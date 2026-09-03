@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">صلاتي</string>
+
+    <string name="daily_today">اليوم</string>
+    <string name="daily_location_context">%1$s</string>
+    <string name="daily_next_event">الصلاة القادمة</string>
+    <string name="daily_display_only">للعرض فقط</string>
+    <string name="daily_middle_of_night">نصف الليل</string>
+    <string name="daily_last_third_of_night">الثلث الأخير من الليل</string>
+    <string name="daily_loading">جاري تحميل مواقيت الصلاة...</string>
+    <string name="daily_error_title">تعذر تحميل مواقيت الصلاة</string>
+    <string name="daily_error_message">مواقيت الصلاة غير متاحة حالياً. يرجى المحاولة مرة أخرى لاحقاً.</string>
+    <string name="daily_retry">إعادة المحاولة</string>
+
+    <string name="prayer_fajr">الفجر</string>
+    <string name="prayer_sunrise">الشروق</string>
+    <string name="prayer_dhuhr">الظهر</string>
+    <string name="prayer_asr">العصر</string>
+    <string name="prayer_maghrib">المغرب</string>
+    <string name="prayer_isha">العشاء</string>
+
+    <string name="daily_event_accessibility">%1$s في %2$s</string>
+    <string name="daily_event_display_only_accessibility">%1$s في %2$s، للعرض فقط</string>
+    <string name="daily_prayer_accessibility">%1$s في %2$s</string>
+    <string name="daily_prayer_current_accessibility">%1$s في %2$s، الصلاة الحالية</string>
+    <string name="daily_prayer_display_only_accessibility">%1$s في %2$s، للعرض فقط</string>
+    <string name="daily_prayer_current_display_only_accessibility">%1$s في %2$s، الصلاة الحالية، للعرض فقط</string>
+    <string name="monthly_today_action">اليوم</string>
+    <string name="monthly_previous_month">الشهر السابق</string>
+    <string name="monthly_next_month">الشهر التالي</string>
+    <string name="monthly_loading">جاري تحميل التقويم...</string>
+    <string name="monthly_retry">إعادة المحاولة</string>
+    <string name="monthly_error_title">البيانات غير متوفرة</string>
+    <string name="monthly_error_message">تعذر تحميل جدول الصلاة الشهري. يرجى التحقق من اتصالك بالإنترنت.</string>
+
+    <string name="event_islamic_new_year">رأس السنة الهجرية</string>
+    <string name="event_ashura">يوم عاشوراء</string>
+    <string name="event_ramadan_start">بداية شهر رمضان</string>
+    <string name="event_eid_al_fitr">عيد الفطر المبارك</string>
+    <string name="event_arafah">يوم عرفة</string>
+    <string name="event_eid_al_adha">عيد الأضحى المبارك</string>
+    <string name="event_white_day">الأيام البيض</string>
+    <string name="event_zakat_hawl">موعد حول الزكاة</string>
+    <string name="hawl_milestone_title">حول الزكاة</string>
+    <string name="hawl_milestone_not_set">حدد تاريخ بلوغ المال النصاب لأول مرة</string>
+    <string name="hawl_milestone_summary">الاستحقاق %1$s · بلوغ النصاب %2$s</string>
+    <string name="hawl_set_date">تحديد التاريخ</string>
+    <string name="hawl_view_date">عرض</string>
+    <string name="hawl_clear_date">مسح</string>
+    <string name="hawl_date_confirm">حفظ</string>
+    <string name="hawl_date_cancel">إلغاء</string>
+    
+    <string name="calendar_calculated_notice">التواريخ الهجرية تعتمد على الحساب الفلكي وقد تختلف عن الرؤية المحلية.</string>
+
+    <string name="monthly_selected_state">التاريخ المحدد</string>
+    <string name="monthly_today_state">اليوم</string>
+    <string name="monthly_today_selected_state">اليوم، التاريخ المحدد</string>
+    <string name="monthly_weekday_monday_short">إثنين</string>
+    <string name="monthly_weekday_tuesday_short">ثلاثاء</string>
+    <string name="monthly_weekday_wednesday_short">أربعاء</string>
+    <string name="monthly_weekday_thursday_short">خميس</string>
+    <string name="monthly_weekday_friday_short">جمعة</string>
+    <string name="monthly_weekday_saturday_short">سبت</string>
+    <string name="monthly_weekday_sunday_short">أحد</string>
+    <string name="monthly_weekday_monday">الإثنين</string>
+    <string name="monthly_weekday_tuesday">الثلاثاء</string>
+    <string name="monthly_weekday_wednesday">الأربعاء</string>
+    <string name="monthly_weekday_thursday">الخميس</string>
+    <string name="monthly_weekday_friday">الجمعة</string>
+    <string name="monthly_weekday_saturday">السبت</string>
+    <string name="monthly_weekday_sunday">الأحد</string>
+
+    <string name="qibla_title">القبلة</string>
+    <string name="qibla_open">فتح بوصلة القبلة</string>
+    <string name="qibla_back">رجوع</string>
+    <string name="qibla_aligned">أنت باتجاه القبلة الآن</string>
+    <string name="qibla_turn_to_align">أدر هاتفك حتى تنطبق العلامة على المؤشر</string>
+    <string name="qibla_calibrate">البوصلة بحاجة إلى معايرة — حرك هاتفك على شكل رقم 8 بعيداً عن المعادن والمغناطيس.</string>
+    <string name="qibla_hint">تعمل البوصلة أفقياً أو عمودياً. احرص على إبعاد الهاتف عن المعادن وأغطية الهاتف المغناطيسية.</string>
+    <string name="qibla_no_sensor">مستشعر البوصلة غير متوفر</string>
+    <string name="qibla_no_sensor_hint">لا يحتوي هذا الجهاز على مستشعر للبوصلة. اتجاه القبلة من موقعك هو %1$s (%2$s) من الشمال الحقيقي.</string>
+    <string name="qibla_accessibility">اتجاه القبلة %1$s، %2$s من الشمال، من %3$s</string>
+
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_location">الموقع</string>
+    <string name="settings_location_detecting">جاري تحديد موقعك عبر GPS…</string>
+    <string name="settings_location_error_permission">يلزم إذن الموقع لتحديد موقعك تلقائياً.</string>
+    <string name="settings_location_error_disabled">خدمة الموقع متوقفة على هذا الجهاز. يرجى تفعيلها.</string>
+    <string name="settings_location_error_unavailable">تعذر الحصول على إشارة الموقع. يرجى المحاولة في مكان مفتوح.</string>
+    <string name="settings_location_updated">تم تحديث الموقع إلى %1$s</string>
+    <string name="settings_location_current">الموقع الحالي</string>
+    <string name="settings_location_gps_hint">اضغط لاكتشاف موقعك عبر GPS. إذن الموقع اختياري.</string>
+    <string name="settings_location_gps_action">استخدام موقع GPS الحالي</string>
+    <string name="settings_location_coordinates">%1$.4f, %2$.4f</string>
+    <string name="settings_location_manual_title">إدخال الإحداثيات</string>
+    <string name="settings_location_manual_description">عيّن اسم المدينة وخط العرض وخط الطول دون منح إذن الموقع</string>
+    <string name="settings_location_manual_city">اسم المدينة</string>
+    <string name="settings_location_manual_latitude">خط العرض</string>
+    <string name="settings_location_manual_longitude">خط الطول</string>
+    <string name="settings_location_manual_save">حفظ</string>
+    <string name="settings_location_manual_cancel">إلغاء</string>
+    <string name="settings_location_manual_invalid">أدخل اسم مدينة وخط عرض صالح (−90 إلى 90) وخط طول صالح (−180 إلى 180).</string>
+
+    <string name="settings_zakat_currency_title">عملة الزكاة</string>
+    <string name="settings_zakat_currency_label">العملة</string>
+
+    <string name="settings_calculation_title">طريقة الحساب</string>
+    <string name="settings_method_label">الطريقة الفلكية</string>
+    <string name="settings_high_latitudes_label">قاعدة خطوط العرض العليا</string>
+    <string name="settings_madhab_label">المذهب</string>
+
+    <string name="settings_reminders_title">التنبيهات والأذان</string>
+    <string name="settings_reminders_mute">كتم التنبيهات</string>
+    <string name="settings_reminders_mute_description">تعطيل جميع التنبيهات والأصوات</string>
+    <string name="settings_reminders_vibration">الاهتزاز</string>
+    <string name="settings_reminders_vibration_description">اهتزاز الهاتف عند دخول وقت الصلاة</string>
+    <string name="settings_silent_mode_title">الوضع الصامت للصلاة</string>
+    <string name="settings_silent_mode_description">كتم رنين الهاتف بعد الأذان ثم استعادة وضع الرنين السابق</string>
+    <string name="settings_silent_mode_offset_title">بدء الكتم بعد الأذان</string>
+    <string name="settings_silent_mode_offset_now">فوراً</string>
+    <string name="settings_silent_mode_offset_5">5 د</string>
+    <string name="settings_silent_mode_offset_10">10 د</string>
+    <string name="settings_silent_mode_offset_15">15 د</string>
+    <string name="settings_silent_mode_duration_title">مدة الوضع الصامت</string>
+    <string name="settings_silent_mode_duration_15">15 د</string>
+    <string name="settings_silent_mode_duration_20">20 د</string>
+    <string name="settings_silent_mode_duration_30">30 د</string>
+
+    <string name="settings_reminders_white_days_title">تذكير صيام الأيام البيض</string>
+    <string name="settings_reminders_white_days_description">تنبيه عند مغرب اليوم السابق لأول الأيام البيض</string>
+
+    <string name="notification_white_days_title">تبدأ الأيام البيض الليلة</string>
+    <string name="notification_white_days_message">الليالي البيض هي 13 و14 و15. صم غداً إن كنت تنوي ذلك تقبل الله منك.</string>
+
+    <string name="notification_prayer_title">حان الآن وقت صلاة %1$s</string>
+    <string name="notification_prayer_message">حان الآن موعد أداء صلاة %1$s.</string>
+    <string name="notification_pre_prayer_title">تذكير: اقترب وقت صلاة %1$s</string>
+    <string name="notification_pre_prayer_message">الصلاة القادمة بعد قليل.</string>
+
+    <string name="settings_reminders_pre_prayer">تنبيه مسبق قبل الصلاة</string>
+    <string name="settings_reminders_pre_prayer_value">قبل الصلاة بـ %1$d دقيقة</string>
+    <string name="settings_reminders_pre_prayer_accessibility">قبل الصلاة بـ %1$d دقيقة</string>
+
+    <string name="settings_calendar_hijri_offset">تعديل التاريخ الهجري</string>
+    <string name="settings_calendar_hijri_offset_zero">0 يوم</string>
+    <plurals name="settings_calendar_hijri_offset_plus">
+        <item quantity="zero">0 يوم</item>
+        <item quantity="one">+يوم واحد</item>
+        <item quantity="two">+يومان</item>
+        <item quantity="few">+%d أيام</item>
+        <item quantity="many">+%d يوماً</item>
+        <item quantity="other">+%d يوماً</item>
+    </plurals>
+    <plurals name="settings_calendar_hijri_offset_minus">
+        <item quantity="zero">0 يوم</item>
+        <item quantity="one">-يوم واحد</item>
+        <item quantity="two">-يومان</item>
+        <item quantity="few">-%d أيام</item>
+        <item quantity="many">-%d يوماً</item>
+        <item quantity="other">-%d يوماً</item>
+    </plurals>
+    <string name="settings_calendar_hijri_offset_accessibility">فارق %1$s</string>
+
+
+    <string name="settings_permission_notifications_title">الإشعارات</string>
+    <string name="settings_permission_notifications_description">استلام تذكيرات ومواقيت الصلاة</string>
+    <string name="settings_permission_notifications_allow">السماح بالإشعارات</string>
+    <string name="settings_permission_notifications_state_allowed">مفعل</string>
+    <string name="settings_permission_notifications_state_not_allowed">غير مفعل</string>
+
+    <string name="settings_permission_exact_alarms_title">المنبه الدقيق</string>
+    <string name="settings_permission_exact_alarms_enabled">تشغيل التنبيهات في وقت الصلاة تماماً</string>
+    <string name="settings_permission_exact_alarms_disabled">تشغيل التنبيهات في وقت الصلاة تماماً</string>
+    <string name="settings_permission_exact_alarms_allow">السماح بالمنبه الدقيق</string>
+    <string name="settings_permission_exact_alarms_state_allowed">مفعل</string>
+    <string name="settings_permission_exact_alarms_state_not_allowed">غير مفعل</string>
+    <string name="settings_permission_silent_mode_title">إذن عدم الإزعاج</string>
+    <string name="settings_permission_silent_mode_description">مطلوب لكتم رنين الهاتف أثناء الصلاة ثم استعادته</string>
+    <string name="settings_permission_silent_mode_allow">فتح الإعدادات</string>
+    <string name="settings_permission_silent_mode_state_allowed">مفعل</string>
+    <string name="settings_permission_silent_mode_state_not_allowed">غير مفعل</string>
+
+    <string name="settings_method_mwl">رابطة العالم الإسلامي</string>
+    <string name="settings_method_isna">أمريكا الشمالية (ISNA)</string>
+    <string name="settings_method_egypt">الهيئة المصرية العامة للمساحة</string>
+    <string name="settings_method_umm_al_qura">جامعة أم القرى (مكة المكرمة)</string>
+    <string name="settings_method_karachi">جامعة العلوم الإسلامية بكراتشي</string>
+    <string name="settings_method_kuwait">وزارة الأوقاف والشؤون الإسلامية بالكويت</string>
+    <string name="settings_method_qatar">وزارة الأوقاف القطرية</string>
+    <string name="settings_method_dubai">دبي (الشؤون الإسلامية والعمل الخيري)</string>
+    <string name="settings_method_singapore">مجلس سنغافورة الإسلامي (MUIS)</string>
+    <string name="settings_method_moon_sighting">لجنة رؤية الهلال</string>
+
+    <string name="settings_madhab_shafi">الشافعي / المالكي / الحنبلي</string>
+    <string name="settings_madhab_hanafi">الحنفي (ظل الشيء مثليه)</string>
+
+    <string name="settings_high_lat_middle_of_night">نصف الليل</string>
+    <string name="settings_high_lat_seventh_of_night">سُبع الليل</string>
+    <string name="settings_high_lat_twilight_angle">زاوية الشفق</string>
+
+    <!-- Theme Settings -->
+    <string name="settings_theme_title">مظهر التطبيق</string>
+    <string name="settings_theme_dark_mode">المظهر</string>
+    <string name="settings_theme_dark_mode_desc">الاختيار بين مظهر النظام، الوضع الفاتح، أو الوضع الداكن</string>
+    <string name="settings_theme_option_system">تلقائي (حسب النظام)</string>
+    <string name="settings_theme_option_light">فاتح</string>
+    <string name="settings_theme_option_dark">داكن</string>
+
+    <!-- Privacy -->
+    <string name="settings_privacy_title">الخصوصية</string>
+    <string name="settings_privacy_policy">سياسة الخصوصية</string>
+    <string name="settings_privacy_policy_description">تعرف على كيفية تعامل التطبيق مع الموقع الجغرافي والبيانات</string>
+    <string name="settings_privacy_policy_open">عرض سياسة الخصوصية</string>
+    <string name="settings_support_title">الدعم</string>
+    <string name="settings_support_report_bug">الإبلاغ عن خطأ</string>
+    <string name="settings_support_email_open">مراسلة salati@sulfuro.eu</string>
+
+    <!-- Zakat Screen -->
+    <string name="zakat_title">حاسبة الزكاة</string>
+    <string name="zakat_subtitle">احسب زكاتك السنوية الشرعية بسهولة ودقة</string>
+
+    <string name="zakat_tab_gold">الذهب</string>
+    <string name="zakat_tab_silver">الفضة</string>
+
+    <string name="zakat_current_gold_price">سعر الذهب الحالي</string>
+    <string name="zakat_current_silver_price">سعر الفضة الحالي</string>
+    <string name="zakat_edit_gold_price">تعديل سعر الذهب يدوياً</string>
+    <string name="zakat_edit_silver_price">تعديل سعر الفضة يدوياً</string>
+    <string name="zakat_refresh_price">تحديث السعر المباشر</string>
+    <string name="zakat_price_updating">جاري جلب أحدث الأسعار…</string>
+    <string name="zakat_price_updated_at">تم التحديث %1$s</string>
+    <string name="zakat_price_update_failed">تعذر التحديث — يتم عرض آخر سعر محفوظ</string>
+    <string name="zakat_price_never_updated">لم يتم التحديث بعد — اضغط للتحديث</string>
+
+    <string name="zakat_cash_title">حساب زكاة الأموال النقدية</string>
+    <string name="zakat_nisab_value_title">قيمة النصاب</string>
+    <string name="zakat_nisab_gold_equiv">ما يعادل 85 غرام من الذهب عيار 24</string>
+    <string name="zakat_nisab_silver_equiv">ما يعادل 595 غرام من الفضة</string>
+
+    <string name="zakat_cash_assets_label">إجمالي الأصول المالية والنقدية</string>
+    <string name="zakat_cash_assets_desc">تشمل السيولة النقدية، الحسابات البنكية، والمدخرات والاستثمارات.</string>
+    <string name="zakat_cash_due">الزكاة الواجبة على النقد:</string>
+
+    <string name="zakat_jewelry_title">حساب زكاة الحلي والمجوهرات</string>
+    <string name="zakat_gold_jewelry_subtitle">حساب زكاة الذهب</string>
+    <string name="zakat_gold_jewelry_label">وزن الحلي الذهبية (بالغرام)</string>
+    <string name="zakat_gold_carat_label">عيار الذهب</string>
+    <string name="zakat_gold_carat_value">%1$d قيراط</string>
+    <string name="zakat_gold_due">الزكاة الواجبة على الذهب (نصاب 85 غرام):</string>
+
+    <string name="zakat_silver_jewelry_subtitle">حساب زكاة الفضة</string>
+    <string name="zakat_silver_jewelry_label">وزن الحلي الفضية (بالغرام)</string>
+    <string name="zakat_estimated_value">القيمة التقديرية:</string>
+    <string name="zakat_silver_due">الزكاة الواجبة على الفضة (نصاب 595 غرام):</string>
+
+    <string name="zakat_total_due_title">إجمالي الزكاة الواجبة</string>
+
+    <string name="zakat_unit_gram">غرام</string>
+
+    <!-- Threshold states -->
+    <string name="zakat_status_below_nisab">دون النصاب</string>
+    <string name="zakat_status_nisab_reached">بلغ النصاب</string>
+
+    <!-- Fatwa on Nisab -->
+
+    <!-- Understand Tab -->
+
+    <!-- Fatwas Tab -->
+
+    <string name="nav_daily">اليوم</string>
+    <string name="nav_monthly">التقويم</string>
+    <string name="nav_zakat">الزكاة</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <!-- Onboarding Flow -->
+    <string name="onboarding_welcome_title">أهلاً بك في تطبيق صلاتي</string>
+    <string name="onboarding_welcome_subtitle">رفيقك الإسلامي اليومي: دقيق، آمن، وخالٍ تماماً من الإعلانات</string>
+    <string name="onboarding_feat_prayers_title">مواقيت صلاة دقيقة</string>
+    <string name="onboarding_feat_prayers_desc">حسابات فلكية معتمدة وفق إحداثيات موقعك الجغرافي في أي مكان حول العالم</string>
+    <string name="onboarding_feat_qibla_title">بوصلة القبلة</string>
+    <string name="onboarding_feat_qibla_desc">تحديد دقيق لاتجاه الكعبة المشرفة مع دعم تصحيح ميل الجهاز</string>
+    <string name="onboarding_feat_calendar_title">التقويم الهجري والمناسبات</string>
+    <string name="onboarding_feat_calendar_desc">التقويم الإسلامي، المناسبات الهامة، وتنبيهات الأيام البيض المستحبة</string>
+    <string name="onboarding_feat_zakat_title">حاسبة الزكاة الذكية</string>
+    <string name="onboarding_feat_zakat_desc">احتساب فوري للنصاب الشرعي للأموال النقدية والذهب والفضة</string>
+    <string name="onboarding_btn_get_started">ابدأ الآن</string>
+    <string name="onboarding_btn_continue">متابعة</string>
+    <string name="onboarding_btn_back">رجوع</string>
+    <string name="onboarding_btn_finish">إنهاء وفتح صلاتي</string>
+    <string name="onboarding_location_title">تحديد موقعك</string>
+    <string name="onboarding_location_subtitle">يحتاج التطبيق إلى إحداثيات موقعك لحساب مواقيت الصلاة بدقة فلكية تامة</string>
+    <string name="onboarding_location_auto">تحديد موقعي تلقائياً عبر GPS</string>
+    <string name="onboarding_location_auto_desc">استخدام نظام تحديد المواقع بالجهاز للحصول على أعلى درجات الدقة. يمكنك التخطي والإبقاء على الموقع الافتراضي، أو إدخال الإحداثيات يدوياً.</string>
+    <string name="onboarding_location_detect">تحديد موقعي</string>
+    <string name="onboarding_location_skip">تخطي الآن واستخدام الموقع الافتراضي</string>
+    <string name="onboarding_location_selected">تم تحديد الموقع</string>
+    <string name="onboarding_method_title">طريقة الحساب الفلكي</string>
+    <string name="onboarding_method_subtitle">اختر الهيئة أو الطريقة المعتمدة في بلدك</string>
+    <string name="onboarding_notifications_title">التنبيهات والإشعارات</string>
+    <string name="onboarding_notifications_subtitle">تفعيل الأذان والتنبيهات الموقوتة وضمان عملها في الخلفية</string>
+
+    <!-- Offline & Reliability -->
+
+    <!-- Battery Optimization Help -->
+    <string name="battery_opt_title">ضمان وصول التنبيهات</string>
+    <string name="battery_opt_desc">لضمان وصول إشعارات الأذان في وقتها بالضبط، يرجى استثناء التطبيق من قيود توفير الطاقة في جهازك.</string>
+    <string name="battery_opt_btn_open">فتح إعدادات البطارية</string>
+    <string name="battery_opt_oem_title">إرشادات مخصصة لنوع هاتفك</string>
+    <string name="battery_opt_device_detected">تعليمات خاصة بجهازك (%1$s)</string>
+    <string name="battery_opt_xiaomi_title">شاومي / ريدمي / بوكو (MIUI / HyperOS)</string>
+    <string name="battery_opt_xiaomi_desc">فعل التشغيل التلقائي (Autostart)، واضبط موفر البطارية على (لا توجد قيود No restrictions)، وقفل التطبيق في قائمة التطبيقات الحديثة.</string>
+    <string name="battery_opt_samsung_title">سامسونج (One UI)</string>
+    <string name="battery_opt_samsung_desc">انتقل إلى البطارية ثم حدود الاستخدام في الخلفية ثم استثناء صلاتي من قائمة التطبيقات في وضع السكون.</string>
+    <string name="battery_opt_oppo_title">أوبو / ريلمي / ون بلس</string>
+    <string name="battery_opt_oppo_desc">فعل خيار السماح بالنشاط في الخلفية والتشغيل التلقائي في إدارة بطارية التطبيقات.</string>
+    <string name="battery_opt_huawei_title">هواوي / هونر (EMUI / MagicOS)</string>
+    <string name="battery_opt_huawei_desc">انتقل إلى الإعدادات ثم البطارية ثم تشغيل التطبيقات ثم اضبط صلاتي على الإدارة يدوياً (تفعيل التشغيل التلقائي والعمل في الخلفية).</string>
+    <string name="battery_opt_generic_title">غوغل بكسل / أجهزة أندرويد الأخرى</string>
+    <string name="battery_opt_generic_desc">انتقل إلى الإعدادات ثم التطبيقات ثم صلاتي ثم البطارية ثم اختر غير مقيد (Unrestricted).</string>
+    <string name="battery_opt_show_all">عرض الإرشادات للأجهزة الأخرى</string>
+    <string name="battery_opt_hide_all">إخفاء إرشادات الأجهزة الأخرى</string>
+    <string name="battery_opt_close">فهمت ذلك</string>
+    <string name="battery_opt_state_unrestricted">غير مقيّد</string>
+    <string name="battery_opt_state_restricted">مقيّد</string>
+    <string name="battery_opt_state_unrestricted_desc">موفّر البطارية لا يقيّد تنبيهات الصلاة</string>
+    <string name="battery_opt_state_restricted_desc">مقيّد: قد يؤخر موفّر البطارية تنبيهات الصلاة</string>
+    <string name="widget_next_prayer">الصلاة التالية</string>
+    <string name="widget_placeholder_time">--:--</string>
+    <string name="widget_dot"> · </string>
+    <string name="widget_location_placeholder">الموقع</string>
+
+    <!-- Language Settings -->
+    <string name="settings_language_title">اللغة</string>
+    <string name="settings_language_label">لغة التطبيق</string>
+    <string name="settings_language_system">افتراضي النظام</string>
+    <string name="settings_language_en">الإنجليزية (English)</string>
+    <string name="settings_language_ar">العربية</string>
+    <string name="settings_language_fr">الفرنسية (Français)</string>
+    <string name="settings_language_nl">الهولندية (Nederlands)</string>
+
+</resources>

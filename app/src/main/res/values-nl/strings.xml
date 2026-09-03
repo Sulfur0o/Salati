@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Salati</string>
+
+    <string name="daily_today">Vandaag</string>
+    <string name="daily_location_context">%1$s</string>
+    <string name="daily_next_event">Volgend gebed</string>
+    <string name="daily_display_only">Alleen weergave</string>
+    <string name="daily_middle_of_night">Midden van de nacht</string>
+    <string name="daily_last_third_of_night">Laatste derde van de nacht</string>
+    <string name="daily_loading">Gebedstijden laden…</string>
+    <string name="daily_error_title">Kan gebedstijden niet laden</string>
+    <string name="daily_error_message">Gebedstijden zijn momenteel niet beschikbaar. Probeer het opnieuw zodra er gegevens zijn.</string>
+    <string name="daily_retry">Opnieuw proberen</string>
+
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_sunrise">Zonsopkomst</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <string name="daily_event_accessibility">%1$s om %2$s</string>
+    <string name="daily_event_display_only_accessibility">%1$s om %2$s, alleen weergave</string>
+    <string name="daily_prayer_accessibility">%1$s om %2$s</string>
+    <string name="daily_prayer_current_accessibility">%1$s om %2$s, huidig</string>
+    <string name="daily_prayer_display_only_accessibility">%1$s om %2$s, alleen weergave</string>
+    <string name="daily_prayer_current_display_only_accessibility">%1$s om %2$s, huidig, alleen weergave</string>
+    <string name="monthly_today_action">Vandaag</string>
+    <string name="monthly_previous_month">Vorige maand</string>
+    <string name="monthly_next_month">Volgende maand</string>
+    <string name="monthly_loading">Kalender laden…</string>
+    <string name="monthly_retry">Opnieuw proberen</string>
+    <string name="monthly_error_title">Gegevens niet beschikbaar</string>
+    <string name="monthly_error_message">Kan het maandelijkse gebedsschema niet laden. Controleer uw internetverbinding.</string>
+
+    <string name="event_islamic_new_year">Islamitisch Nieuwjaar</string>
+    <string name="event_ashura">Asjoera</string>
+    <string name="event_ramadan_start">Begin van de Ramadan</string>
+    <string name="event_eid_al_fitr">Eid al-Fitr</string>
+    <string name="event_arafah">Dag van Arafah</string>
+    <string name="event_eid_al_adha">Eid al-Adha</string>
+    <string name="event_white_day">Witte Dag</string>
+    <string name="event_zakat_hawl">Zakat Hawl vervaldag</string>
+    <string name="hawl_milestone_title">Zakat Hawl</string>
+    <string name="hawl_milestone_not_set">Stel de datum in waarop uw vermogen de Nisab bereikte</string>
+    <string name="hawl_milestone_summary">Vervalt op %1$s · Nisab bereikt op %2$s</string>
+    <string name="hawl_set_date">Datum instellen</string>
+    <string name="hawl_view_date">Bekijken</string>
+    <string name="hawl_clear_date">Wissen</string>
+    <string name="hawl_date_confirm">Opslaan</string>
+    <string name="hawl_date_cancel">Annuleren</string>
+    
+    <string name="calendar_calculated_notice">De Hijri-data worden berekend en kunnen afwijken van lokale waarnemingen.</string>
+
+    <string name="monthly_selected_state">Geselecteerde datum</string>
+    <string name="monthly_today_state">Vandaag</string>
+    <string name="monthly_today_selected_state">Vandaag, geselecteerde datum</string>
+    <string name="monthly_weekday_monday_short">Ma</string>
+    <string name="monthly_weekday_tuesday_short">Di</string>
+    <string name="monthly_weekday_wednesday_short">Wo</string>
+    <string name="monthly_weekday_thursday_short">Do</string>
+    <string name="monthly_weekday_friday_short">Vr</string>
+    <string name="monthly_weekday_saturday_short">Za</string>
+    <string name="monthly_weekday_sunday_short">Zo</string>
+    <string name="monthly_weekday_monday">Maandag</string>
+    <string name="monthly_weekday_tuesday">Dinsdag</string>
+    <string name="monthly_weekday_wednesday">Woensdag</string>
+    <string name="monthly_weekday_thursday">Donderdag</string>
+    <string name="monthly_weekday_friday">Vrijdag</string>
+    <string name="monthly_weekday_saturday">Zaterdag</string>
+    <string name="monthly_weekday_sunday">Zondag</string>
+    <string name="qibla_title">Qibla</string>
+    <string name="qibla_open">Open Qibla-kompas</string>
+    <string name="qibla_back">Terug</string>
+    <string name="qibla_aligned">Richting de Qibla gericht</string>
+    <string name="qibla_turn_to_align">Draai totdat de markering de wijzer ontmoet</string>
+    <string name="qibla_calibrate">Kompas moet worden gekalibreerd — beweeg uw telefoon in een acht-vorm, weg van metaal en magneten.</string>
+    <string name="qibla_hint">Werkt zowel plat als rechtop. Houd uit de buurt van metaal, magneten en magnetische hoesjes.</string>
+    <string name="qibla_no_sensor">Kompas niet beschikbaar</string>
+    <string name="qibla_no_sensor_hint">Dit apparaat heeft geen kompassensor. De Qibla vanaf uw locatie is %1$s (%2$s) ten opzichte van het ware noorden.</string>
+    <string name="qibla_accessibility">Qibla-richting %1$s, %2$s van het ware noorden, vanaf %3$s</string>
+
+    <string name="settings_title">Instellingen</string>
+    <string name="settings_location">Locatie</string>
+    <string name="settings_location_detecting">Uw locatie bepalen…</string>
+    <string name="settings_location_error_permission">Locatietoestemming is vereist om gebedstijden voor uw positie te berekenen.</string>
+    <string name="settings_location_error_disabled">Locatievoorzieningen zijn uitgeschakeld. Schakel deze in om uw locatie te bepalen.</string>
+    <string name="settings_location_error_unavailable">Kon geen locatie bepalen. Probeer het buitenshuis opnieuw of controleer uw gps-signaal.</string>
+    <string name="settings_location_updated">Locatie bijgewerkt naar %1$s</string>
+    <string name="settings_location_current">Huidige locatie</string>
+    <string name="settings_location_gps_hint">Tik om uw huidige gps-locatie te detecteren. Locatie is optioneel.</string>
+    <string name="settings_location_gps_action">Huidige gps-locatie gebruiken</string>
+    <string name="settings_location_coordinates">%1$.4f, %2$.4f</string>
+    <string name="settings_location_manual_title">Coördinaten invoeren</string>
+    <string name="settings_location_manual_description">Stel stad, breedtegraad en lengtegraad in zonder locatietoegang</string>
+    <string name="settings_location_manual_city">Plaatsnaam</string>
+    <string name="settings_location_manual_latitude">Breedtegraad</string>
+    <string name="settings_location_manual_longitude">Lengtegraad</string>
+    <string name="settings_location_manual_save">Opslaan</string>
+    <string name="settings_location_manual_cancel">Annuleren</string>
+    <string name="settings_location_manual_invalid">Voer een plaatsnaam en een geldige breedtegraad (−90 tot 90) en lengtegraad (−180 tot 180) in.</string>
+
+    <string name="settings_zakat_currency_title">Zakat-valuta</string>
+    <string name="settings_zakat_currency_label">Valuta</string>
+
+    <string name="settings_calculation_title">Berekeningsinstellingen</string>
+    <string name="settings_method_label">Methode</string>
+    <string name="settings_high_latitudes_label">Regel voor hoge breedtegraden</string>
+    <string name="settings_madhab_label">Madhab</string>
+
+    <string name="settings_reminders_title">Alarmen &amp; Herinneringen</string>
+    <string name="settings_reminders_mute">Meldingen dempen</string>
+    <string name="settings_reminders_mute_description">Schakel alle gebedswaarschuwingen uit</string>
+    <string name="settings_reminders_vibration">Trilwaarschuwingen</string>
+    <string name="settings_reminders_vibration_description">Laat het apparaat trillen bij gebedstijden</string>
+    <string name="settings_silent_mode_title">Stille modus tijdens gebed</string>
+    <string name="settings_silent_mode_description">Zet de telefoon na de adhan op stil en herstelt daarna het vorige beltoonprofiel</string>
+    <string name="settings_silent_mode_offset_title">Starten na de adhan</string>
+    <string name="settings_silent_mode_offset_now">Direct</string>
+    <string name="settings_silent_mode_offset_5">5 min</string>
+    <string name="settings_silent_mode_offset_10">10 min</string>
+    <string name="settings_silent_mode_offset_15">15 min</string>
+    <string name="settings_silent_mode_duration_title">Stille duur</string>
+    <string name="settings_silent_mode_duration_15">15 min</string>
+    <string name="settings_silent_mode_duration_20">20 min</string>
+    <string name="settings_silent_mode_duration_30">30 min</string>
+
+    <string name="settings_reminders_white_days_title">Vastenherinnering Witte Dagen</string>
+    <string name="settings_reminders_white_days_description">Herinnert u bij Maghrib voor de eerste Witte Dag</string>
+
+    <string name="notification_white_days_title">Witte Dagen beginnen vanavond</string>
+    <string name="notification_white_days_message">De 13e, 14e en 15e zijn de Witte Dagen. Vast morgen indien u dit wenst.</string>
+
+    <string name="notification_prayer_title">Tijd voor %1$s</string>
+    <string name="notification_prayer_message">Het is tijd om het %1$s-gebed te verrichten.</string>
+    <string name="notification_pre_prayer_title">Herinnering: tijd voor %1$s nadert</string>
+    <string name="notification_pre_prayer_message">Het gebed begint binnen enkele minuten.</string>
+
+    <string name="settings_reminders_pre_prayer">Duur voorafgaande waarschuwing</string>
+    <string name="settings_reminders_pre_prayer_value">%1$d minuten van tevoren</string>
+    <string name="settings_reminders_pre_prayer_accessibility">%1$d minuten voor het gebed</string>
+
+    <string name="settings_calendar_hijri_offset">Hijri-datumcorrectie</string>
+    <string name="settings_calendar_hijri_offset_zero">0 dagen</string>
+    <plurals name="settings_calendar_hijri_offset_plus">
+        <item quantity="one">+%d dag</item>
+        <item quantity="other">+%d dagen</item>
+    </plurals>
+    <plurals name="settings_calendar_hijri_offset_minus">
+        <item quantity="one">−%d dag</item>
+        <item quantity="other">−%d dagen</item>
+    </plurals>
+    <string name="settings_calendar_hijri_offset_accessibility">%1$s verschuiving</string>
+
+    <string name="settings_permission_notifications_title">Meldingen</string>
+    <string name="settings_permission_notifications_description">Gebedsherinneringen ontvangen</string>
+    <string name="settings_permission_notifications_allow">Meldingen toestaan</string>
+    <string name="settings_permission_notifications_state_allowed">Toegestaan</string>
+    <string name="settings_permission_notifications_state_not_allowed">Niet toegestaan</string>
+
+    <string name="settings_permission_exact_alarms_title">Exacte alarmen</string>
+    <string name="settings_permission_exact_alarms_enabled">Herinneringen stipt op tijd tonen</string>
+    <string name="settings_permission_exact_alarms_disabled">Herinneringen stipt op tijd tonen</string>
+    <string name="settings_permission_exact_alarms_allow">Exacte alarmen toestaan</string>
+    <string name="settings_permission_exact_alarms_state_allowed">Toegestaan</string>
+    <string name="settings_permission_exact_alarms_state_not_allowed">Niet toegestaan</string>
+    <string name="settings_permission_silent_mode_title">Toegang Niet storen</string>
+    <string name="settings_permission_silent_mode_description">Vereist om het belvolume tijdens gebed aan te passen en te herstellen</string>
+    <string name="settings_permission_silent_mode_allow">Instellingen openen</string>
+    <string name="settings_permission_silent_mode_state_allowed">Toegestaan</string>
+    <string name="settings_permission_silent_mode_state_not_allowed">Niet toegestaan</string>
+
+    <string name="settings_method_mwl">Moslim Wereld Liga</string>
+    <string name="settings_method_isna">Noord-Amerika (ISNA)</string>
+    <string name="settings_method_egypt">Egyptische Algemene Autoriteit</string>
+    <string name="settings_method_umm_al_qura">Umm al-Qura (Mekka)</string>
+    <string name="settings_method_karachi">Karachi (Univ. van Islamitische Wetenschappen)</string>
+    <string name="settings_method_kuwait">Koeweit</string>
+    <string name="settings_method_qatar">Qatar</string>
+    <string name="settings_method_dubai">Dubai</string>
+    <string name="settings_method_singapore">Singapore</string>
+    <string name="settings_method_moon_sighting">Maanwaarnemingscommissie</string>
+
+    <string name="settings_madhab_shafi">Shafi\'i / Maliki / Hanbali</string>
+    <string name="settings_madhab_hanafi">Hanafi</string>
+
+    <string name="settings_high_lat_middle_of_night">Midden van de nacht</string>
+    <string name="settings_high_lat_seventh_of_night">Zevende deel van de nacht</string>
+    <string name="settings_high_lat_twilight_angle">Schemeringshoek</string>
+
+    <!-- Theme Settings -->
+    <string name="settings_theme_title">App-thema</string>
+    <string name="settings_theme_dark_mode">Weergave</string>
+    <string name="settings_theme_dark_mode_desc">Kies tussen het systeemthema, licht of donker</string>
+    <string name="settings_theme_option_system">Systeem</string>
+    <string name="settings_theme_option_light">Licht</string>
+    <string name="settings_theme_option_dark">Donker</string>
+
+    <!-- Language Settings -->
+    <string name="settings_language_title">Taal</string>
+    <string name="settings_language_label">App-taal</string>
+    <string name="settings_language_system">Systeemstandaard</string>
+    <string name="settings_language_en">English (Engels)</string>
+    <string name="settings_language_ar">العربية (Arabisch)</string>
+    <string name="settings_language_fr">Français (Frans)</string>
+    <string name="settings_language_nl">Nederlands</string>
+
+    <!-- Privacy -->
+    <string name="settings_privacy_title">Privacy</string>
+    <string name="settings_privacy_policy">Privacybeleid</string>
+    <string name="settings_privacy_policy_description">Ontdek hoe Salati omgaat met locatie- en netwerkgegevens</string>
+    <string name="settings_privacy_policy_open">Privacybeleid openen</string>
+    <string name="settings_support_title">Ondersteuning</string>
+    <string name="settings_support_report_bug">Een bug melden</string>
+    <string name="settings_support_email_open">E-mail salati@sulfuro.eu</string>
+
+
+    <!-- Zakat Screen -->
+    <string name="zakat_title">Zakat</string>
+    <string name="zakat_subtitle">Bereken eenvoudig uw jaarlijkse Zakat-bijdrage</string>
+
+    <string name="zakat_tab_gold">Goud</string>
+    <string name="zakat_tab_silver">Zilver</string>
+
+    <string name="zakat_current_gold_price">Huidige goudprijs</string>
+    <string name="zakat_current_silver_price">Huidige zilverprijs</string>
+    <string name="zakat_edit_gold_price">Goudprijs handmatig aanpassen</string>
+    <string name="zakat_edit_silver_price">Zilverprijs handmatig aanpassen</string>
+    <string name="zakat_refresh_price">Actuele koers vernieuwen</string>
+    <string name="zakat_price_updating">Laatste koers ophalen…</string>
+    <string name="zakat_price_updated_at">Bijgewerkt op %1$s</string>
+    <string name="zakat_price_update_failed">Kon koers niet bijwerken — laatste waarde wordt getoond</string>
+    <string name="zakat_price_never_updated">Nog niet bijgewerkt — tik op vernieuwen</string>
+
+    <string name="zakat_cash_title">Bereken Zakat over contant geld</string>
+    <string name="zakat_nisab_value_title">Nisab-waarde</string>
+    <string name="zakat_nisab_gold_equiv">Gelijk aan 85g 24k goud</string>
+    <string name="zakat_nisab_silver_equiv">Gelijk aan 595g zilver</string>
+
+    <string name="zakat_cash_assets_label">Totale waarde van uw financiële bezittingen</string>
+    <string name="zakat_cash_assets_desc">Inclusief contant geld, bankrekeningen, spaargeld en beleggingen.</string>
+    <string name="zakat_cash_due">Verschuldigde Zakat over contant geld:</string>
+
+    <string name="zakat_jewelry_title">Bereken Zakat over sieraden</string>
+    <string name="zakat_gold_jewelry_subtitle">Bereken Zakat over goud</string>
+    <string name="zakat_gold_jewelry_label">Gewicht van uw gouden sieraden (gram)</string>
+    <string name="zakat_gold_carat_label">Goudgehalte</string>
+    <string name="zakat_gold_carat_value">%1$dk</string>
+    <string name="zakat_gold_due">Verschuldigde Zakat over goud (drempel van 85g):</string>
+
+    <string name="zakat_silver_jewelry_subtitle">Bereken Zakat over zilver</string>
+    <string name="zakat_silver_jewelry_label">Gewicht van uw zilveren sieraden (gram)</string>
+    <string name="zakat_estimated_value">Geschatte waarde:</string>
+    <string name="zakat_silver_due">Verschuldigde Zakat over zilver (drempel van 595g):</string>
+
+    <string name="zakat_total_due_title">Totaal verschuldigde Zakat</string>
+
+    <string name="zakat_unit_gram">g</string>
+
+    <!-- Threshold states -->
+    <string name="zakat_status_below_nisab">Onder Nisab</string>
+    <string name="zakat_status_nisab_reached">Nisab bereikt</string>
+
+    <string name="nav_daily">Dag</string>
+    <string name="nav_monthly">Maand</string>
+    <string name="nav_zakat">Zakat</string>
+    <string name="nav_settings">Instellingen</string>
+
+    <!-- Onboarding Flow -->
+    <string name="onboarding_welcome_title">Welkom bij Salati</string>
+    <string name="onboarding_welcome_subtitle">Uw betrouwbare, privacyvriendelijke en advertentievrije islamitische metgezel</string>
+    <string name="onboarding_feat_prayers_title">Nauwkeurige gebedstijden</string>
+    <string name="onboarding_feat_prayers_desc">Astronomisch berekende gebedstijden afgestemd op uw exacte coördinaten wereldwijd</string>
+    <string name="onboarding_feat_qibla_title">Qibla-kompas</string>
+    <string name="onboarding_feat_qibla_desc">Uiterst nauwkeurige richting naar de Heilige Kaaba met 3D-kantelcompensatie</string>
+    <string name="onboarding_feat_calendar_title">Islamitische kalender &amp; gebeurtenissen</string>
+    <string name="onboarding_feat_calendar_desc">Hijri-kalender, belangrijke islamitische gelegenheden en herinneringen voor Witte Dagen</string>
+    <string name="onboarding_feat_zakat_title">Zakat-calculator</string>
+    <string name="onboarding_feat_zakat_desc">Directe Nisab-berekening voor contant geld, spaartegoeden, goud en zilver</string>
+    <string name="onboarding_btn_get_started">Aan de slag</string>
+    <string name="onboarding_btn_continue">Doorgaan</string>
+    <string name="onboarding_btn_back">Terug</string>
+    <string name="onboarding_btn_finish">Afronden &amp; Salati openen</string>
+    <string name="onboarding_location_title">Stel uw locatie in</string>
+    <string name="onboarding_location_subtitle">Salati heeft coördinaten nodig om lokale gebedstijden nauwkeurig te berekenen</string>
+    <string name="onboarding_location_auto">Mijn locatie automatisch detecteren</string>
+    <string name="onboarding_location_auto_desc">Gebruik het apparaat-gps om uw positie met hoge nauwkeurigheid te bepalen. U kunt dit overslaan en de standaardlocatie behouden, of coördinaten handmatig invoeren.</string>
+    <string name="onboarding_location_detect">Mijn locatie detecteren</string>
+    <string name="onboarding_location_skip">Nu overslaan en de standaardlocatie gebruiken</string>
+    <string name="onboarding_location_selected">Locatie geselecteerd</string>
+    <string name="onboarding_method_title">Berekeningsmethode</string>
+    <string name="onboarding_method_subtitle">Kies de standaard berekeningsmethode voor uw regio</string>
+    <string name="onboarding_notifications_title">Alarmen &amp; Meldingen</string>
+    <string name="onboarding_notifications_subtitle">Configureer tijdige gebedsherinneringen en exacte alarmen</string>
+
+    <!-- Battery Optimization Help -->
+    <string name="battery_opt_title">Betrouwbaarheid van meldingen</string>
+    <string name="battery_opt_desc">Als meldingen vertraagd zijn of niet klinken, beperkt de batterijbesparing mogelijk achtergrondalarmen. Het uitschakelen van batterijoptimalisatie zorgt voor tijdige meldingen.</string>
+    <string name="battery_opt_btn_open">Batterij-instellingen openen</string>
+    <string name="battery_opt_oem_title">Fabrikantspecifiek advies</string>
+    <string name="battery_opt_device_detected">Instructies voor uw %1$s</string>
+    <string name="battery_opt_xiaomi_title">Xiaomi / MIUI / HyperOS</string>
+    <string name="battery_opt_xiaomi_desc">Schakel \'Automatisch starten\' in, stel batterijbesparing in op \'Geen beperkingen\' en vergrendel Salati in recente apps.</string>
+    <string name="battery_opt_samsung_title">Samsung / One UI</string>
+    <string name="battery_opt_samsung_desc">Ga naar Batterij -&gt; Limieten achtergrondgebruik -&gt; Sluit Salati uit van \'Slapende apps\' en \'Diep slapende apps\'.</string>
+    <string name="battery_opt_oppo_title">Oppo / Realme / OnePlus</string>
+    <string name="battery_opt_oppo_desc">Schakel \'Achtergrondactiviteit toestaan\' en \'Automatisch starten toestaan\' in bij batterijbeheer.</string>
+    <string name="battery_opt_huawei_title">Huawei / EMUI</string>
+    <string name="battery_opt_huawei_desc">Ga naar Instellingen -&gt; Batterij -&gt; App-start -&gt; Stel Salati in op \'Handmatig beheren\' (Automatisch starten &amp; Uitvoeren op achtergrond).</string>
+    <string name="battery_opt_generic_title">Google Pixel / Overige Android</string>
+    <string name="battery_opt_generic_desc">Ga naar Instellingen -&gt; Apps -&gt; Salati -&gt; Batterij -&gt; Kies \'Onbeperkt\' om te garanderen dat alarmen betrouwbaar afgaan.</string>
+    <string name="battery_opt_show_all">Instructies voor andere apparaten tonen</string>
+    <string name="battery_opt_hide_all">Instructies verbergen</string>
+    <string name="battery_opt_close">Begrepen</string>
+    <string name="battery_opt_state_unrestricted">Onbeperkt</string>
+    <string name="battery_opt_state_restricted">Beperkt</string>
+    <string name="battery_opt_state_unrestricted_desc">Batterijbesparing beperkt gebedsalarmen niet</string>
+    <string name="battery_opt_state_restricted_desc">Beperkt: batterijbesparing kan gebedsalarmen vertragen</string>
+    <string name="widget_next_prayer">Volgend gebed</string>
+    <string name="widget_placeholder_time">--:--</string>
+    <string name="widget_dot"> · </string>
+    <string name="widget_location_placeholder">Locatie</string>
+</resources>

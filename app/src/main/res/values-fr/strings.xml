@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Salati</string>
+
+    <string name="daily_today">Aujourd\'hui</string>
+    <string name="daily_location_context">%1$s</string>
+    <string name="daily_next_event">Prière suivante</string>
+    <string name="daily_display_only">Affichage seul</string>
+    <string name="daily_middle_of_night">Milieu de la nuit</string>
+    <string name="daily_last_third_of_night">Dernier tiers de la nuit</string>
+    <string name="daily_loading">Chargement des horaires…</string>
+    <string name="daily_error_title">Impossible de charger les horaires</string>
+    <string name="daily_error_message">Les horaires de prière ne sont pas disponibles actuellement. Réessayez lorsque des données seront accessibles.</string>
+    <string name="daily_retry">Réessayer</string>
+
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_sunrise">Chourouk</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <string name="daily_event_accessibility">%1$s à %2$s</string>
+    <string name="daily_event_display_only_accessibility">%1$s à %2$s, affichage seul</string>
+    <string name="daily_prayer_accessibility">%1$s à %2$s</string>
+    <string name="daily_prayer_current_accessibility">%1$s à %2$s, actuelle</string>
+    <string name="daily_prayer_display_only_accessibility">%1$s à %2$s, affichage seul</string>
+    <string name="daily_prayer_current_display_only_accessibility">%1$s à %2$s, actuelle, affichage seul</string>
+    <string name="monthly_today_action">Aujourd\'hui</string>
+    <string name="monthly_previous_month">Mois précédent</string>
+    <string name="monthly_next_month">Mois suivant</string>
+    <string name="monthly_loading">Chargement du calendrier…</string>
+    <string name="monthly_retry">Réessayer</string>
+    <string name="monthly_error_title">Données indisponibles</string>
+    <string name="monthly_error_message">Impossible de charger le calendrier mensuel. Veuillez vérifier votre connexion.</string>
+
+    <string name="event_islamic_new_year">Nouvel An Hégirien</string>
+    <string name="event_ashura">Achoura</string>
+    <string name="event_ramadan_start">Début du Ramadan</string>
+    <string name="event_eid_al_fitr">Aïd al-Fitr</string>
+    <string name="event_arafah">Jour d\'Arafat</string>
+    <string name="event_eid_al_adha">Aïd al-Adha</string>
+    <string name="event_white_day">Jour Blanc</string>
+    <string name="event_zakat_hawl">Échéance du Hawl de la Zakat</string>
+    <string name="hawl_milestone_title">Hawl de la Zakat</string>
+    <string name="hawl_milestone_not_set">Définissez la date où vos avoirs ont atteint le Nissab</string>
+    <string name="hawl_milestone_summary">Échéance %1$s · Nissab atteint le %2$s</string>
+    <string name="hawl_set_date">Définir la date</string>
+    <string name="hawl_view_date">Voir</string>
+    <string name="hawl_clear_date">Effacer</string>
+    <string name="hawl_date_confirm">Enregistrer</string>
+    <string name="hawl_date_cancel">Annuler</string>
+    
+    <string name="calendar_calculated_notice">Les dates hégiriennes sont calculées astronomiquement et peuvent différer des annonces locales.</string>
+
+    <string name="monthly_selected_state">Date sélectionnée</string>
+    <string name="monthly_today_state">Aujourd\'hui</string>
+    <string name="monthly_today_selected_state">Aujourd\'hui, date sélectionnée</string>
+    <string name="monthly_weekday_monday_short">Lun</string>
+    <string name="monthly_weekday_tuesday_short">Mar</string>
+    <string name="monthly_weekday_wednesday_short">Mer</string>
+    <string name="monthly_weekday_thursday_short">Jeu</string>
+    <string name="monthly_weekday_friday_short">Ven</string>
+    <string name="monthly_weekday_saturday_short">Sam</string>
+    <string name="monthly_weekday_sunday_short">Dim</string>
+    <string name="monthly_weekday_monday">Lundi</string>
+    <string name="monthly_weekday_tuesday">Mardi</string>
+    <string name="monthly_weekday_wednesday">Mercredi</string>
+    <string name="monthly_weekday_thursday">Jeudi</string>
+    <string name="monthly_weekday_friday">Vendredi</string>
+    <string name="monthly_weekday_saturday">Samedi</string>
+    <string name="monthly_weekday_sunday">Dimanche</string>
+    <string name="qibla_title">Qibla</string>
+    <string name="qibla_open">Ouvrir la boussole de la Qibla</string>
+    <string name="qibla_back">Retour</string>
+    <string name="qibla_aligned">Face à la Qibla</string>
+    <string name="qibla_turn_to_align">Tournez jusqu\'à aligner le repère avec l\'aiguille</string>
+    <string name="qibla_calibrate">La boussole doit être calibrée — effectuez un mouvement en huit avec le téléphone, loin des objets métalliques et aimants.</string>
+    <string name="qibla_hint">Fonctionne à plat ou verticalement. Éloignez des objets métalliques, aimants et coques magnétiques.</string>
+    <string name="qibla_no_sensor">Boussole indisponible</string>
+    <string name="qibla_no_sensor_hint">Cet appareil n\'a pas de capteur de boussole. La Qibla depuis votre position est à %1$s (%2$s) par rapport au nord géographique.</string>
+    <string name="qibla_accessibility">Direction de la Qibla %1$s, %2$s depuis le nord géographique, depuis %3$s</string>
+
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_location">Localisation</string>
+    <string name="settings_location_detecting">Détection de votre position…</string>
+    <string name="settings_location_error_permission">L\'autorisation de localisation est requise pour calculer les horaires de prière.</string>
+    <string name="settings_location_error_disabled">La localisation est désactivée. Veuillez l\'activer pour détecter votre position.</string>
+    <string name="settings_location_error_unavailable">Impossible d\'obtenir une position. Veuillez réessayer à l\'extérieur ou vérifier le signal GPS.</string>
+    <string name="settings_location_updated">Position mise à jour : %1$s</string>
+    <string name="settings_location_current">Position actuelle</string>
+    <string name="settings_location_gps_hint">Appuyez pour détecter votre position GPS. La localisation est facultative.</string>
+    <string name="settings_location_gps_action">Utiliser la position GPS actuelle</string>
+    <string name="settings_location_coordinates">%1$.4f, %2$.4f</string>
+    <string name="settings_location_manual_title">Saisir les coordonnées</string>
+    <string name="settings_location_manual_description">Définir la ville, la latitude et la longitude sans accorder l\'accès à la localisation</string>
+    <string name="settings_location_manual_city">Ville</string>
+    <string name="settings_location_manual_latitude">Latitude</string>
+    <string name="settings_location_manual_longitude">Longitude</string>
+    <string name="settings_location_manual_save">Enregistrer</string>
+    <string name="settings_location_manual_cancel">Annuler</string>
+    <string name="settings_location_manual_invalid">Saisissez un nom de ville et une latitude (−90 à 90) et une longitude (−180 à 180) valides.</string>
+
+    <string name="settings_zakat_currency_title">Devise de la Zakat</string>
+    <string name="settings_zakat_currency_label">Devise</string>
+
+    <string name="settings_calculation_title">Paramètres de calcul</string>
+    <string name="settings_method_label">Méthode</string>
+    <string name="settings_high_latitudes_label">Règle des hautes latitudes</string>
+    <string name="settings_madhab_label">Madhab</string>
+
+    <string name="settings_reminders_title">Alarmes &amp; Rappels</string>
+    <string name="settings_reminders_mute">Mettre les notifications en sourdine</string>
+    <string name="settings_reminders_mute_description">Désactiver toutes les alertes de prière</string>
+    <string name="settings_reminders_vibration">Alertes par vibration</string>
+    <string name="settings_reminders_vibration_description">Faire vibrer l\'appareil aux heures de prière</string>
+    <string name="settings_silent_mode_title">Mode silencieux prière</string>
+    <string name="settings_silent_mode_description">Met le téléphone en silencieux après chaque Adhan, puis rétablit la sonnerie précédente</string>
+    <string name="settings_silent_mode_offset_title">Démarrer après l\'Adhan</string>
+    <string name="settings_silent_mode_offset_now">Immédiatement</string>
+    <string name="settings_silent_mode_offset_5">5 min</string>
+    <string name="settings_silent_mode_offset_10">10 min</string>
+    <string name="settings_silent_mode_offset_15">15 min</string>
+    <string name="settings_silent_mode_duration_title">Durée en silencieux</string>
+    <string name="settings_silent_mode_duration_15">15 min</string>
+    <string name="settings_silent_mode_duration_20">20 min</string>
+    <string name="settings_silent_mode_duration_30">30 min</string>
+
+    <string name="settings_reminders_white_days_title">Rappel de jeûne des Jours Blancs</string>
+    <string name="settings_reminders_white_days_description">Rappel au Maghrib précédant le premier Jour Blanc</string>
+
+    <string name="notification_white_days_title">Les Jours Blancs commencent ce soir</string>
+    <string name="notification_white_days_message">Les 13, 14 et 15 sont les Jours Blancs. Jeûnez demain si vous en avez l\'intention.</string>
+
+    <string name="notification_prayer_title">C\'est l\'heure de %1$s</string>
+    <string name="notification_prayer_message">Il est l\'heure d\'accomplir la prière de %1$s.</string>
+    <string name="notification_pre_prayer_title">Rappel : l\'heure de %1$s approche</string>
+    <string name="notification_pre_prayer_message">Prière imminente dans quelques minutes.</string>
+
+    <string name="settings_reminders_pre_prayer">Délai du rappel pré-prière</string>
+    <string name="settings_reminders_pre_prayer_value">%1$d minutes avant</string>
+    <string name="settings_reminders_pre_prayer_accessibility">%1$d minutes avant la prière</string>
+
+    <string name="settings_calendar_hijri_offset">Ajustement du calendrier hégirien</string>
+    <string name="settings_calendar_hijri_offset_zero">0 jour</string>
+    <plurals name="settings_calendar_hijri_offset_plus">
+        <item quantity="one">+%d jour</item>
+        <item quantity="many">+%d jours</item>
+        <item quantity="other">+%d jours</item>
+    </plurals>
+    <plurals name="settings_calendar_hijri_offset_minus">
+        <item quantity="one">−%d jour</item>
+        <item quantity="many">−%d jours</item>
+        <item quantity="other">−%d jours</item>
+    </plurals>
+    <string name="settings_calendar_hijri_offset_accessibility">Décalage de %1$s</string>
+
+    <string name="settings_permission_notifications_title">Notifications</string>
+    <string name="settings_permission_notifications_description">Recevoir les rappels de prière</string>
+    <string name="settings_permission_notifications_allow">Autoriser les notifications</string>
+    <string name="settings_permission_notifications_state_allowed">Autorisé</string>
+    <string name="settings_permission_notifications_state_not_allowed">Non autorisé</string>
+
+    <string name="settings_permission_exact_alarms_title">Alarmes exactes</string>
+    <string name="settings_permission_exact_alarms_enabled">Délivrer les rappels à l\'heure exacte</string>
+    <string name="settings_permission_exact_alarms_disabled">Délivrer les rappels à l\'heure exacte</string>
+    <string name="settings_permission_exact_alarms_allow">Autoriser les alarmes exactes</string>
+    <string name="settings_permission_exact_alarms_state_allowed">Autorisé</string>
+    <string name="settings_permission_exact_alarms_state_not_allowed">Non autorisé</string>
+    <string name="settings_permission_silent_mode_title">Accès Ne pas déranger</string>
+    <string name="settings_permission_silent_mode_description">Requis pour modifier et restaurer la sonnerie du téléphone pendant la prière</string>
+    <string name="settings_permission_silent_mode_allow">Ouvrir les paramètres</string>
+    <string name="settings_permission_silent_mode_state_allowed">Autorisé</string>
+    <string name="settings_permission_silent_mode_state_not_allowed">Non autorisé</string>
+
+    <string name="settings_method_mwl">Ligue Islamique Mondiale</string>
+    <string name="settings_method_isna">Amérique du Nord (ISNA)</string>
+    <string name="settings_method_egypt">Autorité Générale Égyptienne</string>
+    <string name="settings_method_umm_al_qura">Oumm al-Qura (La Mecque)</string>
+    <string name="settings_method_karachi">Karachi (Univ. des Sciences Islamiques)</string>
+    <string name="settings_method_kuwait">Koweït</string>
+    <string name="settings_method_qatar">Qatar</string>
+    <string name="settings_method_dubai">Dubaï</string>
+    <string name="settings_method_singapore">Singapour</string>
+    <string name="settings_method_moon_sighting">Comité d\'observation de la lune</string>
+
+    <string name="settings_madhab_shafi">Chafi\'ite / Malikite / Hanbalite</string>
+    <string name="settings_madhab_hanafi">Hanafite</string>
+
+    <string name="settings_high_lat_middle_of_night">Milieu de la nuit</string>
+    <string name="settings_high_lat_seventh_of_night">Septième de la nuit</string>
+    <string name="settings_high_lat_twilight_angle">Angle du crépuscule</string>
+
+    <!-- Theme Settings -->
+    <string name="settings_theme_title">Thème de l\'application</string>
+    <string name="settings_theme_dark_mode">Apparence</string>
+    <string name="settings_theme_dark_mode_desc">Choisissez entre le thème du système, clair ou sombre</string>
+    <string name="settings_theme_option_system">Système</string>
+    <string name="settings_theme_option_light">Clair</string>
+    <string name="settings_theme_option_dark">Sombre</string>
+
+    <!-- Language Settings -->
+    <string name="settings_language_title">Langue</string>
+    <string name="settings_language_label">Langue de l\'application</string>
+    <string name="settings_language_system">Langue du système</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_ar">العربية (Arabe)</string>
+    <string name="settings_language_fr">Français</string>
+    <string name="settings_language_nl">Nederlands (Néerlandais)</string>
+
+    <!-- Privacy -->
+    <string name="settings_privacy_title">Confidentialité</string>
+    <string name="settings_privacy_policy">Politique de confidentialité</string>
+    <string name="settings_privacy_policy_description">Découvrez comment Salati traite les données de localisation et de réseau</string>
+    <string name="settings_privacy_policy_open">Ouvrir la politique de confidentialité</string>
+    <string name="settings_support_title">Assistance</string>
+    <string name="settings_support_report_bug">Signaler un bug</string>
+    <string name="settings_support_email_open">Envoyer un e-mail à salati@sulfuro.eu</string>
+
+
+    <!-- Zakat Screen -->
+    <string name="zakat_title">Zakat</string>
+    <string name="zakat_subtitle">Calculez facilement votre contribution annuelle de Zakat</string>
+
+    <string name="zakat_tab_gold">Or</string>
+    <string name="zakat_tab_silver">Argent</string>
+
+    <string name="zakat_current_gold_price">Prix actuel de l\'or</string>
+    <string name="zakat_current_silver_price">Prix actuel de l\'argent</string>
+    <string name="zakat_edit_gold_price">Modifier le prix de l\'or manuellement</string>
+    <string name="zakat_edit_silver_price">Modifier le prix de l\'argent manuellement</string>
+    <string name="zakat_refresh_price">Actualiser le cours en direct</string>
+    <string name="zakat_price_updating">Récupération du dernier cours…</string>
+    <string name="zakat_price_updated_at">Mis à jour le %1$s</string>
+    <string name="zakat_price_update_failed">Impossible de mettre à jour le cours — dernière valeur affichée</string>
+    <string name="zakat_price_never_updated">Pas encore actualisé — appuyez sur actualiser</string>
+
+    <string name="zakat_cash_title">Calculer la Zakat sur les liquidités</string>
+    <string name="zakat_nisab_value_title">Valeur du Nissab</string>
+    <string name="zakat_nisab_gold_equiv">Équivalent à 85g d\'or 24 carats</string>
+    <string name="zakat_nisab_silver_equiv">Équivalent à 595g d\'argent</string>
+
+    <string name="zakat_cash_assets_label">Montant total de vos avoirs financiers</string>
+    <string name="zakat_cash_assets_desc">Inclut les espèces, comptes bancaires, épargne et investissements.</string>
+    <string name="zakat_cash_due">Zakat due sur les liquidités :</string>
+
+    <string name="zakat_jewelry_title">Calculer la Zakat sur les bijoux</string>
+    <string name="zakat_gold_jewelry_subtitle">Calculer la Zakat sur l\'or</string>
+    <string name="zakat_gold_jewelry_label">Poids de vos bijoux en or (grammes)</string>
+    <string name="zakat_gold_carat_label">Pureté de l\'or</string>
+    <string name="zakat_gold_carat_value">%1$d carats</string>
+    <string name="zakat_gold_due">Zakat due sur l\'or (seuil de 85g) :</string>
+
+    <string name="zakat_silver_jewelry_subtitle">Calculer la Zakat sur l\'argent</string>
+    <string name="zakat_silver_jewelry_label">Poids de vos bijoux en argent (grammes)</string>
+    <string name="zakat_estimated_value">Valeur estimée :</string>
+    <string name="zakat_silver_due">Zakat due sur l\'argent (seuil de 595g) :</string>
+
+    <string name="zakat_total_due_title">Total de la Zakat due</string>
+
+    <string name="zakat_unit_gram">g</string>
+
+    <!-- Threshold states -->
+    <string name="zakat_status_below_nisab">Inférieur au Nissab</string>
+    <string name="zakat_status_nisab_reached">Nissab atteint</string>
+
+    <string name="nav_daily">Jour</string>
+    <string name="nav_monthly">Mois</string>
+    <string name="nav_zakat">Zakat</string>
+    <string name="nav_settings">Paramètres</string>
+
+    <!-- Onboarding Flow -->
+    <string name="onboarding_welcome_title">Bienvenue sur Salati</string>
+    <string name="onboarding_welcome_subtitle">Votre compagnon islamique privé, précis et sans publicité</string>
+    <string name="onboarding_feat_prayers_title">Horaires de prière précis</string>
+    <string name="onboarding_feat_prayers_desc">Calculs astronomiques des prières adaptés à vos coordonnées précises dans le monde entier</string>
+    <string name="onboarding_feat_qibla_title">Boussole de la Qibla</string>
+    <string name="onboarding_feat_qibla_desc">Direction de haute précision vers la Sainte Kaaba avec compensation de l\'inclinaison 3D</string>
+    <string name="onboarding_feat_calendar_title">Calendrier &amp; événements islamiques</string>
+    <string name="onboarding_feat_calendar_desc">Calendrier hégirien, occasions islamiques marquantes et rappels des Jours Blancs</string>
+    <string name="onboarding_feat_zakat_title">Calculateur de Zakat</string>
+    <string name="onboarding_feat_zakat_desc">Évaluation instantanée du Nissab pour les liquidités, comptes, or et argent</string>
+    <string name="onboarding_btn_get_started">Commencer</string>
+    <string name="onboarding_btn_continue">Continuer</string>
+    <string name="onboarding_btn_back">Retour</string>
+    <string name="onboarding_btn_finish">Terminer &amp; Ouvrir Salati</string>
+    <string name="onboarding_location_title">Définir votre position</string>
+    <string name="onboarding_location_subtitle">Salati a besoin de vos coordonnées pour calculer les horaires de prière avec précision</string>
+    <string name="onboarding_location_auto">Détecter automatiquement ma position</string>
+    <string name="onboarding_location_auto_desc">Utiliser le GPS de l\'appareil pour déterminer votre position avec précision. Vous pouvez ignorer cette étape et conserver la position par défaut, ou saisir les coordonnées manuellement.</string>
+    <string name="onboarding_location_detect">Détecter ma position</string>
+    <string name="onboarding_location_skip">Ignorer pour l\'instant et utiliser la position par défaut</string>
+    <string name="onboarding_location_selected">Position sélectionnée</string>
+    <string name="onboarding_method_title">Méthode de calcul</string>
+    <string name="onboarding_method_subtitle">Choisissez la méthode de calcul standard pour votre région</string>
+    <string name="onboarding_notifications_title">Alarmes &amp; Notifications</string>
+    <string name="onboarding_notifications_subtitle">Configurez des rappels de prière ponctuels et des alarmes exactes</string>
+
+    <!-- Battery Optimization Help -->
+    <string name="battery_opt_title">Fiabilité des notifications</string>
+    <string name="battery_opt_desc">Si les notifications sont retardées ou silencieuses, l\'économiseur de batterie peut restreindre les alarmes. Désactiver l\'optimisation de batterie garantit des alertes ponctuelles.</string>
+    <string name="battery_opt_btn_open">Ouvrir les paramètres de batterie</string>
+    <string name="battery_opt_oem_title">Conseils spécifiques par fabricant</string>
+    <string name="battery_opt_device_detected">Instructions pour votre %1$s</string>
+    <string name="battery_opt_xiaomi_title">Xiaomi / MIUI / HyperOS</string>
+    <string name="battery_opt_xiaomi_desc">Activez \'Lancement automatique\', réglez l\'économiseur sur \'Pas de restrictions\' et verrouillez Salati dans les applications récentes.</string>
+    <string name="battery_opt_samsung_title">Samsung / One UI</string>
+    <string name="battery_opt_samsung_desc">Allez dans Batterie -&gt; Limites d\'utilisation en arrière-plan -&gt; Excluez Salati des \'Applications en veille\' et \'Veille profonde\'.</string>
+    <string name="battery_opt_oppo_title">Oppo / Realme / OnePlus</string>
+    <string name="battery_opt_oppo_desc">Activez \'Autoriser l\'activité en arrière-plan\' et \'Lancement automatique\' dans la gestion de batterie.</string>
+    <string name="battery_opt_huawei_title">Huawei / EMUI</string>
+    <string name="battery_opt_huawei_desc">Allez dans Paramètres -&gt; Batterie -&gt; Lancement d\'application -&gt; Réglez Salati sur \'Gérer manuellement\' (Lancement auto &amp; Exécution arrière-plan).</string>
+    <string name="battery_opt_generic_title">Google Pixel / Autre Android</string>
+    <string name="battery_opt_generic_desc">Allez dans Paramètres -&gt; Applications -&gt; Salati -&gt; Batterie -&gt; Choisissez \'Non restreinte\' pour garantir le bon déclenchement des alarmes.</string>
+    <string name="battery_opt_show_all">Afficher les instructions pour d\'autres appareils</string>
+    <string name="battery_opt_hide_all">Masquer les instructions</string>
+    <string name="battery_opt_close">J\'ai compris</string>
+    <string name="battery_opt_state_unrestricted">Sans restriction</string>
+    <string name="battery_opt_state_restricted">Restreint</string>
+    <string name="battery_opt_state_unrestricted_desc">L\'économiseur de batterie ne retarde pas les alarmes de prière</string>
+    <string name="battery_opt_state_restricted_desc">Restreint : l\'économiseur de batterie peut retarder les alarmes de prière</string>
+    <string name="widget_next_prayer">Prochaine prière</string>
+    <string name="widget_placeholder_time">--:--</string>
+    <string name="widget_dot"> · </string>
+    <string name="widget_location_placeholder">Lieu</string>
+</resources>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — Salati</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: Georgia, "Times New Roman", serif; max-width: 42rem; margin: 2rem auto; padding: 0 1.25rem; line-height: 1.55; }
+    h1, h2, h3 { font-family: system-ui, sans-serif; }
+    a { color: inherit; }
+    code { font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <p><a href="./">Salati</a></p>
+  <h1>Privacy Policy for Salati</h1>
+  <p><strong>Last updated:</strong> September 3, 2026</p>
+  <p><strong>Salati</strong> is an independent, privacy-first Islamic prayer companion developed by <strong>sulfuro25</strong> (application ID: <code>com.sulfuro.salati</code>).</p>
+
+  <h2>1. Core privacy principles</h2>
+  <ul>
+    <li><strong>No user accounts.</strong> Salati does not require, support, or use accounts, registrations, passwords, or emails.</li>
+    <li><strong>No advertisements.</strong> Zero advertisements, banners, or advertising SDKs.</li>
+    <li><strong>No analytics or telemetry.</strong> No tracking tools, behavioral analytics, telemetry SDKs, or crash-reporting trackers.</li>
+    <li><strong>No data selling or advertising use.</strong></li>
+    <li><strong>Local-first storage.</strong> Preferences, calculations, configured coordinates, and cached responses stay in Android’s sandboxed storage.</li>
+  </ul>
+
+  <h2>2. Device permissions</h2>
+  <h3>Location (<code>ACCESS_FINE_LOCATION</code>, <code>ACCESS_COARSE_LOCATION</code>)</h3>
+  <p>Used only when you tap “Detect my location” / “Use current GPS location” to obtain coordinates for prayer times and Qibla. Location is optional. You can skip GPS during onboarding, keep the default Brussels coordinates, or enter city name, latitude, and longitude manually without granting location permission. Salati never reads location in the background.</p>
+  <p>When monthly prayer timetables are retrieved, the <em>configured</em> latitude and longitude (default, GPS, or manual) are sent over HTTPS to the Aladhan API (<code>api.aladhan.com</code>).</p>
+
+  <h3>Notifications (<code>POST_NOTIFICATIONS</code>)</h3>
+  <p>On Android 13+, this permission allows prayer alerts and optional White Days reminders. You can mute all notifications or configure them per prayer.</p>
+
+  <h3>Exact alarms (<code>SCHEDULE_EXACT_ALARM</code>)</h3>
+  <p>Used solely to schedule precise local alarms for prayer notifications and pre-reminders. If access is unavailable, Salati falls back to inexact alarms and does not crash.</p>
+
+  <h3>Do Not Disturb / ringer policy (<code>ACCESS_NOTIFICATION_POLICY</code>)</h3>
+  <p>Used only if you enable optional prayer silent mode. Salati checks that policy access is granted, silences the ringer for a bounded prayer window, and restores your previous ringer mode. It never leaves the device in a permanent silent or DND state.</p>
+
+  <h2>3. External network communications</h2>
+  <ol>
+    <li><strong>Prayer times API (Aladhan, <code>api.aladhan.com</code>):</strong> monthly schedules using configured latitude, longitude, year, month, calculation method, school, and high-latitude rule. No account, advertising ID, or analytics identifier is sent by the app.</li>
+    <li><strong>Currency feed</strong> (<code>cdn.jsdelivr.net</code>, fallback <code>latest.currency-api.pages.dev</code>): used when you refresh metal prices. Coordinates are not included.</li>
+  </ol>
+  <p>Connections use HTTPS. Service operators can see standard connection metadata such as the device’s public IP address. Salati does not operate a developer backend.</p>
+
+  <h2>4. Data retention and deletion</h2>
+  <p>All data Salati itself retains lives in your device’s private application sandbox. Android cloud backup and device-to-device transfer of this app data are disabled. Clearing app storage or uninstalling removes local preferences, coordinates, and caches.</p>
+
+  <h2>5. Contact</h2>
+  <ul>
+    <li>Repository: <a href="https://github.com/Sulfur0o/Salati">https://github.com/Sulfur0o/Salati</a></li>
+    <li>Questions and support: <a href="https://github.com/Sulfur0o/Salati/issues">https://github.com/Sulfur0o/Salati/issues</a></li>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<resources>
+    <string name="app_name">Salati</string>
+
+    <string name="daily_today">Today</string>
+    <string name="daily_location_context">%1$s</string>
+    <string name="daily_next_event">Next prayer</string>
+    <string name="daily_display_only">Display only</string>
+    <string name="daily_middle_of_night">Middle of the night</string>
+    <string name="daily_last_third_of_night">Last third of the night</string>
+    <string name="daily_loading">Loading prayer times</string>
+    <string name="daily_error_title">Unable to load prayer times</string>
+    <string name="daily_error_message">Prayer times are not available right now. Try again when data is available.</string>
+    <string name="daily_retry">Retry</string>
+
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_sunrise">Sunrise</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <string name="daily_event_accessibility">%1$s at %2$s</string>
+    <string name="daily_event_display_only_accessibility">%1$s at %2$s, display only</string>
+    <string name="daily_prayer_accessibility">%1$s at %2$s</string>
+    <string name="daily_prayer_current_accessibility">%1$s at %2$s, current</string>
+    <string name="daily_prayer_display_only_accessibility">%1$s at %2$s, display only</string>
+    <string name="daily_prayer_current_display_only_accessibility">%1$s at %2$s, current, display only</string>
+    <string name="monthly_today_action">Today</string>
+    <string name="monthly_previous_month">Previous month</string>
+    <string name="monthly_next_month">Next month</string>
+    <string name="monthly_loading">Loading calendar...</string>
+    <string name="monthly_retry">Retry</string>
+    <string name="monthly_error_title">Data Unavailable</string>
+    <string name="monthly_error_message">Unable to load the monthly prayer schedule. Please check your connection.</string>
+
+    <string name="event_islamic_new_year">Islamic New Year</string>
+    <string name="event_ashura">Ashura</string>
+    <string name="event_ramadan_start">Beginning of Ramadan</string>
+    <string name="event_eid_al_fitr">Eid al-Fitr</string>
+    <string name="event_arafah">Day of \'Arafah</string>
+    <string name="event_eid_al_adha">Eid al-Adha</string>
+    <string name="event_white_day">White Day</string>
+    <string name="event_zakat_hawl">Zakat Hawl due</string>
+    <string name="hawl_milestone_title">Zakat Hawl</string>
+    <string name="hawl_milestone_not_set">Set the date your wealth first reached Nisab</string>
+    <string name="hawl_milestone_summary">Due %1$s · Nisab reached %2$s</string>
+    <string name="hawl_set_date">Set date</string>
+    <string name="hawl_view_date">View</string>
+    <string name="hawl_clear_date">Clear</string>
+    <string name="hawl_date_confirm">Save</string>
+    <string name="hawl_date_cancel">Cancel</string>
+    
+    <string name="calendar_calculated_notice">Hijri dates are calculated and may differ from local announcements.</string>
+
+    <string name="monthly_selected_state">Selected date</string>
+    <string name="monthly_today_state">Today</string>
+    <string name="monthly_today_selected_state">Today, selected date</string>
+    <string name="monthly_weekday_monday_short">Mon</string>
+    <string name="monthly_weekday_tuesday_short">Tue</string>
+    <string name="monthly_weekday_wednesday_short">Wed</string>
+    <string name="monthly_weekday_thursday_short">Thu</string>
+    <string name="monthly_weekday_friday_short">Fri</string>
+    <string name="monthly_weekday_saturday_short">Sat</string>
+    <string name="monthly_weekday_sunday_short">Sun</string>
+    <string name="monthly_weekday_monday">Monday</string>
+    <string name="monthly_weekday_tuesday">Tuesday</string>
+    <string name="monthly_weekday_wednesday">Wednesday</string>
+    <string name="monthly_weekday_thursday">Thursday</string>
+    <string name="monthly_weekday_friday">Friday</string>
+    <string name="monthly_weekday_saturday">Saturday</string>
+    <string name="monthly_weekday_sunday">Sunday</string>
+    <string name="qibla_title">Qibla</string>
+    <string name="qibla_open">Open Qibla compass</string>
+    <string name="qibla_back">Back</string>
+    <string name="qibla_aligned">Facing the Qibla</string>
+    <string name="qibla_turn_to_align">Turn until the marker meets the pointer</string>
+    <string name="qibla_calibrate">Compass needs calibrating — move your phone in a figure-eight motion, away from metal and magnets.</string>
+    <string name="qibla_hint">Works held flat or upright. Keep away from metal, magnets and phone cases with magnetic clasps.</string>
+    <string name="qibla_no_sensor">Compass unavailable</string>
+    <string name="qibla_no_sensor_hint">This device has no compass sensor. The Qibla from your saved location is %1$s (%2$s) from true north.</string>
+    <string name="qibla_accessibility">Qibla direction %1$s, %2$s from true north, from %3$s</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_location">Location</string>
+    <string name="settings_location_detecting">Getting your location…</string>
+    <string name="settings_location_error_permission">Location permission is needed to calculate prayer times for your position.</string>
+    <string name="settings_location_error_disabled">Location is turned off on this device. Please turn it on to detect your location.</string>
+    <string name="settings_location_error_unavailable">Couldn\'t get a location fix. Please try again outdoors or check your GPS signal.</string>
+    <string name="settings_location_updated">Location updated to %1$s</string>
+    <string name="settings_location_current">Current location</string>
+    <string name="settings_location_gps_hint">Tap to detect your current GPS location. Location is optional.</string>
+    <string name="settings_location_gps_action">Use current GPS location</string>
+    <string name="settings_location_coordinates">%1$.4f, %2$.4f</string>
+    <string name="settings_location_manual_title">Enter coordinates</string>
+    <string name="settings_location_manual_description">Set city name, latitude, and longitude without granting location access</string>
+    <string name="settings_location_manual_city">City name</string>
+    <string name="settings_location_manual_latitude">Latitude</string>
+    <string name="settings_location_manual_longitude">Longitude</string>
+    <string name="settings_location_manual_save">Save</string>
+    <string name="settings_location_manual_cancel">Cancel</string>
+    <string name="settings_location_manual_invalid">Enter a city name and valid latitude (−90 to 90) and longitude (−180 to 180).</string>
+
+    <string name="settings_zakat_currency_title">Zakat Currency</string>
+    <string name="settings_zakat_currency_label">Currency</string>
+
+    <string name="settings_calculation_title">Calculation Settings</string>
+    <string name="settings_method_label">Method</string>
+    <string name="settings_high_latitudes_label">High Latitudes Rule</string>
+    <string name="settings_madhab_label">Madhab</string>
+
+    <string name="settings_reminders_title">Alarms &amp; Reminders</string>
+    <string name="settings_reminders_mute">Mute Notifications</string>
+    <string name="settings_reminders_mute_description">Disable all alarm alerts</string>
+    <string name="settings_reminders_vibration">Vibration Alerts</string>
+    <string name="settings_reminders_vibration_description">Vibrate the device at prayer times</string>
+    <string name="settings_silent_mode_title">Prayer silent mode</string>
+    <string name="settings_silent_mode_description">Silence the phone after each Adhan, then restore the previous ringer mode</string>
+    <string name="settings_silent_mode_offset_title">Start after Adhan</string>
+    <string name="settings_silent_mode_offset_now">Now</string>
+    <string name="settings_silent_mode_offset_5">5 min</string>
+    <string name="settings_silent_mode_offset_10">10 min</string>
+    <string name="settings_silent_mode_offset_15">15 min</string>
+    <string name="settings_silent_mode_duration_title">Silent duration</string>
+    <string name="settings_silent_mode_duration_15">15 min</string>
+    <string name="settings_silent_mode_duration_20">20 min</string>
+    <string name="settings_silent_mode_duration_30">30 min</string>
+
+    <string name="settings_reminders_white_days_title">White Days fasting reminder</string>
+    <string name="settings_reminders_white_days_description">Reminds you at Maghrib before the first White Day</string>
+
+    <string name="notification_white_days_title">White Days begin tonight</string>
+    <string name="notification_white_days_message">The 13th, 14th, and 15th are the White Days. Fast tomorrow if you intend to.</string>
+
+    <string name="notification_prayer_title">Time for %1$s</string>
+    <string name="notification_prayer_message">It is time to perform %1$s.</string>
+    <string name="notification_pre_prayer_title">Reminder: %1$s time is approaching</string>
+    <string name="notification_pre_prayer_message">Upcoming prayer in a few minutes.</string>
+
+    <string name="settings_reminders_pre_prayer">Pre-Prayer Alert Duration</string>
+    <string name="settings_reminders_pre_prayer_value">%1$d minutes before</string>
+    <string name="settings_reminders_pre_prayer_accessibility">%1$d minutes before prayer</string>
+
+    <string name="settings_calendar_hijri_offset">Hijri Date Offset</string>
+    <string name="settings_calendar_hijri_offset_zero">0 days</string>
+    <plurals name="settings_calendar_hijri_offset_plus">
+        <item quantity="one">+%d day</item>
+        <item quantity="other">+%d days</item>
+    </plurals>
+    <plurals name="settings_calendar_hijri_offset_minus">
+        <item quantity="one">−%d day</item>
+        <item quantity="other">−%d days</item>
+    </plurals>
+    <string name="settings_calendar_hijri_offset_accessibility">%1$s offset</string>
+
+
+    <string name="settings_permission_notifications_title">Notifications</string>
+    <string name="settings_permission_notifications_description">Receive prayer reminders</string>
+    <string name="settings_permission_notifications_allow">Allow notifications</string>
+    <string name="settings_permission_notifications_state_allowed">Allowed</string>
+    <string name="settings_permission_notifications_state_not_allowed">Not allowed</string>
+
+    <string name="settings_permission_exact_alarms_title">Exact Alarms</string>
+    <string name="settings_permission_exact_alarms_enabled">Deliver reminders on time</string>
+    <string name="settings_permission_exact_alarms_disabled">Deliver reminders on time</string>
+    <string name="settings_permission_exact_alarms_allow">Allow exact alarms</string>
+    <string name="settings_permission_exact_alarms_state_allowed">Allowed</string>
+    <string name="settings_permission_exact_alarms_state_not_allowed">Not allowed</string>
+    <string name="settings_permission_silent_mode_title">Do Not Disturb access</string>
+    <string name="settings_permission_silent_mode_description">Required to change and restore the phone ringer during prayer</string>
+    <string name="settings_permission_silent_mode_allow">Open settings</string>
+    <string name="settings_permission_silent_mode_state_allowed">Allowed</string>
+    <string name="settings_permission_silent_mode_state_not_allowed">Not allowed</string>
+
+    <string name="settings_method_mwl">Muslim World League</string>
+    <string name="settings_method_isna">North America (ISNA)</string>
+    <string name="settings_method_egypt">Egyptian Authority</string>
+    <string name="settings_method_umm_al_qura">Umm al-Qura (Saudi)</string>
+    <string name="settings_method_karachi">Karachi (Univ of Islamic Sciences)</string>
+    <string name="settings_method_kuwait">Kuwait</string>
+    <string name="settings_method_qatar">Qatar</string>
+    <string name="settings_method_dubai">Dubai</string>
+    <string name="settings_method_singapore">Singapore</string>
+    <string name="settings_method_moon_sighting">Moon Sighting Committee</string>
+
+    <string name="settings_madhab_shafi">Shafi / Maliki / Hanbali</string>
+    <string name="settings_madhab_hanafi">Hanafi</string>
+
+    <string name="settings_high_lat_middle_of_night">Middle of the Night</string>
+    <string name="settings_high_lat_seventh_of_night">Seventh of the Night</string>
+    <string name="settings_high_lat_twilight_angle">Twilight Angle</string>
+
+    <!-- Theme Settings -->
+    <string name="settings_theme_title">App Theme</string>
+    <string name="settings_theme_dark_mode">Appearance</string>
+    <string name="settings_theme_dark_mode_desc">Choose between your device\'s theme, light, or dark appearance</string>
+    <string name="settings_theme_option_system">System</string>
+    <string name="settings_theme_option_light">Light</string>
+    <string name="settings_theme_option_dark">Dark</string>
+
+    <!-- Privacy -->
+    <string name="settings_privacy_title">Privacy</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_privacy_policy_description">Learn how Salati handles location and network data</string>
+    <string name="settings_privacy_policy_open">Open privacy policy</string>
+    <string name="privacy_policy_url" translatable="false">https://salati.sulfuro.xyz/privacy.html</string>
+    <string name="settings_support_title">Support</string>
+    <string name="settings_support_report_bug">Report a bug</string>
+    <string name="settings_support_email_address" translatable="false">salati@sulfuro.eu</string>
+    <string name="settings_support_email_open">Email salati@sulfuro.eu</string>
+
+    <!-- Zakat Screen -->
+    <string name="zakat_title">Zakat</string>
+    <string name="zakat_subtitle">Calculate your annual Zakat contribution easily</string>
+
+    <string name="zakat_tab_gold">Gold</string>
+    <string name="zakat_tab_silver">Silver</string>
+
+    <string name="zakat_current_gold_price">Current gold price</string>
+    <string name="zakat_current_silver_price">Current silver price</string>
+    <string name="zakat_edit_gold_price">Edit gold price manually</string>
+    <string name="zakat_edit_silver_price">Edit silver price manually</string>
+    <string name="zakat_refresh_price">Refresh live price</string>
+    <string name="zakat_price_updating">Fetching latest price…</string>
+    <string name="zakat_price_updated_at">Updated %1$s</string>
+    <string name="zakat_price_update_failed">Couldn\'t update price — showing last saved value</string>
+    <string name="zakat_price_never_updated">Not updated yet — tap refresh</string>
+
+    <string name="zakat_cash_title">Calculate Zakat on Cash</string>
+    <string name="zakat_nisab_value_title">Nisab Value</string>
+    <string name="zakat_nisab_gold_equiv">Equivalent to 85g of 24k gold</string>
+    <string name="zakat_nisab_silver_equiv">Equivalent to 595g of silver</string>
+
+    <string name="zakat_cash_assets_label">Total amount of your financial assets</string>
+    <string name="zakat_cash_assets_desc">Include cash, bank accounts, savings, and investments.</string>
+    <string name="zakat_cash_due">Zakat due on cash:</string>
+
+    <string name="zakat_jewelry_title">Calculate Zakat on Jewelry</string>
+    <string name="zakat_gold_jewelry_subtitle">Calculate Zakat on Gold</string>
+    <string name="zakat_gold_jewelry_label">Weight of your gold jewelry (grams)</string>
+    <string name="zakat_gold_carat_label">Gold purity</string>
+    <string name="zakat_gold_carat_value">%1$dk</string>
+    <string name="zakat_gold_due">Zakat due on gold (85g threshold):</string>
+
+    <string name="zakat_silver_jewelry_subtitle">Calculate Zakat on Silver</string>
+    <string name="zakat_silver_jewelry_label">Weight of your silver jewelry (grams)</string>
+    <string name="zakat_estimated_value">Estimated value:</string>
+    <string name="zakat_silver_due">Zakat due on silver (595g threshold):</string>
+
+    <string name="zakat_total_due_title">Total Zakat Due</string>
+
+    <string name="zakat_unit_gram">g</string>
+
+    <!-- Threshold states -->
+    <string name="zakat_status_below_nisab">Below Nisab</string>
+    <string name="zakat_status_nisab_reached">Nisab reached</string>
+
+    <!-- Fatwa on Nisab (short version in calculator) -->
+
+    <!-- Understand Tab -->
+
+    <!-- Fatwas Tab -->
+
+    <string name="nav_daily">Daily</string>
+    <string name="nav_monthly">Monthly</string>
+    <string name="nav_zakat">Zakat</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Onboarding Flow -->
+    <string name="onboarding_welcome_title">Welcome to Salati</string>
+    <string name="onboarding_welcome_subtitle">Your private, accurate, and ad-free Islamic companion</string>
+    <string name="onboarding_feat_prayers_title">Accurate Prayer Times</string>
+    <string name="onboarding_feat_prayers_desc">Calculated astronomical prayer times tailored to your exact coordinates worldwide</string>
+    <string name="onboarding_feat_qibla_title">Qibla Compass</string>
+    <string name="onboarding_feat_qibla_desc">High-precision direction to the Holy Kaaba with 3D tilt compensation</string>
+    <string name="onboarding_feat_calendar_title">Islamic Calendar &amp; Events</string>
+    <string name="onboarding_feat_calendar_desc">Hijri calendar, significant Islamic occasions, and White Days reminders</string>
+    <string name="onboarding_feat_zakat_title">Zakat Calculator</string>
+    <string name="onboarding_feat_zakat_desc">Instant Nisab valuation for cash, bank assets, gold, and silver</string>
+    <string name="onboarding_btn_get_started">Get Started</string>
+    <string name="onboarding_btn_continue">Continue</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_finish">Finish &amp; Open Salati</string>
+    <string name="onboarding_location_title">Set Your Location</string>
+    <string name="onboarding_location_subtitle">Salati requires coordinates to calculate local prayer times accurately</string>
+    <string name="onboarding_location_auto">Automatically detect my location</string>
+    <string name="onboarding_location_auto_desc">Use device GPS to determine your location with high precision. You can skip this and keep the default, or enter coordinates manually.</string>
+    <string name="onboarding_location_detect">Detect my location</string>
+    <string name="onboarding_location_skip">Skip for now and use the default location</string>
+    <string name="onboarding_location_selected">Location selected</string>
+    <string name="onboarding_method_title">Calculation Method</string>
+    <string name="onboarding_method_subtitle">Choose the standard calculation method for your region</string>
+    <string name="onboarding_notifications_title">Alarms &amp; Notifications</string>
+    <string name="onboarding_notifications_subtitle">Configure on-time prayer reminders and exact alarms</string>
+
+    <!-- Offline & Reliability -->
+
+    <!-- Battery Optimization Help -->
+    <string name="battery_opt_title">Notification Reliability</string>
+    <string name="battery_opt_desc">If notifications are delayed or silenced, your device\'s battery saver may be restricting background alarms. Disabling battery optimization ensures on-time prayer alerts.</string>
+    <string name="battery_opt_btn_open">Open Battery Settings</string>
+    <string name="battery_opt_oem_title">Manufacturer Specific Advice</string>
+    <string name="battery_opt_device_detected">Instructions for your %1$s</string>
+    <string name="battery_opt_xiaomi_title">Xiaomi / MIUI / HyperOS</string>
+    <string name="battery_opt_xiaomi_desc">Enable \'Autostart\', set Battery Saver to \'No restrictions\', and lock Salati in the Recent Apps tray.</string>
+    <string name="battery_opt_samsung_title">Samsung / One UI</string>
+    <string name="battery_opt_samsung_desc">Go to Battery -&gt; Background usage limits -&gt; Exclude Salati from \'Sleeping apps\' and \'Deep sleeping apps\'.</string>
+    <string name="battery_opt_oppo_title">Oppo / Realme / OnePlus</string>
+    <string name="battery_opt_oppo_desc">Enable \'Allow background activity\' and \'Allow auto-launch\' in App Battery Management.</string>
+    <string name="battery_opt_huawei_title">Huawei / EMUI</string>
+    <string name="battery_opt_huawei_desc">Go to Settings -&gt; Battery -&gt; App launch -&gt; Set Salati to \'Manage manually\' (enable Auto-launch &amp; Run in background).</string>
+    <string name="battery_opt_generic_title">Google Pixel / Other Android</string>
+    <string name="battery_opt_generic_desc">Go to Settings -&gt; Apps -&gt; Salati -&gt; Battery -&gt; Choose \'Unrestricted\' to ensure alarms fire reliably.</string>
+    <string name="battery_opt_show_all">Show instructions for other devices</string>
+    <string name="battery_opt_hide_all">Hide instructions for other devices</string>
+    <string name="battery_opt_close">Got It</string>
+    <string name="battery_opt_state_unrestricted">Unrestricted</string>
+    <string name="battery_opt_state_restricted">Restricted</string>
+    <string name="battery_opt_state_unrestricted_desc">Battery saver does not restrict prayer alarms</string>
+    <string name="battery_opt_state_restricted_desc">Restricted: system battery saver may delay prayer alarms</string>
+
+    <string name="widget_next_prayer">Next prayer</string>
+    <string name="widget_placeholder_time">--:--</string>
+    <string name="widget_dot"> · </string>
+    <string name="widget_location_placeholder">Location</string>
+
+    <!-- Language Settings -->
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_label">App Language</string>
+    <string name="settings_language_system">System default</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_ar">العربية (Arabic)</string>
+    <string name="settings_language_fr">Français (French)</string>
+    <string name="settings_language_nl">Nederlands (Dutch)</string>
+
+</resources>
