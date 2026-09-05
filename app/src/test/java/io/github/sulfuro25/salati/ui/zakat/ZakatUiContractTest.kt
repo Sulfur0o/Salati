@@ -45,10 +45,24 @@ class ZakatUiContractTest {
     fun hawlTrackerLivesOnZakatScreenNotCalendar() {
         val zakat = String(Files.readAllBytes(projectPath("src/main/java/io/github/sulfuro25/salati/ui/zakat/ZakatScreen.kt")))
         val calendar = String(Files.readAllBytes(projectPath("src/main/java/io/github/sulfuro25/salati/ui/calendar/CalendarScreen.kt")))
-        assertTrue(zakat.contains("HawlTrackerCard"))
+        // The Hawl milestone is edited on the Zakat screen (in the summary step) and only
+        // read by the calendar, which renders it as an event badge.
+        assertTrue(zakat.contains("hawl_milestone_title"))
         assertTrue(zakat.contains("zakatHawlStartEpochDay"))
         assertFalse(calendar.contains("HawlMilestoneCard"))
         assertFalse(calendar.contains("onHawlStartDateChanged"))
+    }
+
+    @Test
+    fun zakatScreenOffersTheCalendarHawlHandoff() {
+        val zakat = String(Files.readAllBytes(projectPath("src/main/java/io/github/sulfuro25/salati/ui/zakat/ZakatScreen.kt")))
+        assertTrue(zakat.contains("ZakatHawlCalendar.buildInsertIntent"))
+        assertTrue(zakat.contains("zakat_hawl_calendar_action"))
+    }
+
+    @Test
+    fun zakatWalkthroughExposesFourSteps() {
+        assertEquals(4, ZAKAT_STEP_COUNT)
     }
 
     private fun projectPath(relative: String): Path {

@@ -1,6 +1,15 @@
 package io.github.sulfuro25.salati.data.settings
 
+import io.github.sulfuro25.salati.core.computation.ZakatGoldItem
+import io.github.sulfuro25.salati.core.computation.ZakatSilverItem
 import kotlinx.serialization.Serializable
+
+/** How prayer times are rendered; [SYSTEM] follows the device's 12/24-hour setting. */
+object TimeFormatPreference {
+    const val SYSTEM = "SYSTEM"
+    const val TWELVE_HOUR = "12H"
+    const val TWENTY_FOUR_HOUR = "24H"
+}
 
 @Serializable
 data class CalculationSettings(
@@ -33,10 +42,23 @@ data class CalculationSettings(
     val zakatPricesUpdatedAt: Long = 0L,    // Epoch millis of the last successful price fetch (0 = never)
     val zakatPricesCurrencyCode: String = "", // Currency the stored metal prices were quoted in
     val zakatHawlStartEpochDay: Long? = null, // Date wealth first reached Nisab; due after 354 days
-    
+
+    // Zakat walkthrough inputs. Persisted rather than held in UI state because the
+    // assessment is revisited once a Hijri year later, and re-entering every piece of
+    // jewellery from scratch each time is the main thing that makes the tool tedious.
+    val zakatStandard: Int = 0,             // 0 = gold Nisab (85g), 1 = silver Nisab (595g)
+    val zakatCashOnHand: Double = 0.0,
+    val zakatBankBalance: Double = 0.0,
+    val zakatInvestments: Double = 0.0,
+    val zakatReceivables: Double = 0.0,
+    val zakatLiabilities: Double = 0.0,
+    val zakatGoldItems: List<ZakatGoldItem> = emptyList(),
+    val zakatSilverItems: List<ZakatSilverItem> = emptyList(),
+
     // Theme & Language
     val isDarkMode: Boolean? = null,
-    val appLanguageCode: String? = null // null = System default, "en", "ar", "fr", "nl"
+    val appLanguageCode: String? = null, // null = System default, "en", "ar", "fr", "nl"
+    val timeFormat: String = TimeFormatPreference.SYSTEM
 )
 
 fun CalculationSettings.safeZoneId(): java.time.ZoneId {
@@ -46,4 +68,18 @@ fun CalculationSettings.safeZoneId(): java.time.ZoneId {
 fun safeZoneId(timezoneId: String?): java.time.ZoneId {
     if (timezoneId.isNullOrBlank()) return java.time.ZoneId.systemDefault()
     return runCatching { java.time.ZoneId.of(timezoneId) }.getOrElse { java.time.ZoneId.systemDefault() }
+}
+
+/**
+ * Resolves the stored [CalculationSettings.timeFormat] against the device setting so
+ * every surface (Daily, Monthly, widget) renders the clock the same way.
+ *
+ * @param systemUses24Hour what `DateFormat.is24HourFormat` reports for this device.
+ */
+fun resolveUses24HourClock(timeFormat: String?, systemUses24Hour: Boolean): Boolean {
+    return when (timeFormat) {
+        TimeFormatPreference.TWELVE_HOUR -> false
+        TimeFormatPreference.TWENTY_FOUR_HOUR -> true
+        else -> systemUses24Hour
+    }
 }

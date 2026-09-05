@@ -126,7 +126,10 @@ fun DashboardScreen(
     }
 
     val displayLocale = LocalConfiguration.current.locales[0]
-    val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
+    val is24Hour = io.github.sulfuro25.salati.data.settings.resolveUses24HourClock(
+        settings.timeFormat,
+        android.text.format.DateFormat.is24HourFormat(context)
+    )
     val timeFormat = remember(displayLocale, zoneId, is24Hour) { dashboardTimeFormatter(displayLocale, zoneId, is24Hour) }
     val dateFormat = remember(displayLocale) { dashboardDateFormatter(displayLocale) }
 

@@ -46,7 +46,10 @@ fun CalendarScreen(
     val context = LocalContext.current
     val displayLocale = LocalConfiguration.current.locales[0]
     val zoneId = remember(settings.timezoneId) { settings.safeZoneId() }
-    val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
+    val is24Hour = io.github.sulfuro25.salati.data.settings.resolveUses24HourClock(
+        settings.timeFormat,
+        android.text.format.DateFormat.is24HourFormat(context)
+    )
     val today = remember(zoneId) { calendarDateAt(System.currentTimeMillis(), zoneId) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.from(today)) }
     var monthlyData by remember { mutableStateOf<List<AladhanDayData>>(emptyList()) }

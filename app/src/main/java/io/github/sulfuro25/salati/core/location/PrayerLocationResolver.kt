@@ -13,7 +13,8 @@ internal object PrayerLocationResolver {
         current: CalculationSettings,
         cityName: String,
         latitude: Double,
-        longitude: Double
+        longitude: Double,
+        countryName: String? = null
     ): CalculationSettings {
         val currentZone = runCatching { ZoneId.of(current.timezoneId) }
             .getOrElse { ZoneId.systemDefault() }
@@ -33,6 +34,7 @@ internal object PrayerLocationResolver {
             ?.let { runCatching { ZoneId.of(it) }.getOrNull() }
         return current.copy(
             cityName = cityName,
+            countryName = countryName?.takeIf { it.isNotBlank() } ?: current.countryName,
             latitude = latitude,
             longitude = longitude,
             timezoneId = resolvedZoneId?.id ?: current.timezoneId

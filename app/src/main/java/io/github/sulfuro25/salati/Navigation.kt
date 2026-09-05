@@ -73,17 +73,9 @@ fun MainNavigation(
 
     // Hoisted here (rather than inside ZakatScreen) because tab switches remove and
     // re-add nav entries, tearing down and recreating the screen's own remembered state.
-    val zakatSelectedStandard = androidx.compose.runtime.saveable.rememberSaveable {
-        androidx.compose.runtime.mutableStateOf(0)
-    }
-    val zakatCashInput = androidx.compose.runtime.saveable.rememberSaveable {
-        androidx.compose.runtime.mutableStateOf("")
-    }
-    val zakatGoldWeightInput = androidx.compose.runtime.saveable.rememberSaveable {
-        androidx.compose.runtime.mutableStateOf("")
-    }
-    val zakatSilverWeightInput = androidx.compose.runtime.saveable.rememberSaveable {
-        androidx.compose.runtime.mutableStateOf("")
+    // Only the wizard position needs hoisting now; every answer lives in preferences.
+    val zakatStep = androidx.compose.runtime.saveable.rememberSaveable {
+        androidx.compose.runtime.mutableIntStateOf(0)
     }
 
     Scaffold(
@@ -178,10 +170,7 @@ fun MainNavigation(
                     ZakatScreen(
                         settings = settings,
                         preferences = preferences,
-                        selectedStandardState = zakatSelectedStandard,
-                        cashState = zakatCashInput,
-                        goldWeightState = zakatGoldWeightInput,
-                        silverWeightState = zakatSilverWeightInput,
+                        stepState = zakatStep,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)

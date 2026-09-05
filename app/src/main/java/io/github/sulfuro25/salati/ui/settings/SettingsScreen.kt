@@ -51,6 +51,16 @@ import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.ui.components.SettingRow
 import io.github.sulfuro25.salati.ui.components.SettingSection
 import io.github.sulfuro25.salati.ui.components.ValueSelectionRow
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import io.github.sulfuro25.salati.core.notifications.AppPermissionState
+import io.github.sulfuro25.salati.data.settings.TimeFormatPreference
+import io.github.sulfuro25.salati.ui.components.ExpandableSettingSection
+import io.github.sulfuro25.salati.ui.components.SegmentedTabRow
 import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import kotlinx.coroutines.launch
@@ -131,7 +141,7 @@ internal fun applyAppLanguage(context: android.content.Context, langCode: String
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(
     settings: CalculationSettings,
@@ -164,7 +174,6 @@ fun SettingsScreen(
         }
     }
 
-    // Calculation Methods
     val methods = listOf(
         "MUSLIM_WORLD_LEAGUE" to stringResource(R.string.settings_method_mwl),
         "ISNA" to stringResource(R.string.settings_method_isna),
@@ -178,20 +187,17 @@ fun SettingsScreen(
         "MOON_SIGHTING" to stringResource(R.string.settings_method_moon_sighting)
     )
 
-    // Madhabs
     val madhabs = listOf(
         "SHAFI" to stringResource(R.string.settings_madhab_shafi),
         "HANAFI" to stringResource(R.string.settings_madhab_hanafi)
     )
 
-    // High Latitude rules
     val highLatRules = listOf(
         "MIDDLE_OF_THE_NIGHT" to stringResource(R.string.settings_high_lat_middle_of_night),
         "SEVENTH_OF_THE_NIGHT" to stringResource(R.string.settings_high_lat_seventh_of_night),
         "TWILIGHT_ANGLE" to stringResource(R.string.settings_high_lat_twilight_angle)
     )
 
-    // Language options
     val languageOptions = listOf(
         "" to stringResource(R.string.settings_language_system),
         "en" to stringResource(R.string.settings_language_en),
@@ -214,18 +220,26 @@ fun SettingsScreen(
         }
     }
 
-    // Modal BottomSheet states
-    var showCurrencySheet by remember { mutableStateOf(false) }
+    // Modal sheet / dialog visibility
     var showMethodSheet by remember { mutableStateOf(false) }
     var showHighLatSheet by remember { mutableStateOf(false) }
     var showMadhabSheet by remember { mutableStateOf(false) }
     var showLanguageSheet by remember { mutableStateOf(false) }
     var showBatteryHelpDialog by remember { mutableStateOf(false) }
-    var showManualLocationDialog by remember { mutableStateOf(false) }
+    var showCitySearchSheet by remember { mutableStateOf(false) }
+
+    // Progressive disclosure: advanced blocks stay folded until asked for.
+    var showLocationAdvanced by rememberSaveable { mutableStateOf(false) }
+    var showAlarmsAdvanced by rememberSaveable { mutableStateOf(false) }
 
     var isUpdatingLocation by remember { mutableStateOf(false) }
 
-    fun persistLocation(cityName: String, latitude: Double, longitude: Double) {
+    fun persistLocation(
+        cityName: String,
+        latitude: Double,
+        longitude: Double,
+        countryName: String? = null
+    ) {
         if (isUpdatingLocation) return
         scope.launch {
             isUpdatingLocation = true
@@ -235,7 +249,8 @@ fun SettingsScreen(
                     current = settings,
                     cityName = cityName,
                     latitude = latitude,
-                    longitude = longitude
+                    longitude = longitude,
+                    countryName = countryName
                 )
                 saveSettings { updated }
                 Toast.makeText(
@@ -254,47 +269,47 @@ fun SettingsScreen(
         scope.launch {
             isUpdatingLocation = true
             try {
-            when (val result = DeviceLocationProvider.resolveCurrentLocation(appContext)) {
-                is DeviceLocationResult.Success -> {
-                    val resolved = result.location
-                    val resolvedCity = resolved.cityName
-                        ?: appContext.getString(R.string.settings_location_current)
-                    val updated = PrayerLocationResolver.withResolvedTimezone(
-                        context = appContext,
-                        current = settings,
-                        cityName = resolvedCity,
-                        latitude = resolved.latitude,
-                        longitude = resolved.longitude
-                    )
-                    saveSettings { updated }
-                    Toast.makeText(
-                        appContext,
-                        appContext.getString(R.string.settings_location_updated, updated.cityName),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                when (val result = DeviceLocationProvider.resolveCurrentLocation(appContext)) {
+                    is DeviceLocationResult.Success -> {
+                        val resolved = result.location
+                        val resolvedCity = resolved.cityName
+                            ?: appContext.getString(R.string.settings_location_current)
+                        val updated = PrayerLocationResolver.withResolvedTimezone(
+                            context = appContext,
+                            current = settings,
+                            cityName = resolvedCity,
+                            latitude = resolved.latitude,
+                            longitude = resolved.longitude
+                        )
+                        saveSettings { updated }
+                        Toast.makeText(
+                            appContext,
+                            appContext.getString(R.string.settings_location_updated, updated.cityName),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    DeviceLocationResult.PermissionDenied -> {
+                        Toast.makeText(
+                            appContext,
+                            appContext.getString(R.string.settings_location_error_permission),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    DeviceLocationResult.LocationDisabled -> {
+                        Toast.makeText(
+                            appContext,
+                            appContext.getString(R.string.settings_location_error_disabled),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    DeviceLocationResult.Unavailable -> {
+                        Toast.makeText(
+                            appContext,
+                            appContext.getString(R.string.settings_location_error_unavailable),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-                DeviceLocationResult.PermissionDenied -> {
-                    Toast.makeText(
-                        appContext,
-                        appContext.getString(R.string.settings_location_error_permission),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                DeviceLocationResult.LocationDisabled -> {
-                    Toast.makeText(
-                        appContext,
-                        appContext.getString(R.string.settings_location_error_disabled),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                DeviceLocationResult.Unavailable -> {
-                    Toast.makeText(
-                        appContext,
-                        appContext.getString(R.string.settings_location_error_unavailable),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
             } finally {
                 isUpdatingLocation = false
             }
@@ -315,7 +330,7 @@ fun SettingsScreen(
         }
     }
 
-    fun handleLocationClick() {
+    fun handleGpsClick() {
         if (DeviceLocationProvider.hasLocationPermission(appContext)) {
             triggerGpsUpdate()
         } else {
@@ -342,12 +357,13 @@ fun SettingsScreen(
             color = MaterialTheme.colorScheme.primary
         )
 
-        // 1. Prayer location (Single 1-tap GPS Location row)
-        SettingSection(title = stringResource(R.string.settings_location)) {
+        // ------------------------------------------------------------------
+        // Card 1 - Location & calculation
+        // ------------------------------------------------------------------
+        SettingSection(title = stringResource(R.string.settings_card_location_title)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(enabled = !isUpdatingLocation) { handleLocationClick() }
                     .padding(vertical = SalatiSpacing.sm, horizontal = SalatiSpacing.md),
                 horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.md),
                 verticalAlignment = Alignment.CenterVertically
@@ -370,7 +386,9 @@ fun SettingsScreen(
                         text = settings.cityName,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
                     if (isUpdatingLocation) {
                         Text(
@@ -380,44 +398,44 @@ fun SettingsScreen(
                         )
                     }
                 }
-                if (!isUpdatingLocation) {
-                    IconButton(onClick = { handleLocationClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.settings_location_gps_action),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
             }
+
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
             SettingRow(
-                title = stringResource(R.string.settings_location_manual_title),
-                supportingText = stringResource(R.string.settings_location_manual_description),
-                modifier = Modifier.clickable(role = Role.Button) {
-                    showManualLocationDialog = true
+                title = stringResource(R.string.settings_location_use_gps),
+                supportingText = stringResource(R.string.settings_location_use_gps_description),
+                modifier = Modifier.clickable(enabled = !isUpdatingLocation, role = Role.Button) {
+                    handleGpsClick()
                 }
-            ) { }
-        }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MyLocation,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
 
-        // Zakat currency
-        val currentCurrency = zakatCurrencyOptions.firstOrNull { it.code == settings.zakatCurrencyCode }
-        val currentCurrencyLabel = if (currentCurrency != null) {
-            "${currentCurrency.code} (${currentCurrency.symbol}) — ${currentCurrency.displayName}"
-        } else {
-            settings.zakatCurrencyCode
-        }
-        SettingSection(title = stringResource(R.string.settings_zakat_currency_title)) {
-            ValueSelectionRow(
-                title = stringResource(R.string.settings_zakat_currency_label),
-                value = currentCurrencyLabel,
-                expanded = showCurrencySheet,
-                onExpandedChange = { showCurrencySheet = it }
-            )
-        }
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-        // 2. Calculation Settings
-        SettingSection(title = stringResource(R.string.settings_calculation_title)) {
-            val selectedMethodName = methods.firstOrNull { it.first == settings.calculationMethod }?.second ?: settings.calculationMethod
+            SettingRow(
+                title = stringResource(R.string.settings_location_search_city),
+                supportingText = stringResource(R.string.settings_location_search_city_description),
+                modifier = Modifier.clickable(enabled = !isUpdatingLocation, role = Role.Button) {
+                    showCitySearchSheet = true
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            val selectedMethodName = methods.firstOrNull { it.first == settings.calculationMethod }?.second
+                ?: settings.calculationMethod
             ValueSelectionRow(
                 title = stringResource(R.string.settings_method_label),
                 value = selectedMethodName,
@@ -427,136 +445,81 @@ fun SettingsScreen(
 
             HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-            val selectedRuleName = highLatRules.firstOrNull { it.first == settings.highLatitudeRule }?.second ?: settings.highLatitudeRule
-            ValueSelectionRow(
-                title = stringResource(R.string.settings_high_latitudes_label),
-                value = selectedRuleName,
-                expanded = showHighLatSheet,
-                onExpandedChange = { showHighLatSheet = it }
-            )
-
-            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-            val selectedMadhabName = madhabs.firstOrNull { it.first == settings.madhab }?.second ?: settings.madhab
+            val selectedMadhabName = madhabs.firstOrNull { it.first == settings.madhab }?.second
+                ?: settings.madhab
             ValueSelectionRow(
                 title = stringResource(R.string.settings_madhab_label),
                 value = selectedMadhabName,
                 expanded = showMadhabSheet,
                 onExpandedChange = { showMadhabSheet = it }
             )
+
+            ExpandableSettingSection(
+                sectionName = stringResource(R.string.settings_card_location_title),
+                expanded = showLocationAdvanced,
+                onExpandedChange = { showLocationAdvanced = it }
+            ) {
+                val selectedRuleName = highLatRules.firstOrNull { it.first == settings.highLatitudeRule }?.second
+                    ?: settings.highLatitudeRule
+                ValueSelectionRow(
+                    title = stringResource(R.string.settings_high_latitudes_label),
+                    value = selectedRuleName,
+                    expanded = showHighLatSheet,
+                    onExpandedChange = { showHighLatSheet = it }
+                )
+            }
         }
 
-        // 3. Alarms & Reminders
-        SettingSection(title = stringResource(R.string.settings_reminders_title)) {
-            PermissionAccessControls(
-                permissionState = permissionState,
-                onRequestNotifications = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                },
-                onRequestExactAlarms = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        runCatching {
-                            context.startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                                data = Uri.parse("package:${context.packageName}")
-                            })
-                        }
-                    }
-                },
-                showNotificationPolicyAccess = settings.silentModeAutomationEnabled,
-                onRequestNotificationPolicyAccess = {
-                    runCatching {
-                        context.startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
-                    }
-                },
-                onConfigureBattery = { showBatteryHelpDialog = true }
+        // ------------------------------------------------------------------
+        // Card 2 - Alarms & notifications
+        // ------------------------------------------------------------------
+        SettingSection(title = stringResource(R.string.settings_card_alarms_title)) {
+            SettingToggleRow(
+                title = stringResource(R.string.settings_reminders_mute),
+                supportingText = stringResource(R.string.settings_reminders_mute_description),
+                checked = settings.notificationsMuted,
+                onCheckedChange = { isChecked -> saveSettings { it.copy(notificationsMuted = isChecked) } }
             )
             HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-            SettingRow(
-                title = stringResource(R.string.settings_reminders_mute),
-                supportingText = stringResource(R.string.settings_reminders_mute_description),
-                modifier = Modifier.toggleable(
-                    value = settings.notificationsMuted,
-                    onValueChange = { isChecked ->
-                        saveSettings { it.copy(notificationsMuted = isChecked) }
-                    },
-                    role = Role.Switch
-                )
-            ) {
-                Switch(
-                    checked = settings.notificationsMuted,
-                    onCheckedChange = null,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        uncheckedBorderColor = androidx.compose.ui.graphics.Color.Transparent
-                    ),
-                    modifier = Modifier.clearAndSetSemantics {}
-                )
-            }
+            SettingToggleRow(
+                title = stringResource(R.string.settings_reminders_sound),
+                supportingText = stringResource(R.string.settings_reminders_sound_description),
+                checked = settings.soundEnabled,
+                onCheckedChange = { isChecked -> saveSettings { it.copy(soundEnabled = isChecked) } }
+            )
             HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-            SettingRow(
+            SettingToggleRow(
                 title = stringResource(R.string.settings_reminders_vibration),
                 supportingText = stringResource(R.string.settings_reminders_vibration_description),
-                modifier = Modifier.toggleable(
-                    value = settings.vibrateEnabled,
-                    onValueChange = { isChecked ->
-                        saveSettings { it.copy(vibrateEnabled = isChecked) }
-                    },
-                    role = Role.Switch
-                )
-            ) {
-                Switch(
-                    checked = settings.vibrateEnabled,
-                    onCheckedChange = null,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        uncheckedBorderColor = androidx.compose.ui.graphics.Color.Transparent
-                    ),
-                    modifier = Modifier.clearAndSetSemantics {}
-                )
-            }
+                checked = settings.vibrateEnabled,
+                onCheckedChange = { isChecked -> saveSettings { it.copy(vibrateEnabled = isChecked) } }
+            )
             HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-            SettingRow(
+            SettingToggleRow(
                 title = stringResource(R.string.settings_silent_mode_title),
                 supportingText = stringResource(R.string.settings_silent_mode_description),
-                modifier = Modifier.toggleable(
-                    value = settings.silentModeAutomationEnabled,
-                    onValueChange = { isChecked ->
-                        PrayerSilentModeScheduler.setAutomationEnabled(appContext, isChecked)
-                        saveSettings { it.copy(silentModeAutomationEnabled = isChecked) }
-                        if (isChecked && !permissionState.notificationPolicyAccess) {
-                            runCatching {
-                                context.startActivity(
-                                    Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-                                )
-                            }
-                        } else if (!isChecked) {
-                            scope.launch {
-                                withContext(Dispatchers.IO) {
-                                    PrayerSilentModeController.forceRestore(appContext)
-                                }
+                checked = settings.silentModeAutomationEnabled,
+                onCheckedChange = { isChecked ->
+                    PrayerSilentModeScheduler.setAutomationEnabled(appContext, isChecked)
+                    saveSettings { it.copy(silentModeAutomationEnabled = isChecked) }
+                    if (isChecked && !permissionState.notificationPolicyAccess) {
+                        runCatching {
+                            context.startActivity(
+                                Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                            )
+                        }
+                    } else if (!isChecked) {
+                        scope.launch {
+                            withContext(Dispatchers.IO) {
+                                PrayerSilentModeController.forceRestore(appContext)
                             }
                         }
-                    },
-                    role = Role.Switch
-                )
-            ) {
-                Switch(
-                    checked = settings.silentModeAutomationEnabled,
-                    onCheckedChange = null,
-                    modifier = Modifier.clearAndSetSemantics {}
-                )
-            }
+                    }
+                }
+            )
 
             if (settings.silentModeAutomationEnabled) {
                 val offsetOptions = listOf(0, 5, 10, 15)
@@ -578,13 +541,11 @@ fun SettingsScreen(
                         text = stringResource(R.string.settings_silent_mode_offset_title),
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    io.github.sulfuro25.salati.ui.components.SegmentedTabRow(
+                    SegmentedTabRow(
                         tabs = offsetLabels,
                         selectedTabIndex = selectedOffset,
                         onTabSelected = { index ->
-                            saveSettings {
-                                it.copy(silentModeMinutesAfterAdhan = offsetOptions[index])
-                            }
+                            saveSettings { it.copy(silentModeMinutesAfterAdhan = offsetOptions[index]) }
                         }
                     )
 
@@ -602,193 +563,78 @@ fun SettingsScreen(
                         text = stringResource(R.string.settings_silent_mode_duration_title),
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    io.github.sulfuro25.salati.ui.components.SegmentedTabRow(
+                    SegmentedTabRow(
                         tabs = durationLabels,
                         selectedTabIndex = selectedDuration,
                         onTabSelected = { index ->
-                            saveSettings {
-                                it.copy(silentModeDurationMinutes = durationOptions[index])
-                            }
+                            saveSettings { it.copy(silentModeDurationMinutes = durationOptions[index]) }
                         }
                     )
                 }
             }
-            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-
-            SettingRow(
-                title = stringResource(R.string.settings_reminders_white_days_title),
-                supportingText = stringResource(R.string.settings_reminders_white_days_description),
-                modifier = Modifier.toggleable(
-                    value = settings.whiteDaysReminder,
-                    onValueChange = { isChecked ->
-                        saveSettings { it.copy(whiteDaysReminder = isChecked) }
-                    },
-                    role = Role.Switch
-                )
+            ExpandableSettingSection(
+                sectionName = stringResource(R.string.settings_card_alarms_title),
+                expanded = showAlarmsAdvanced,
+                onExpandedChange = { showAlarmsAdvanced = it }
             ) {
-                Switch(
+                SettingToggleRow(
+                    title = stringResource(R.string.settings_reminders_white_days_title),
+                    supportingText = stringResource(R.string.settings_reminders_white_days_description),
                     checked = settings.whiteDaysReminder,
-                    onCheckedChange = null,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        uncheckedBorderColor = androidx.compose.ui.graphics.Color.Transparent
-                    ),
-                    modifier = Modifier.clearAndSetSemantics {}
+                    onCheckedChange = { isChecked -> saveSettings { it.copy(whiteDaysReminder = isChecked) } }
                 )
-            }
-            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-            // Pre-prayer alert slider
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
-            ) {
-                var prePrayerDraft by remember(settings.prePrayerMinutes) { mutableFloatStateOf(settings.prePrayerMinutes.toFloat()) }
-                val prePrayerMinutes = prePrayerDraft.toInt()
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(R.string.settings_reminders_pre_prayer),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = stringResource(
-                            R.string.settings_reminders_pre_prayer_value,
-                            prePrayerMinutes
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                val prePrayerDesc = stringResource(
-                    R.string.settings_reminders_pre_prayer_accessibility,
-                    prePrayerMinutes
-                )
-                Slider(
-                    value = prePrayerDraft,
-                    onValueChange = { value -> prePrayerDraft = value },
-                    onValueChangeFinished = {
-                        saveSettings { it.copy(prePrayerMinutes = prePrayerDraft.toInt()) }
-                    },
-                    valueRange = 0f..30f,
-                    steps = 5,
-                    colors = SliderDefaults.colors(
-                        activeTrackColor = MaterialTheme.colorScheme.primary,
-                        inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        thumbColor = MaterialTheme.colorScheme.primary,
-                        activeTickColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                        inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                    ),
-                    thumb = {
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                        )
-                    },
-                    track = { sliderState ->
-                        SliderDefaults.Track(
-                            colors = SliderDefaults.colors(
-                                activeTrackColor = MaterialTheme.colorScheme.primary,
-                                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                                activeTickColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                                inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                            ),
-                            sliderState = sliderState,
-                            modifier = Modifier.height(4.dp)
-                        )
-                    },
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .semantics {
-                            contentDescription = prePrayerDesc
-                        }
-                )
-            }
-            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-            // Hijri day offset
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
-            ) {
-                var hijriDraft by remember(settings.hijriOffset) { mutableFloatStateOf(settings.hijriOffset.toFloat()) }
-                val currentOffset = hijriDraft.toInt()
-                val offsetText = when {
-                    currentOffset == 0 -> stringResource(R.string.settings_calendar_hijri_offset_zero)
-                    currentOffset > 0 -> pluralStringResource(R.plurals.settings_calendar_hijri_offset_plus, currentOffset, currentOffset)
-                    else -> pluralStringResource(R.plurals.settings_calendar_hijri_offset_minus, -currentOffset, -currentOffset)
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
                 ) {
-                    Text(
-                        text = stringResource(R.string.settings_calendar_hijri_offset),
-                        style = MaterialTheme.typography.bodyLarge
+                    var prePrayerDraft by remember(settings.prePrayerMinutes) {
+                        mutableFloatStateOf(settings.prePrayerMinutes.toFloat())
+                    }
+                    val prePrayerMinutes = prePrayerDraft.toInt()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.settings_reminders_pre_prayer),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            text = stringResource(
+                                R.string.settings_reminders_pre_prayer_value,
+                                prePrayerMinutes
+                            ),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    val prePrayerDesc = stringResource(
+                        R.string.settings_reminders_pre_prayer_accessibility,
+                        prePrayerMinutes
                     )
-                    Text(
-                        text = offsetText,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                    SalatiSlider(
+                        value = prePrayerDraft,
+                        onValueChange = { prePrayerDraft = it },
+                        onValueChangeFinished = {
+                            saveSettings { it.copy(prePrayerMinutes = prePrayerDraft.toInt()) }
+                        },
+                        valueRange = 0f..30f,
+                        steps = 5,
+                        contentDescription = prePrayerDesc
                     )
                 }
-                val hijriDesc = stringResource(R.string.settings_calendar_hijri_offset_accessibility, offsetText)
-                Slider(
-                    value = hijriDraft,
-                    onValueChange = { value -> hijriDraft = value },
-                    onValueChangeFinished = {
-                        saveSettings { it.copy(hijriOffset = hijriDraft.toInt()) }
-                    },
-                    valueRange = -2f..2f,
-                    steps = 3,
-                    colors = SliderDefaults.colors(
-                        activeTrackColor = MaterialTheme.colorScheme.primary,
-                        inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        thumbColor = MaterialTheme.colorScheme.primary,
-                        activeTickColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                        inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                    ),
-                    thumb = {
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                        )
-                    },
-                    track = { sliderState ->
-                        SliderDefaults.Track(
-                            colors = SliderDefaults.colors(
-                                activeTrackColor = MaterialTheme.colorScheme.primary,
-                                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                                activeTickColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                                inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                            ),
-                            sliderState = sliderState,
-                            modifier = Modifier.height(4.dp)
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics {
-                            contentDescription = hijriDesc
-                        }
-                )
             }
         }
 
-        // 4. App Theme
-        SettingSection(title = stringResource(R.string.settings_theme_title)) {
+        // ------------------------------------------------------------------
+        // Card 3 - Appearance & regional
+        // ------------------------------------------------------------------
+        SettingSection(title = stringResource(R.string.settings_card_appearance_title)) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -814,7 +660,7 @@ fun SettingsScreen(
                     false -> 1
                     true -> 2
                 }
-                io.github.sulfuro25.salati.ui.components.SegmentedTabRow(
+                SegmentedTabRow(
                     tabs = themeOptionLabels,
                     selectedTabIndex = selectedThemeIndex,
                     onTabSelected = { index ->
@@ -827,24 +673,146 @@ fun SettingsScreen(
                     }
                 )
             }
-        }
 
-        
-        // 5. App Language
-        val currentLangCode = settings.appLanguageCode ?: ""
-        val currentLangName = languageOptions.firstOrNull { it.first == currentLangCode }?.second
-            ?: stringResource(R.string.settings_language_system)
-        SettingSection(title = stringResource(R.string.settings_language_title)) {
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            val currentLangCode = settings.appLanguageCode ?: ""
+            val currentLangName = languageOptions.firstOrNull { it.first == currentLangCode }?.second
+                ?: stringResource(R.string.settings_language_system)
             ValueSelectionRow(
                 title = stringResource(R.string.settings_language_label),
                 value = currentLangName,
                 expanded = showLanguageSheet,
                 onExpandedChange = { showLanguageSheet = it }
             )
+
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SalatiSpacing.sm, horizontal = SalatiSpacing.md)
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_time_format_title),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(SalatiSpacing.sm))
+                val timeFormatOptions = listOf(
+                    TimeFormatPreference.SYSTEM,
+                    TimeFormatPreference.TWELVE_HOUR,
+                    TimeFormatPreference.TWENTY_FOUR_HOUR
+                )
+                val timeFormatLabels = listOf(
+                    stringResource(R.string.settings_time_format_system),
+                    stringResource(R.string.settings_time_format_12h),
+                    stringResource(R.string.settings_time_format_24h)
+                )
+                val selectedTimeFormat = timeFormatOptions.indexOf(settings.timeFormat)
+                    .coerceAtLeast(0)
+                SegmentedTabRow(
+                    tabs = timeFormatLabels,
+                    selectedTabIndex = selectedTimeFormat,
+                    onTabSelected = { index ->
+                        saveSettings { it.copy(timeFormat = timeFormatOptions[index]) }
+                    }
+                )
+            }
+
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
+            ) {
+                var hijriDraft by remember(settings.hijriOffset) {
+                    mutableFloatStateOf(settings.hijriOffset.toFloat())
+                }
+                val currentOffset = hijriDraft.toInt()
+                val offsetText = when {
+                    currentOffset == 0 -> stringResource(R.string.settings_calendar_hijri_offset_zero)
+                    currentOffset > 0 -> pluralStringResource(
+                        R.plurals.settings_calendar_hijri_offset_plus, currentOffset, currentOffset
+                    )
+                    else -> pluralStringResource(
+                        R.plurals.settings_calendar_hijri_offset_minus, -currentOffset, -currentOffset
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_calendar_hijri_offset),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = offsetText,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                val hijriDesc = stringResource(
+                    R.string.settings_calendar_hijri_offset_accessibility, offsetText
+                )
+                SalatiSlider(
+                    value = hijriDraft,
+                    onValueChange = { hijriDraft = it },
+                    onValueChangeFinished = {
+                        saveSettings { it.copy(hijriOffset = hijriDraft.toInt()) }
+                    },
+                    valueRange = -2f..2f,
+                    steps = 3,
+                    contentDescription = hijriDesc
+                )
+            }
         }
 
-        val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
-        SettingSection(title = stringResource(R.string.settings_privacy_title)) {
+        // ------------------------------------------------------------------
+        // Card 4 - System status & permissions
+        // ------------------------------------------------------------------
+        SettingSection(title = stringResource(R.string.settings_card_system_title)) {
+            PermissionStatusChips(
+                permissionState = permissionState,
+                showDndChip = settings.silentModeAutomationEnabled,
+                onNotificationsClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                        !permissionState.notificationPermission
+                    ) {
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                },
+                onExactAlarmsClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        runCatching {
+                            context.startActivity(
+                                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                    data = Uri.parse("package:${context.packageName}")
+                                }
+                            )
+                        }
+                    }
+                },
+                onBatteryClick = { showBatteryHelpDialog = true },
+                onDndClick = {
+                    runCatching {
+                        context.startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+                    }
+                }
+            )
+
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            SettingRow(
+                title = stringResource(R.string.settings_about_title),
+                supportingText = stringResource(R.string.settings_about_version, appVersionName(context))
+            ) { }
+
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
             SettingRow(
                 title = stringResource(R.string.settings_privacy_policy),
                 supportingText = stringResource(R.string.settings_privacy_policy_description),
@@ -859,10 +827,10 @@ fun SettingsScreen(
                     contentDescription = stringResource(R.string.settings_privacy_policy_open)
                 )
             }
-        }
 
-        val supportEmail = stringResource(R.string.settings_support_email_address)
-        SettingSection(title = stringResource(R.string.settings_support_title)) {
+            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+            val supportEmail = stringResource(R.string.settings_support_email_address)
             SettingRow(
                 title = stringResource(R.string.settings_support_report_bug),
                 supportingText = supportEmail,
@@ -884,24 +852,14 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(SalatiSpacing.xl))
     }
 
-    // Modal BottomSheets
-    if (showCurrencySheet) {
-        CurrencySelectionSheet(
-            selectedCode = settings.zakatCurrencyCode,
-            onSelect = { code ->
-                saveSettings { it.copy(zakatCurrencyCode = code) }
-            },
-            onDismiss = { showCurrencySheet = false }
-        )
-    }
-
+    // ----------------------------------------------------------------------
+    // Sheets and dialogs
+    // ----------------------------------------------------------------------
     if (showMethodSheet) {
         MethodSelectionSheet(
             selectedMethodId = settings.calculationMethod,
             methods = methods,
-            onSelect = { methodId ->
-                saveSettings { it.copy(calculationMethod = methodId) }
-            },
+            onSelect = { methodId -> saveSettings { it.copy(calculationMethod = methodId) } },
             onDismiss = { showMethodSheet = false }
         )
     }
@@ -911,9 +869,7 @@ fun SettingsScreen(
             title = stringResource(R.string.settings_high_latitudes_label),
             selectedId = settings.highLatitudeRule,
             options = highLatRules,
-            onSelect = { ruleId ->
-                saveSettings { it.copy(highLatitudeRule = ruleId) }
-            },
+            onSelect = { ruleId -> saveSettings { it.copy(highLatitudeRule = ruleId) } },
             onDismiss = { showHighLatSheet = false }
         )
     }
@@ -923,16 +879,11 @@ fun SettingsScreen(
             title = stringResource(R.string.settings_madhab_label),
             selectedId = settings.madhab,
             options = madhabs,
-            onSelect = { madhabId ->
-                saveSettings { it.copy(madhab = madhabId) }
-            },
+            onSelect = { madhabId -> saveSettings { it.copy(madhab = madhabId) } },
             onDismiss = { showMadhabSheet = false }
         )
     }
 
-
-
-    
     if (showLanguageSheet) {
         OptionSelectionSheet(
             title = stringResource(R.string.settings_language_title),
@@ -949,21 +900,194 @@ fun SettingsScreen(
     }
 
     if (showBatteryHelpDialog) {
-        BatteryOptimizationHelpDialog(
-            onDismiss = { showBatteryHelpDialog = false }
-        )
+        BatteryOptimizationHelpDialog(onDismiss = { showBatteryHelpDialog = false })
     }
 
-    if (showManualLocationDialog) {
-        LocationEditDialog(
-            initialCityName = settings.cityName,
-            initialLatitude = settings.latitude,
-            initialLongitude = settings.longitude,
-            onDismiss = { showManualLocationDialog = false },
-            onSave = { input ->
-                showManualLocationDialog = false
-                persistLocation(input.cityName, input.latitude, input.longitude)
-            }
+    if (showCitySearchSheet) {
+        CitySearchSheet(
+            onSelect = { suggestion ->
+                showCitySearchSheet = false
+                persistLocation(
+                    cityName = suggestion.cityName,
+                    latitude = suggestion.latitude,
+                    longitude = suggestion.longitude,
+                    countryName = suggestion.countryName
+                )
+            },
+            onDismiss = { showCitySearchSheet = false }
         )
     }
+}
+
+/** Switch row wired for accessibility: the whole row toggles, the switch itself is mute. */
+@Composable
+private fun SettingToggleRow(
+    title: String,
+    supportingText: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    SettingRow(
+        title = title,
+        supportingText = supportingText,
+        modifier = Modifier.toggleable(
+            value = checked,
+            onValueChange = onCheckedChange,
+            role = Role.Switch
+        )
+    ) {
+        Switch(
+            checked = checked,
+            onCheckedChange = null,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                uncheckedBorderColor = androidx.compose.ui.graphics.Color.Transparent
+            ),
+            modifier = Modifier.clearAndSetSemantics {}
+        )
+    }
+}
+
+/** Shared slider styling, extracted so the two sliders cannot drift apart. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SalatiSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    onValueChangeFinished: () -> Unit,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    contentDescription: String
+) {
+    Slider(
+        value = value,
+        onValueChange = onValueChange,
+        onValueChangeFinished = onValueChangeFinished,
+        valueRange = valueRange,
+        steps = steps,
+        colors = SliderDefaults.colors(
+            activeTrackColor = MaterialTheme.colorScheme.primary,
+            inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+            thumbColor = MaterialTheme.colorScheme.primary,
+            activeTickColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+            inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+        ),
+        thumb = {
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+            )
+        },
+        track = { sliderState ->
+            SliderDefaults.Track(
+                colors = SliderDefaults.colors(
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    activeTickColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                    inactiveTickColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                ),
+                sliderState = sliderState,
+                modifier = Modifier.height(4.dp)
+            )
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { this.contentDescription = contentDescription }
+    )
+}
+
+/**
+ * Compact permission overview. Each chip states the current grant and, where the system
+ * offers a screen to change it, doubles as the shortcut to that screen.
+ */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun PermissionStatusChips(
+    permissionState: AppPermissionState,
+    showDndChip: Boolean,
+    onNotificationsClick: () -> Unit,
+    onExactAlarmsClick: () -> Unit,
+    onBatteryClick: () -> Unit,
+    onDndClick: () -> Unit
+) {
+    val granted = stringResource(R.string.settings_status_granted)
+    val denied = stringResource(R.string.settings_status_denied)
+
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs),
+        horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.xs),
+        verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            StatusChip(
+                label = stringResource(R.string.settings_status_notifications),
+                value = if (permissionState.notificationPermission) granted else denied,
+                isPositive = permissionState.notificationPermission,
+                onClick = onNotificationsClick
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            StatusChip(
+                label = stringResource(R.string.settings_status_exact_alarms),
+                value = if (permissionState.exactAlarmAccess) granted else denied,
+                isPositive = permissionState.exactAlarmAccess,
+                onClick = onExactAlarmsClick
+            )
+        }
+        StatusChip(
+            label = stringResource(R.string.settings_status_battery),
+            value = if (permissionState.batteryOptimizationIgnored) {
+                stringResource(R.string.settings_status_unrestricted)
+            } else {
+                stringResource(R.string.settings_status_restricted)
+            },
+            isPositive = permissionState.batteryOptimizationIgnored,
+            onClick = onBatteryClick
+        )
+        if (showDndChip) {
+            StatusChip(
+                label = stringResource(R.string.settings_status_dnd),
+                value = if (permissionState.notificationPolicyAccess) granted else denied,
+                isPositive = permissionState.notificationPolicyAccess,
+                onClick = onDndClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatusChip(
+    label: String,
+    value: String,
+    isPositive: Boolean,
+    onClick: () -> Unit
+) {
+    AssistChip(
+        onClick = onClick,
+        label = { Text("$label · $value") },
+        colors = AssistChipDefaults.assistChipColors(
+            containerColor = if (isPositive) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.errorContainer
+            },
+            labelColor = if (isPositive) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onErrorContainer
+            }
+        )
+    )
+}
+
+private fun appVersionName(context: android.content.Context): String {
+    return runCatching {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName
+    }.getOrNull().orEmpty()
 }

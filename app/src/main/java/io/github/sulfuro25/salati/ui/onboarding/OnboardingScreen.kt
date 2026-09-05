@@ -75,7 +75,7 @@ import io.github.sulfuro25.salati.R
 import io.github.sulfuro25.salati.core.location.DeviceLocationProvider
 import io.github.sulfuro25.salati.core.location.DeviceLocationResult
 import io.github.sulfuro25.salati.core.location.PrayerLocationResolver
-import io.github.sulfuro25.salati.ui.settings.LocationEditDialog
+import io.github.sulfuro25.salati.ui.settings.CitySearchSheet
 import io.github.sulfuro25.salati.core.notifications.readAppPermissionState
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
@@ -483,7 +483,7 @@ private fun LocationStep(
                         shape = SalatiShapeTokens.Control,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = stringResource(R.string.settings_location_manual_title))
+                        Text(text = stringResource(R.string.settings_location_search_city))
                     }
                 }
             }
@@ -538,12 +538,9 @@ private fun LocationStep(
     }
 
     if (showManualLocationDialog) {
-        LocationEditDialog(
-            initialCityName = (detectedLocation ?: currentSettings).cityName,
-            initialLatitude = (detectedLocation ?: currentSettings).latitude,
-            initialLongitude = (detectedLocation ?: currentSettings).longitude,
+        CitySearchSheet(
             onDismiss = { showManualLocationDialog = false },
-            onSave = { input ->
+            onSelect = { suggestion ->
                 showManualLocationDialog = false
                 isDetecting = true
                 locationError = null
@@ -551,9 +548,10 @@ private fun LocationStep(
                     detectedLocation = PrayerLocationResolver.withResolvedTimezone(
                         context = context,
                         current = currentSettings,
-                        cityName = input.cityName,
-                        latitude = input.latitude,
-                        longitude = input.longitude
+                        cityName = suggestion.cityName,
+                        latitude = suggestion.latitude,
+                        longitude = suggestion.longitude,
+                        countryName = suggestion.countryName
                     )
                     isDetecting = false
                 }

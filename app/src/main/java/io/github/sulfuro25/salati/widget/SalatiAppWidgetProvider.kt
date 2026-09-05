@@ -52,9 +52,13 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
          * Renders a parsed timing for the widget, honouring the device's 12/24-hour
          * setting the same way the Daily and Monthly screens do.
          */
-        private fun displayTime(context: Context, raw: String): String {
+        private fun displayTime(context: Context, raw: String, timeFormat: String?): String {
             val parsed = parseTime(raw) ?: return cleanTime(raw)
-            val pattern = if (android.text.format.DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm a"
+            val uses24Hour = io.github.sulfuro25.salati.data.settings.resolveUses24HourClock(
+                timeFormat,
+                android.text.format.DateFormat.is24HourFormat(context)
+            )
+            val pattern = if (uses24Hour) "HH:mm" else "h:mm a"
             return DateTimeFormatter.ofPattern(pattern, java.util.Locale.getDefault()).format(parsed)
         }
 
@@ -150,11 +154,11 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
                         val maghribTime = cleanTime(timings.Maghrib)
                         val ishaTime = cleanTime(timings.Isha)
 
-                        views.setTextViewText(R.id.widget_time_fajr, displayTime(context, fajrTime))
-                        views.setTextViewText(R.id.widget_time_dhuhr, displayTime(context, dhuhrTime))
-                        views.setTextViewText(R.id.widget_time_asr, displayTime(context, asrTime))
-                        views.setTextViewText(R.id.widget_time_maghrib, displayTime(context, maghribTime))
-                        views.setTextViewText(R.id.widget_time_isha, displayTime(context, ishaTime))
+                        views.setTextViewText(R.id.widget_time_fajr, displayTime(context, fajrTime, settings.timeFormat))
+                        views.setTextViewText(R.id.widget_time_dhuhr, displayTime(context, dhuhrTime, settings.timeFormat))
+                        views.setTextViewText(R.id.widget_time_asr, displayTime(context, asrTime, settings.timeFormat))
+                        views.setTextViewText(R.id.widget_time_maghrib, displayTime(context, maghribTime, settings.timeFormat))
+                        views.setTextViewText(R.id.widget_time_isha, displayTime(context, ishaTime, settings.timeFormat))
 
                         // Determine next prayer
                         val prayers = listOf(
@@ -180,7 +184,7 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
                                 "Maghrib" -> maghribTime
                                 else -> ishaTime
                             }
-                            views.setTextViewText(R.id.widget_next_prayer_time, displayTime(context, nextTimeStr))
+                            views.setTextViewText(R.id.widget_next_prayer_time, displayTime(context, nextTimeStr, settings.timeFormat))
                         } else {
                             views.setTextViewText(R.id.widget_next_prayer_name, context.getString(R.string.prayer_fajr))
                             val tomorrow = today.plusDays(1)
@@ -200,7 +204,7 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
                                     ?.firstOrNull { it.date.gregorian.day.toIntOrNull() == tomorrow.dayOfMonth }
                             }
                             val tomorrowFajr = tomorrowSchedule?.timings?.Fajr?.let(::cleanTime) ?: fajrTime
-                            views.setTextViewText(R.id.widget_next_prayer_time, displayTime(context, tomorrowFajr))
+                            views.setTextViewText(R.id.widget_next_prayer_time, displayTime(context, tomorrowFajr, settings.timeFormat))
                         }
                     }
 

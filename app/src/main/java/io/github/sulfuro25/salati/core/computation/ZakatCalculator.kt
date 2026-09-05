@@ -69,6 +69,47 @@ object ZakatCalculator {
     }
 
     /**
+     * Normalises a gold piece to the pure 24k weight it contains: `weight × karat / 24`.
+     *
+     * Zakat is owed on the fine metal, and the price feed quotes pure gold, so mixing
+     * karats only works once every piece is expressed on that same 24k basis. Unusable
+     * inputs (negative, non-finite, or an unknown karat) contribute nothing rather than
+     * silently inflating the total.
+     */
+    fun normalizePureGoldWeight(weightGrams: Double, karat: Int): Double {
+        if (!weightGrams.isFinite() || weightGrams <= 0.0) return 0.0
+        val purity = GoldPurity.entries.firstOrNull { it.karat == karat } ?: return 0.0
+        return weightGrams * purity.fineness
+    }
+
+    /** Sums [normalizePureGoldWeight] across every piece, in grams of pure 24k gold. */
+    fun totalPureGoldWeight(items: List<ZakatGoldItem>): Double {
+        return items.sumOf { normalizePureGoldWeight(it.weightGrams, it.karat) }
+    }
+
+    /**
+     * Normalises a silver piece to the fine (999) weight it contains, e.g. sterling
+     * silver counts for 92.5% of its gram weight.
+     */
+    fun normalizeFineSilverWeight(weightGrams: Double, millesimal: Int): Double {
+        if (!weightGrams.isFinite() || weightGrams <= 0.0) return 0.0
+        val purity = SilverPurity.entries.firstOrNull { it.millesimal == millesimal } ?: return 0.0
+        return weightGrams * purity.fineness
+    }
+
+    /** Sums [normalizeFineSilverWeight] across every piece, in grams of fine silver. */
+    fun totalFineSilverWeight(items: List<ZakatSilverItem>): Double {
+        return items.sumOf { normalizeFineSilverWeight(it.weightGrams, it.millesimal) }
+    }
+
+    /** Market value of a normalised pure-metal weight at the quoted per-gram rate. */
+    fun valueForPureWeight(pureWeightGrams: Double, pricePerGram: Double): Double {
+        if (!pureWeightGrams.isFinite() || !pricePerGram.isFinite()) return 0.0
+        if (pureWeightGrams <= 0.0 || pricePerGram <= 0.0) return 0.0
+        return pureWeightGrams * pricePerGram
+    }
+
+    /**
      * Checks if metal prices match the user's selected active currency.
      */
     fun doPricesMatchCurrency(

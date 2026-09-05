@@ -1,88 +1,158 @@
 package io.github.sulfuro25.salati.ui.zakat
 
-import io.github.sulfuro25.salati.core.computation.ZakatCalculator
-import io.github.sulfuro25.salati.core.computation.zakatCurrencySymbolFor
+import android.content.ActivityNotFoundException
+import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.zIndex
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.sulfuro25.salati.R
+import io.github.sulfuro25.salati.core.computation.MetalPricesResult
+import io.github.sulfuro25.salati.core.computation.MetalsPriceRepository
+import io.github.sulfuro25.salati.core.computation.ZakatCalculator
+import io.github.sulfuro25.salati.core.computation.ZakatGoldItem
+import io.github.sulfuro25.salati.core.computation.ZakatHawlCalendar
+import io.github.sulfuro25.salati.core.computation.ZakatSilverItem
+import io.github.sulfuro25.salati.core.computation.zakatCurrencySymbolFor
+import io.github.sulfuro25.salati.core.computation.zakatCurrencyOptions
+import io.github.sulfuro25.salati.core.computation.zakatHawlDueDate
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
 import io.github.sulfuro25.salati.data.settings.SalatiPreferences
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
-import io.github.sulfuro25.salati.core.computation.zakatHawlDueDate
-import io.github.sulfuro25.salati.ui.components.SalatiSectionCard
 import io.github.sulfuro25.salati.ui.components.StatusPill
+import io.github.sulfuro25.salati.ui.settings.CurrencySelectionSheet
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.UUID
 
+internal const val ZAKAT_STEP_COUNT = 4
+
+/**
+ * Four-step Zakat walkthrough.
+ *
+ * The assessment is long enough that a single scrolling form buries the parts that
+ * actually need thought, so it is split into: pick a Nisab standard, enter liquid
+ * wealth, itemise precious metals at their real purities, then review and optionally
+ * book the next Hawl in the user's own calendar.
+ *
+ * Every answer is written straight through to [SalatiPreferences] rather than held in
+ * screen state: the tab bar tears this screen down on every switch, and the assessment
+ * is revisited a lunar year later, so losing the inputs is worse than a few small writes.
+ */
 @Composable
 fun ZakatScreen(
     settings: CalculationSettings,
     preferences: SalatiPreferences,
-    selectedStandardState: MutableState<Int>,
-    cashState: MutableState<String>,
-    goldWeightState: MutableState<String>,
-    silverWeightState: MutableState<String>,
+    stepState: MutableState<Int>,
     modifier: Modifier = Modifier
 ) {
-    var selectedStandard by selectedStandardState
+    var step by stepState
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
+    val displayLocale = LocalConfiguration.current.locales[0]
 
-    val calculatorScrollState = rememberScrollState()
+    val currencySymbol = zakatCurrencySymbolFor(settings.zakatCurrencyCode)
+    val formatAmount = remember(displayLocale, currencySymbol) {
+        { amount: Double, grouping: Boolean ->
+            val pattern = if (grouping) "%,.2f" else "%.2f"
+            currencySymbol + " " + java.lang.String.format(displayLocale, pattern, amount)
+        }
+    }
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
+    val update = { transform: (CalculationSettings) -> CalculationSettings ->
+        scope.launch { preferences.updateSettings(transform) }
+        Unit
+    }
+
+    var showCurrencySheet by remember { mutableStateOf(false) }
+    var isRefreshingPrices by remember { mutableStateOf(false) }
+    var priceRefreshFailed by remember { mutableStateOf(false) }
+
+    suspend fun refreshMetalPrices() {
+        isRefreshingPrices = true
+        priceRefreshFailed = false
+        when (val result = MetalsPriceRepository.fetchLatestPrices(settings.zakatCurrencyCode)) {
+            is MetalPricesResult.Success -> update {
+                it.copy(
+                    zakatGoldPrice = result.prices.goldPricePerGram,
+                    zakatSilverPrice = result.prices.silverPricePerGram,
+                    zakatPricesUpdatedAt = result.prices.fetchedAtMillis,
+                    zakatPricesCurrencyCode = result.prices.currencyCode
+                )
+            }
+            MetalPricesResult.Unavailable -> priceRefreshFailed = true
+        }
+        isRefreshingPrices = false
+    }
+
+    // Prices are quoted per currency, so a currency change invalidates what is stored.
+    LaunchedEffect(settings.zakatCurrencyCode) { refreshMetalPrices() }
+
+    val assessment = rememberZakatAssessment(settings)
+
+    Column(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,872 +165,410 @@ fun ZakatScreen(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.semantics { heading() }
             )
-            Text(
-                text = stringResource(R.string.zakat_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-            )
+            ZakatStepIndicator(currentStep = step)
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            CalculatorTabContent(
-                settings = settings,
-                preferences = preferences,
-                scrollState = calculatorScrollState,
-                selectedStandard = selectedStandard,
-                onSelectStandard = { selectedStandard = it },
-                cashState = cashState,
-                goldWeightState = goldWeightState,
-                silverWeightState = silverWeightState
-            )
-        }
-    }
-}
-
-@Composable
-private fun PriceRefreshHeader(
-    label: String,
-    isRefreshing: Boolean,
-    updatedAtMillis: Long,
-    hasFailed: Boolean,
-    onRefresh: () -> Unit
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            IconButton(
-                onClick = onRefresh,
-                enabled = !isRefreshing,
-                modifier = Modifier.size(48.dp)
-            ) {
-                if (isRefreshing) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(18.dp),
-                        strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = stringResource(R.string.zakat_refresh_price),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        }
-        val statusText = when {
-            isRefreshing -> stringResource(R.string.zakat_price_updating)
-            hasFailed -> stringResource(R.string.zakat_price_update_failed)
-            updatedAtMillis > 0L -> stringResource(
-                R.string.zakat_price_updated_at,
-                formatPriceTimestamp(updatedAtMillis)
-            )
-            else -> stringResource(R.string.zakat_price_never_updated)
-        }
-        Text(
-            text = statusText,
-            style = MaterialTheme.typography.bodySmall,
-            color = if (hasFailed) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            }
-        )
-    }
-}
-
-private fun formatPriceTimestamp(epochMillis: Long): String {
-    val formatter = java.text.DateFormat.getDateTimeInstance(
-        java.text.DateFormat.MEDIUM,
-        java.text.DateFormat.SHORT
-    )
-    return formatter.format(java.util.Date(epochMillis))
-}
-
-@Composable
-private fun ZakatDueRow(
-    label: String,
-    amountText: String,
-    isNisabReached: Boolean,
-    labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    labelWeight: FontWeight = FontWeight.SemiBold,
-    amountStyle: TextStyle = LocalTextStyle.current,
-    amountWeight: FontWeight = FontWeight.Bold
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = label, style = labelStyle, fontWeight = labelWeight)
-            Text(
-                text = amountText,
-                style = amountStyle,
-                fontWeight = amountWeight,
-                color = if (isNisabReached) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        StatusPill(
-            text = stringResource(if (isNisabReached) R.string.zakat_status_nisab_reached else R.string.zakat_status_below_nisab),
-            containerColor = if (isNisabReached) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = if (isNisabReached) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-fun CalculatorTabContent(
-    settings: CalculationSettings,
-    preferences: SalatiPreferences,
-    scrollState: ScrollState,
-    selectedStandard: Int,
-    onSelectStandard: (Int) -> Unit,
-    cashState: MutableState<String>,
-    goldWeightState: MutableState<String>,
-    silverWeightState: MutableState<String>
-) {
-    val scope = rememberCoroutineScope()
-    val parseDouble = { input: String -> ZakatCalculator.parseAmount(input) ?: 0.0 }
-    val pricesMatchCurrency = ZakatCalculator.doPricesMatchCurrency(
-        settings.zakatPricesCurrencyCode,
-        settings.zakatCurrencyCode
-    )
-    val currencySymbol = io.github.sulfuro25.salati.core.computation.zakatCurrencySymbolFor(settings.zakatCurrencyCode)
-    val pricePerGramUnit = "$currencySymbol/g"
-    val displayLocale = LocalConfiguration.current.locales[0]
-    val formatAmount = remember(displayLocale, currencySymbol) {
-        { amount: Double, withGrouping: Boolean ->
-            val pattern = if (withGrouping) "%,.2f" else "%.2f"
-            currencySymbol + " " + String.format(displayLocale, pattern, amount)
-        }
-    }
-
-    val goldPrice = settings.zakatGoldPrice
-    val goldCarat = if (settings.zakatGoldCarat in setOf(24, 21, 18, 14, 10)) {
-        settings.zakatGoldCarat
-    } else {
-        24
-    }
-    val effectiveGoldPrice = ZakatCalculator.calculateEffectiveCaratPrice(goldPrice, goldCarat)
-    var goldPriceInput by remember(goldPrice) {
-        mutableStateOf(String.format(Locale.US, "%.2f", goldPrice))
-    }
-
-    // Silver sits near 1.5 per gram, so it needs more decimals than gold to stay accurate
-    // across the 595g Nisab threshold.
-    var silverPriceInput by remember(settings.zakatSilverPrice) {
-        mutableStateOf(String.format(Locale.US, "%.3f", settings.zakatSilverPrice))
-    }
-
-    var cashVal by cashState
-    var goldJewelryWeight by goldWeightState
-    var silverJewelryWeight by silverWeightState
-
-    val goldNisabValue = settings.zakatNisabGram * goldPrice
-    val silverNisabValue = settings.zakatNisabSilverGram * settings.zakatSilverPrice
-
-    val activeNisabValue = if (selectedStandard == 0) goldNisabValue else silverNisabValue
-
-    val cashAssets = parseDouble(cashVal)
-    val goldWeight = parseDouble(goldJewelryWeight)
-    val estimatedGoldValue = goldWeight * effectiveGoldPrice
-    val silverWeight = parseDouble(silverJewelryWeight)
-    val estimatedSilverValue = silverWeight * settings.zakatSilverPrice
-
-    // In Islamic jurisprudence, Nisab is evaluated on the aggregate of all zakatable
-    // wealth (Cash + Gold + Silver). If total wealth reaches the Nisab threshold,
-    // Zakat (2.5%) is due across all qualifying assets.
-    val totalWealth = cashAssets + estimatedGoldValue + estimatedSilverValue
-    val isTotalNisabReached = totalWealth >= activeNisabValue && totalWealth > 0.0
-
-    val isCashNisabReached = isTotalNisabReached && cashAssets > 0.0
-    val cashZakatDue = if (isTotalNisabReached) cashAssets * 0.025 else 0.0
-
-    val isGoldJewelryNisabReached = isTotalNisabReached && goldWeight > 0.0
-    val goldJewelryZakatDue = if (isTotalNisabReached) estimatedGoldValue * 0.025 else 0.0
-
-    val isSilverJewelryNisabReached = isTotalNisabReached && silverWeight > 0.0
-    val silverJewelryZakatDue = if (isTotalNisabReached) estimatedSilverValue * 0.025 else 0.0
-
-    val totalZakatDue = if (isTotalNisabReached) totalWealth * 0.025 else 0.0
-
-    val updatePreferences = { transform: (CalculationSettings) -> CalculationSettings ->
-        scope.launch {
-            preferences.updateSettings(transform)
-        }
-    }
-
-    var isRefreshingPrices by remember { mutableStateOf(false) }
-    var priceRefreshFailed by remember { mutableStateOf(false) }
-
-    suspend fun refreshMetalPrices() {
-        isRefreshingPrices = true
-        priceRefreshFailed = false
-        when (
-            val result = io.github.sulfuro25.salati.core.computation.MetalsPriceRepository
-                .fetchLatestPrices(settings.zakatCurrencyCode)
-        ) {
-            is io.github.sulfuro25.salati.core.computation.MetalPricesResult.Success -> {
-                updatePreferences {
-                    it.copy(
-                        zakatGoldPrice = result.prices.goldPricePerGram,
-                        zakatSilverPrice = result.prices.silverPricePerGram,
-                        zakatPricesUpdatedAt = result.prices.fetchedAtMillis,
-                        zakatPricesCurrencyCode = result.prices.currencyCode
-                    )
-                }
-            }
-            io.github.sulfuro25.salati.core.computation.MetalPricesResult.Unavailable -> {
-                priceRefreshFailed = true
-            }
-        }
-        isRefreshingPrices = false
-    }
-
-    // Re-fetch whenever the selected currency changes, so displayed prices are always
-    // quoted in the currency the amounts are labelled with.
-    LaunchedEffect(settings.zakatCurrencyCode) { refreshMetalPrices() }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(start = SalatiSpacing.md, end = SalatiSpacing.md, top = 4.dp, bottom = SalatiSpacing.md),
-        verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
-    ) {
-        if (!pricesMatchCurrency) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                ),
-                shape = SalatiShapeTokens.Control
-            ) {
-                Row(
-                    modifier = Modifier.padding(SalatiSpacing.md),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                    Text(
-                        text = stringResource(
-                            R.string.zakat_currency_mismatch_warning,
-                            settings.zakatPricesCurrencyCode,
-                            settings.zakatCurrencyCode
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                }
-            }
-        }
-
-        Column(modifier = Modifier.fillMaxWidth()) {
-            val cardBg = MaterialTheme.colorScheme.surfaceVariant
-            val borderColor = MaterialTheme.colorScheme.outline
-            val isGold = selectedStandard == 0
-            val isSilver = selectedStandard == 1
-            val goldTabBorderPath = remember { Path() }
-            val silverTabBorderPath = remember { Path() }
-
-            // Top-docked arched tabs outside the price card
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(49.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                // Gold Tab (Half-circle / arched, outside the card)
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(if (isGold) 49.dp else 48.dp)
-                        .zIndex(if (isGold) 2f else 0f)
-                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 0.dp, bottomEnd = 0.dp))
-                        .background(if (isGold) cardBg else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
-                        .clickable { onSelectStandard(0) }
-                        .drawBehind {
-                            val strokePx = 1.dp.toPx()
-                            val r = 16.dp.toPx()
-                            val w = size.width
-                            val h = size.height
-                            val path = goldTabBorderPath.apply {
-                                reset()
-                                if (isGold) {
-                                    moveTo(strokePx / 2f, h + 2.dp.toPx())
-                                    lineTo(strokePx / 2f, r)
-                                    arcTo(
-                                        rect = Rect(strokePx / 2f, strokePx / 2f, strokePx / 2f + 2 * r, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 180f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f - r, strokePx / 2f)
-                                    arcTo(
-                                        rect = Rect(w - strokePx / 2f - 2 * r, strokePx / 2f, w - strokePx / 2f, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 270f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f, h + 2.dp.toPx())
-                                } else {
-                                    moveTo(strokePx / 2f, h - strokePx / 2f)
-                                    lineTo(strokePx / 2f, r)
-                                    arcTo(
-                                        rect = Rect(strokePx / 2f, strokePx / 2f, strokePx / 2f + 2 * r, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 180f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f - r, strokePx / 2f)
-                                    arcTo(
-                                        rect = Rect(w - strokePx / 2f - 2 * r, strokePx / 2f, w - strokePx / 2f, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 270f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f, h - strokePx / 2f)
-                                    lineTo(strokePx / 2f, h - strokePx / 2f)
-                                    close()
-                                }
-                            }
-                            drawPath(
-                                path,
-                                color = if (isGold) borderColor else borderColor.copy(alpha = 0.5f),
-                                style = Stroke(width = strokePx)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.zakat_tab_gold),
-                        style = if (isGold) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyMedium,
-                        fontWeight = if (isGold) FontWeight.ExtraBold else FontWeight.Normal,
-                        color = if (isGold) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                        letterSpacing = if (isGold) 0.5.sp else 0.sp
-                    )
-                }
-
-                // Silver Tab (Half-circle / arched, outside the card)
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(if (isSilver) 49.dp else 48.dp)
-                        .zIndex(if (isSilver) 2f else 0f)
-                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 0.dp, bottomEnd = 0.dp))
-                        .background(if (isSilver) cardBg else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
-                        .clickable { onSelectStandard(1) }
-                        .drawBehind {
-                            val strokePx = 1.dp.toPx()
-                            val r = 16.dp.toPx()
-                            val w = size.width
-                            val h = size.height
-                            val path = silverTabBorderPath.apply {
-                                reset()
-                                if (isSilver) {
-                                    moveTo(strokePx / 2f, h + 2.dp.toPx())
-                                    lineTo(strokePx / 2f, r)
-                                    arcTo(
-                                        rect = Rect(strokePx / 2f, strokePx / 2f, strokePx / 2f + 2 * r, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 180f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f - r, strokePx / 2f)
-                                    arcTo(
-                                        rect = Rect(w - strokePx / 2f - 2 * r, strokePx / 2f, w - strokePx / 2f, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 270f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f, h + 2.dp.toPx())
-                                } else {
-                                    moveTo(strokePx / 2f, h - strokePx / 2f)
-                                    lineTo(strokePx / 2f, r)
-                                    arcTo(
-                                        rect = Rect(strokePx / 2f, strokePx / 2f, strokePx / 2f + 2 * r, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 180f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f - r, strokePx / 2f)
-                                    arcTo(
-                                        rect = Rect(w - strokePx / 2f - 2 * r, strokePx / 2f, w - strokePx / 2f, strokePx / 2f + 2 * r),
-                                        startAngleDegrees = 270f,
-                                        sweepAngleDegrees = 90f,
-                                        forceMoveTo = false
-                                    )
-                                    lineTo(w - strokePx / 2f, h - strokePx / 2f)
-                                    lineTo(strokePx / 2f, h - strokePx / 2f)
-                                    close()
-                                }
-                            }
-                            drawPath(
-                                path,
-                                color = if (isSilver) borderColor else borderColor.copy(alpha = 0.5f),
-                                style = Stroke(width = strokePx)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.zakat_tab_silver),
-                        style = if (isSilver) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyMedium,
-                        fontWeight = if (isSilver) FontWeight.ExtraBold else FontWeight.Normal,
-                        color = if (isSilver) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                        letterSpacing = if (isSilver) 0.5.sp else 0.sp
-                    )
-                }
-            }
-
-            // Current Metal Price Card Body
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset(y = (-1).dp)
-                    .zIndex(1f),
-                shape = RoundedCornerShape(
-                    topStart = 0.dp,
-                    topEnd = 0.dp,
-                    bottomStart = 16.dp,
-                    bottomEnd = 16.dp
-                ),
-                color = cardBg,
-                border = BorderStroke(1.dp, borderColor)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(SalatiSpacing.md),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    if (selectedStandard == 0) {
-                        PriceRefreshHeader(
-                            label = stringResource(R.string.zakat_current_gold_price),
-                            isRefreshing = isRefreshingPrices,
-                            updatedAtMillis = settings.zakatPricesUpdatedAt,
-                            hasFailed = priceRefreshFailed,
-                            onRefresh = { scope.launch { refreshMetalPrices() } }
-                        )
-
-                        OutlinedTextField(
-                            value = goldPriceInput,
-                            onValueChange = { input ->
-                                if (input.isEmpty() || input.matches(Regex("^\\d*\\.?\\d{0,2}$"))) {
-                                    goldPriceInput = input
-                                    val price = input.toDoubleOrNull()
-                                    if (price != null) {
-                                        updatePreferences { it.copy(zakatGoldPrice = price) }
-                                    }
-                                }
-                            },
-                            label = { Text(stringResource(R.string.zakat_edit_gold_price)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                            singleLine = true,
-                            trailingIcon = { Text(pricePerGramUnit, modifier = Modifier.padding(end = 8.dp)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = SalatiShapeTokens.Control
-                        )
-
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = SalatiShapeTokens.Control,
-                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column {
-                                    Text(stringResource(R.string.zakat_nisab_value_title), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                                    Text(
-                                        stringResource(R.string.zakat_nisab_gold_equiv),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                Text(
-                                    text = formatAmount(activeNisabValue, true),
-                                    fontWeight = FontWeight.Black,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    } else {
-                        PriceRefreshHeader(
-                            label = stringResource(R.string.zakat_current_silver_price),
-                            isRefreshing = isRefreshingPrices,
-                            updatedAtMillis = settings.zakatPricesUpdatedAt,
-                            hasFailed = priceRefreshFailed,
-                            onRefresh = { scope.launch { refreshMetalPrices() } }
-                        )
-
-                        OutlinedTextField(
-                            value = silverPriceInput,
-                            onValueChange = { input ->
-                                if (input.isEmpty() || input.matches(Regex("^\\d*\\.?\\d{0,4}$"))) {
-                                    silverPriceInput = input
-                                    val price = input.toDoubleOrNull()
-                                    if (price != null) {
-                                        updatePreferences { it.copy(zakatSilverPrice = price) }
-                                    }
-                                }
-                            },
-                            label = { Text(stringResource(R.string.zakat_edit_silver_price)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                            singleLine = true,
-                            trailingIcon = { Text(pricePerGramUnit, modifier = Modifier.padding(end = 8.dp)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = SalatiShapeTokens.Control
-                        )
-
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = SalatiShapeTokens.Control,
-                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column {
-                                    Text(stringResource(R.string.zakat_nisab_value_title), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                                    Text(stringResource(R.string.zakat_nisab_silver_equiv), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                                Text(
-                                    text = formatAmount(activeNisabValue, true),
-                                    fontWeight = FontWeight.Black,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        SalatiSectionCard(
-            bordered = true,
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = SalatiSpacing.md, end = SalatiSpacing.md, top = SalatiSpacing.sm),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .height(18.dp)
-                            .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(2.dp))
-                    )
-                    Text(
-                        text = stringResource(R.string.zakat_cash_title),
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = SalatiSpacing.md, end = SalatiSpacing.md, bottom = SalatiSpacing.md, top = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = cashVal,
-                        onValueChange = { cashVal = it },
-                        label = { Text(stringResource(R.string.zakat_cash_assets_label)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                        singleLine = true,
-                        trailingIcon = { Text(settings.zakatCurrencyCode, modifier = Modifier.padding(end = 8.dp)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = SalatiShapeTokens.Control
-                    )
-
-                    Text(
-                        text = stringResource(R.string.zakat_cash_assets_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f))
-
-                    ZakatDueRow(
-                        label = stringResource(R.string.zakat_cash_due),
-                        amountText = formatAmount(cashZakatDue, false),
-                        isNisabReached = isCashNisabReached,
-                        labelWeight = FontWeight.Bold,
-                        amountStyle = MaterialTheme.typography.titleMedium,
-                        amountWeight = FontWeight.Black
-                    )
-                }
-            }
-        }
-
-        SalatiSectionCard(
-            bordered = true,
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = SalatiSpacing.md, end = SalatiSpacing.md, top = SalatiSpacing.sm),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .height(18.dp)
-                            .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(2.dp))
-                    )
-                    Text(
-                        text = stringResource(R.string.zakat_jewelry_title),
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = SalatiSpacing.md, end = SalatiSpacing.md, bottom = SalatiSpacing.md, top = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    if (selectedStandard == 0) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(
-                                text = stringResource(R.string.zakat_gold_jewelry_subtitle),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = stringResource(R.string.zakat_gold_carat_label),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                listOf(24, 21, 18, 14, 10).forEach { carat ->
-                                    FilterChip(
-                                        selected = goldCarat == carat,
-                                        onClick = {
-                                            updatePreferences { it.copy(zakatGoldCarat = carat) }
-                                        },
-                                        label = { Text(stringResource(R.string.zakat_gold_carat_value, carat)) },
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                }
-                            }
-                            OutlinedTextField(
-                                value = goldJewelryWeight,
-                                onValueChange = { goldJewelryWeight = it },
-                                label = { Text(stringResource(R.string.zakat_gold_jewelry_label)) },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                                singleLine = true,
-                                trailingIcon = { Text(stringResource(R.string.zakat_unit_gram), modifier = Modifier.padding(end = 8.dp)) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = SalatiShapeTokens.Control
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(stringResource(R.string.zakat_estimated_value), style = MaterialTheme.typography.bodySmall)
-                                Text(formatAmount(estimatedGoldValue, false), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
-                            }
-                            ZakatDueRow(
-                                label = stringResource(R.string.zakat_gold_due),
-                                amountText = formatAmount(goldJewelryZakatDue, false),
-                                isNisabReached = isGoldJewelryNisabReached
-                            )
-                        }
-                    } else {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(
-                                text = stringResource(R.string.zakat_silver_jewelry_subtitle),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column {
-                                    Text(stringResource(R.string.zakat_nisab_value_title), style = MaterialTheme.typography.bodySmall)
-                                    Text(stringResource(R.string.zakat_nisab_silver_equiv), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                                Text(formatAmount(silverNisabValue, false), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
-                            }
-                            OutlinedTextField(
-                                value = silverJewelryWeight,
-                                onValueChange = { silverJewelryWeight = it },
-                                label = { Text(stringResource(R.string.zakat_silver_jewelry_label)) },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                                singleLine = true,
-                                trailingIcon = { Text(stringResource(R.string.zakat_unit_gram), modifier = Modifier.padding(end = 8.dp)) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = SalatiShapeTokens.Control
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(stringResource(R.string.zakat_estimated_value), style = MaterialTheme.typography.bodySmall)
-                                Text(formatAmount(estimatedSilverValue, false), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
-                            }
-                            ZakatDueRow(
-                                label = stringResource(R.string.zakat_silver_due),
-                                amountText = formatAmount(silverJewelryZakatDue, false),
-                                isNisabReached = isSilverJewelryNisabReached
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        SalatiSectionCard(
-            modifier = Modifier.fillMaxWidth(),
-            bordered = true,
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ) {
+        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SalatiSpacing.lg),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs)
             ) {
-                Text(
-                    text = stringResource(R.string.zakat_total_due_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                Text(
-                    text = formatAmount(totalZakatDue, true),
-                    style = TextStyle(
-                        fontSize = 36.sp,
-                        fontWeight = FontWeight.Black,
-                        fontFeatureSettings = "tnum"
-                    ),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                if (!assessment.pricesMatchCurrency) {
+                    CurrencyMismatchWarning(settings)
+                    Spacer(modifier = Modifier.height(SalatiSpacing.sm))
+                }
+
+                AnimatedContent(
+                    targetState = step,
+                    transitionSpec = {
+                        val forward = targetState > initialState
+                        val offset = if (forward) 1 else -1
+                        (slideInHorizontally(tween(250)) { width -> offset * width / 4 } + fadeIn(tween(250)))
+                            .togetherWith(
+                                slideOutHorizontally(tween(200)) { width -> -offset * width / 4 } +
+                                    fadeOut(tween(200))
+                            )
+                    },
+                    label = "zakatStepContent"
+                ) { targetStep ->
+                    when (targetStep) {
+                        0 -> ZakatStandardStep(
+                            selectedStandard = assessment.standard,
+                            onSelectStandard = { value -> update { it.copy(zakatStandard = value) } },
+                            currencyLabel = currencyLabelFor(settings.zakatCurrencyCode),
+                            onOpenCurrency = { showCurrencySheet = true },
+                            nisabThresholdText = formatAmount(assessment.nisabThreshold, true),
+                            priceSummary = {
+                                PriceRefreshHeader(
+                                    isRefreshing = isRefreshingPrices,
+                                    updatedAtMillis = settings.zakatPricesUpdatedAt,
+                                    hasFailed = priceRefreshFailed,
+                                    onRefresh = { scope.launch { refreshMetalPrices() } }
+                                )
+                            }
+                        )
+
+                        1 -> ZakatCashStep(
+                            currencySymbol = currencySymbol,
+                            cashOnHand = settings.zakatCashOnHand,
+                            bankBalance = settings.zakatBankBalance,
+                            investments = settings.zakatInvestments,
+                            receivables = settings.zakatReceivables,
+                            liabilities = settings.zakatLiabilities,
+                            subtotalText = formatAmount(assessment.liquidAssets, true),
+                            onCashOnHandChange = { v -> update { it.copy(zakatCashOnHand = v) } },
+                            onBankBalanceChange = { v -> update { it.copy(zakatBankBalance = v) } },
+                            onInvestmentsChange = { v -> update { it.copy(zakatInvestments = v) } },
+                            onReceivablesChange = { v -> update { it.copy(zakatReceivables = v) } },
+                            onLiabilitiesChange = { v -> update { it.copy(zakatLiabilities = v) } }
+                        )
+
+                        2 -> ZakatMetalsStep(
+                            goldItems = settings.zakatGoldItems,
+                            silverItems = settings.zakatSilverItems,
+                            totalPureGoldText = stringResource(
+                                R.string.zakat_gold_total_pure,
+                                formatGrams(assessment.pureGoldGrams)
+                            ),
+                            totalFineSilverText = stringResource(
+                                R.string.zakat_silver_total_fine,
+                                formatGrams(assessment.fineSilverGrams)
+                            ),
+                            onAddGoldItem = {
+                                update {
+                                    it.copy(
+                                        zakatGoldItems = it.zakatGoldItems +
+                                            ZakatGoldItem(id = UUID.randomUUID().toString())
+                                    )
+                                }
+                            },
+                            onUpdateGoldItem = { edited ->
+                                update { current ->
+                                    current.copy(
+                                        zakatGoldItems = current.zakatGoldItems.map {
+                                            if (it.id == edited.id) edited else it
+                                        }
+                                    )
+                                }
+                            },
+                            onRemoveGoldItem = { id ->
+                                update { current ->
+                                    current.copy(
+                                        zakatGoldItems = current.zakatGoldItems.filterNot { it.id == id }
+                                    )
+                                }
+                            },
+                            onAddSilverItem = {
+                                update {
+                                    it.copy(
+                                        zakatSilverItems = it.zakatSilverItems +
+                                            ZakatSilverItem(id = UUID.randomUUID().toString())
+                                    )
+                                }
+                            },
+                            onUpdateSilverItem = { edited ->
+                                update { current ->
+                                    current.copy(
+                                        zakatSilverItems = current.zakatSilverItems.map {
+                                            if (it.id == edited.id) edited else it
+                                        }
+                                    )
+                                }
+                            },
+                            onRemoveSilverItem = { id ->
+                                update { current ->
+                                    current.copy(
+                                        zakatSilverItems = current.zakatSilverItems.filterNot { it.id == id }
+                                    )
+                                }
+                            }
+                        )
+
+                        else -> ZakatSummaryStep(
+                            settings = settings,
+                            assessment = assessment,
+                            formatAmount = formatAmount,
+                            onStartDateChanged = { date ->
+                                update { it.copy(zakatHawlStartEpochDay = date?.toEpochDay()) }
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(SalatiSpacing.xl))
             }
         }
 
-        HawlTrackerCard(
-            settings = settings,
-            onStartDateChanged = { date ->
-                updatePreferences { it.copy(zakatHawlStartEpochDay = date?.toEpochDay()) }
-            }
+        ZakatStepNavigation(
+            step = step,
+            onBack = { step = (step - 1).coerceAtLeast(0) },
+            onNext = { step = (step + 1).coerceAtMost(ZAKAT_STEP_COUNT - 1) }
         )
+    }
 
-        Spacer(modifier = Modifier.height(32.dp))
+    if (showCurrencySheet) {
+        CurrencySelectionSheet(
+            selectedCode = settings.zakatCurrencyCode,
+            onSelect = { code -> update { it.copy(zakatCurrencyCode = code) } },
+            onDismiss = { showCurrencySheet = false }
+        )
     }
 }
+
+// ---------------------------------------------------------------------------
+// Derived assessment
+// ---------------------------------------------------------------------------
+
+internal data class ZakatAssessment(
+    val standard: Int,
+    val liquidAssets: Double,
+    val pureGoldGrams: Double,
+    val fineSilverGrams: Double,
+    val goldValue: Double,
+    val silverValue: Double,
+    val grossAssets: Double,
+    val liabilities: Double,
+    val netWealth: Double,
+    val nisabThreshold: Double,
+    val isEligible: Boolean,
+    val zakatDue: Double,
+    val pricesMatchCurrency: Boolean
+)
+
+@Composable
+private fun rememberZakatAssessment(settings: CalculationSettings): ZakatAssessment =
+    remember(settings) { computeAssessment(settings) }
+
+/**
+ * Pure derivation of the whole assessment, kept out of the composables so the arithmetic
+ * can be exercised directly in tests.
+ */
+internal fun computeAssessment(settings: CalculationSettings): ZakatAssessment {
+    val liquid = settings.zakatCashOnHand +
+        settings.zakatBankBalance +
+        settings.zakatInvestments +
+        settings.zakatReceivables
+
+    val pureGold = ZakatCalculator.totalPureGoldWeight(settings.zakatGoldItems)
+    val fineSilver = ZakatCalculator.totalFineSilverWeight(settings.zakatSilverItems)
+    val goldValue = ZakatCalculator.valueForPureWeight(pureGold, settings.zakatGoldPrice)
+    val silverValue = ZakatCalculator.valueForPureWeight(fineSilver, settings.zakatSilverPrice)
+
+    val nisab = if (settings.zakatStandard == STANDARD_SILVER) {
+        ZakatCalculator.calculateNisabValue(settings.zakatNisabSilverGram, settings.zakatSilverPrice)
+    } else {
+        ZakatCalculator.calculateNisabValue(settings.zakatNisabGram, settings.zakatGoldPrice)
+    }
+
+    val result = ZakatCalculator.computeZakat(
+        cash = settings.zakatCashOnHand + settings.zakatBankBalance,
+        goldValue = goldValue,
+        silverValue = silverValue,
+        otherAssets = settings.zakatInvestments + settings.zakatReceivables,
+        shortTermLiabilities = settings.zakatLiabilities,
+        nisabThreshold = nisab
+    )
+
+    return ZakatAssessment(
+        standard = settings.zakatStandard,
+        liquidAssets = liquid,
+        pureGoldGrams = pureGold,
+        fineSilverGrams = fineSilver,
+        goldValue = goldValue,
+        silverValue = silverValue,
+        grossAssets = result.totalAssets,
+        liabilities = settings.zakatLiabilities,
+        netWealth = result.netWealth,
+        nisabThreshold = result.nisabThreshold,
+        isEligible = result.isEligible,
+        zakatDue = result.zakatDue,
+        pricesMatchCurrency = ZakatCalculator.doPricesMatchCurrency(
+            settings.zakatPricesCurrencyCode,
+            settings.zakatCurrencyCode
+        )
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Step 4 - summary, eligibility badge and Hawl calendar hand-off
+// ---------------------------------------------------------------------------
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HawlTrackerCard(
+private fun ZakatSummaryStep(
     settings: CalculationSettings,
+    assessment: ZakatAssessment,
+    formatAmount: (Double, Boolean) -> String,
     onStartDateChanged: (LocalDate?) -> Unit
 ) {
+    val context = LocalContext.current
     val displayLocale = LocalConfiguration.current.locales[0]
-    val formatter = remember(displayLocale) {
+    val dateFormatter = remember(displayLocale) {
         DateTimeFormatter.ofPattern("d MMM uuuu", displayLocale)
     }
-    val startDate = remember(settings.zakatHawlStartEpochDay) {
+    val hawlStart = remember(settings.zakatHawlStartEpochDay) {
         settings.zakatHawlStartEpochDay?.let(LocalDate::ofEpochDay)
     }
-    val dueDate = remember(startDate) { startDate?.let(::zakatHawlDueDate) }
+    val hawlDue = remember(hawlStart) { hawlStart?.let(::zakatHawlDueDate) }
     var showDatePicker by remember { mutableStateOf(false) }
 
-    SalatiSectionCard(
-        bordered = true,
-        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(SalatiSpacing.md),
-            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
+    val calendarTitle = stringResource(R.string.zakat_hawl_calendar_title)
+    val calendarDescription = stringResource(R.string.zakat_hawl_calendar_description)
+    val calendarUnavailable = stringResource(R.string.zakat_hawl_calendar_unavailable)
+
+    Column(verticalArrangement = Arrangement.spacedBy(SalatiSpacing.md)) {
+        StepHeading(
+            title = stringResource(R.string.zakat_summary_heading),
+            explainer = stringResource(R.string.zakat_summary_breakdown)
+        )
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = SalatiShapeTokens.Card,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
-            Text(
-                text = stringResource(R.string.hawl_milestone_title),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = if (startDate != null && dueDate != null) {
-                    stringResource(
-                        R.string.hawl_milestone_summary,
-                        formatter.format(dueDate),
-                        formatter.format(startDate)
-                    )
-                } else {
-                    stringResource(R.string.hawl_milestone_not_set)
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
+            Column(
+                modifier = Modifier.padding(SalatiSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
             ) {
-                if (dueDate != null) {
+                TotalsRow(
+                    label = stringResource(R.string.zakat_summary_cash_line),
+                    value = formatAmount(assessment.liquidAssets, true)
+                )
+                TotalsRow(
+                    label = stringResource(
+                        R.string.zakat_summary_gold_line,
+                        formatGrams(assessment.pureGoldGrams)
+                    ),
+                    value = formatAmount(assessment.goldValue, true)
+                )
+                TotalsRow(
+                    label = stringResource(
+                        R.string.zakat_summary_silver_line,
+                        formatGrams(assessment.fineSilverGrams)
+                    ),
+                    value = formatAmount(assessment.silverValue, true)
+                )
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+                TotalsRow(
+                    label = stringResource(R.string.zakat_summary_gross),
+                    value = formatAmount(assessment.grossAssets, true)
+                )
+                TotalsRow(
+                    label = stringResource(R.string.zakat_summary_liabilities),
+                    value = formatAmount(assessment.liabilities, true)
+                )
+                TotalsRow(
+                    label = stringResource(R.string.zakat_summary_net),
+                    value = formatAmount(assessment.netWealth, true),
+                    emphasised = true
+                )
+                TotalsRow(
+                    label = stringResource(R.string.zakat_summary_nisab),
+                    value = formatAmount(assessment.nisabThreshold, true)
+                )
+            }
+        }
+
+        EligibilityCard(
+            isEligible = assessment.isEligible,
+            zakatDueText = formatAmount(assessment.zakatDue, true),
+            belowNisabText = stringResource(
+                R.string.zakat_summary_below_nisab,
+                formatAmount(assessment.nisabThreshold, true)
+            )
+        )
+
+        // Hawl milestone: the in-app record plus a hand-off to the user's own calendar.
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = SalatiShapeTokens.Card,
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        ) {
+            Column(
+                modifier = Modifier.padding(SalatiSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
+            ) {
+                Text(
+                    text = stringResource(R.string.hawl_milestone_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = if (hawlStart != null && hawlDue != null) {
+                        stringResource(
+                            R.string.hawl_milestone_summary,
+                            dateFormatter.format(hawlDue),
+                            dateFormatter.format(hawlStart)
+                        )
+                    } else {
+                        stringResource(R.string.hawl_milestone_not_set)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)) {
                     TextButton(onClick = { showDatePicker = true }) {
                         Text(stringResource(R.string.hawl_set_date))
                     }
-                    TextButton(onClick = { onStartDateChanged(null) }) {
-                        Text(stringResource(R.string.hawl_clear_date))
+                    if (hawlStart != null) {
+                        TextButton(onClick = { onStartDateChanged(null) }) {
+                            Text(stringResource(R.string.hawl_clear_date))
+                        }
                     }
-                } else {
-                    TextButton(onClick = { showDatePicker = true }) {
-                        Text(stringResource(R.string.hawl_set_date))
-                    }
+                }
+
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+                val calendarDueDate = hawlDue ?: ZakatHawlCalendar.dueDateFrom(LocalDate.now())
+                Text(
+                    text = stringResource(
+                        R.string.zakat_hawl_calendar_helper,
+                        dateFormatter.format(calendarDueDate)
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                FilledTonalButton(
+                    onClick = {
+                        val intent = ZakatHawlCalendar.buildInsertIntent(
+                            title = calendarTitle,
+                            description = calendarDescription,
+                            dueDate = calendarDueDate
+                        )
+                        try {
+                            context.startActivity(intent)
+                        } catch (notFound: ActivityNotFoundException) {
+                            Toast.makeText(context, calendarUnavailable, Toast.LENGTH_LONG).show()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Event,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.size(SalatiSpacing.xs))
+                    Text(stringResource(R.string.zakat_hawl_calendar_action))
                 }
             }
         }
     }
 
     if (showDatePicker) {
-        val initialDate = startDate ?: LocalDate.now()
+        val initialDate = hawlStart ?: LocalDate.now()
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = initialDate.toEpochDay() * 86_400_000L
         )
@@ -969,11 +577,9 @@ private fun HawlTrackerCard(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        datePickerState.selectedDateMillis?.let { selectedMillis ->
+                        datePickerState.selectedDateMillis?.let { millis ->
                             onStartDateChanged(
-                                Instant.ofEpochMilli(selectedMillis)
-                                    .atZone(ZoneId.of("UTC"))
-                                    .toLocalDate()
+                                Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC")).toLocalDate()
                             )
                         }
                         showDatePicker = false
@@ -991,4 +597,234 @@ private fun HawlTrackerCard(
             DatePicker(state = datePickerState)
         }
     }
+}
+
+@Composable
+private fun EligibilityCard(
+    isEligible: Boolean,
+    zakatDueText: String,
+    belowNisabText: String
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = SalatiShapeTokens.Card,
+        color = if (isEligible) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        },
+        contentColor = if (isEligible) {
+            MaterialTheme.colorScheme.onPrimaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
+    ) {
+        Column(
+            modifier = Modifier.padding(SalatiSpacing.md),
+            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
+        ) {
+            if (isEligible) {
+                StatusPill(
+                    text = stringResource(R.string.zakat_summary_due_badge),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+                Text(
+                    text = zakatDueText,
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Black
+                )
+            } else {
+                Text(
+                    text = belowNisabText,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Chrome: step indicator, navigation, price header
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun ZakatStepIndicator(currentStep: Int) {
+    val stepTitles = listOf(
+        stringResource(R.string.zakat_step_1_title),
+        stringResource(R.string.zakat_step_2_title),
+        stringResource(R.string.zakat_step_3_title),
+        stringResource(R.string.zakat_step_4_title)
+    )
+    val label = stringResource(
+        R.string.zakat_step_accessibility,
+        currentStep + 1,
+        ZAKAT_STEP_COUNT,
+        stepTitles[currentStep.coerceIn(0, ZAKAT_STEP_COUNT - 1)]
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { contentDescription = label },
+        verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            repeat(ZAKAT_STEP_COUNT) { index ->
+                val reached = index <= currentStep
+                val weight by animateFloatAsState(
+                    targetValue = if (reached) 1f else 0.35f,
+                    label = "zakatStepSegment$index"
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(4.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = weight),
+                            shape = RoundedCornerShape(2.dp)
+                        )
+                )
+            }
+        }
+        Text(
+            text = stringResource(R.string.zakat_step_indicator, currentStep + 1, ZAKAT_STEP_COUNT) +
+                " · " + stepTitles[currentStep.coerceIn(0, ZAKAT_STEP_COUNT - 1)],
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun ZakatStepNavigation(
+    step: Int,
+    onBack: () -> Unit,
+    onNext: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedButton(
+                onClick = onBack,
+                enabled = step > 0,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(stringResource(R.string.zakat_step_back))
+            }
+            Button(
+                onClick = onNext,
+                enabled = step < ZAKAT_STEP_COUNT - 1,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    stringResource(
+                        if (step == ZAKAT_STEP_COUNT - 2) {
+                            R.string.zakat_step_finish
+                        } else {
+                            R.string.zakat_step_next
+                        }
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PriceRefreshHeader(
+    isRefreshing: Boolean,
+    updatedAtMillis: Long,
+    hasFailed: Boolean,
+    onRefresh: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val statusText = when {
+            isRefreshing -> stringResource(R.string.zakat_price_updating)
+            hasFailed -> stringResource(R.string.zakat_price_update_failed)
+            updatedAtMillis > 0L -> stringResource(
+                R.string.zakat_price_updated_at,
+                formatPriceTimestamp(updatedAtMillis)
+            )
+            else -> stringResource(R.string.zakat_price_never_updated)
+        }
+        Text(
+            text = statusText,
+            style = MaterialTheme.typography.bodySmall,
+            color = if (hasFailed) {
+                MaterialTheme.colorScheme.error
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
+            modifier = Modifier.weight(1f)
+        )
+        IconButton(onClick = onRefresh, enabled = !isRefreshing, modifier = Modifier.size(48.dp)) {
+            if (isRefreshing) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = stringResource(R.string.zakat_refresh_price),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrencyMismatchWarning(settings: CalculationSettings) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+        shape = SalatiShapeTokens.Control
+    ) {
+        Text(
+            text = stringResource(
+                R.string.zakat_currency_mismatch_warning,
+                settings.zakatPricesCurrencyCode,
+                settings.zakatCurrencyCode
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onErrorContainer,
+            modifier = Modifier.padding(SalatiSpacing.md)
+        )
+    }
+}
+
+private fun currencyLabelFor(code: String): String {
+    val option = zakatCurrencyOptions.firstOrNull { it.code == code } ?: return code
+    val localized = runCatching {
+        java.util.Currency.getInstance(option.code).getDisplayName()
+    }.getOrDefault(option.displayName)
+    return "${option.code} (${option.symbol}) — $localized"
+}
+
+private fun formatPriceTimestamp(epochMillis: Long): String {
+    val formatter = java.text.DateFormat.getDateTimeInstance(
+        java.text.DateFormat.MEDIUM,
+        java.text.DateFormat.SHORT
+    )
+    return formatter.format(java.util.Date(epochMillis))
 }
