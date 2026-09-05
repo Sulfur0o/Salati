@@ -52,6 +52,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
+        }
         if (signingProperties != null) {
             signingConfigs.create("externalRelease") {
                 storeFile = file(signingProperties.getProperty("storeFile"))

@@ -75,7 +75,7 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     internal fun localizedPrayerName(context: Context, key: String): String {
-        val resId = when (key.lowercase()) {
+        val resId = when (key.lowercase(java.util.Locale.ROOT)) {
             "fajr" -> R.string.prayer_fajr
             "sunrise" -> R.string.prayer_sunrise
             "dhuhr" -> R.string.prayer_dhuhr
@@ -85,7 +85,11 @@ class AlarmReceiver : BroadcastReceiver() {
             "white_days" -> R.string.event_white_day
             else -> null
         }
-        return if (resId != null) context.getString(resId) else key.replaceFirstChar { it.uppercase() }
+        return if (resId != null) {
+            context.getString(resId)
+        } else {
+            key.replaceFirstChar { it.uppercase(java.util.Locale.ROOT) }
+        }
     }
 
     private fun showNotification(

@@ -1,4 +1,4 @@
-﻿package io.github.sulfuro25.salati.core.computation
+package io.github.sulfuro25.salati.core.computation
 
 import io.github.sulfuro25.salati.R
 import java.time.LocalDate

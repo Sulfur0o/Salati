@@ -1,5 +1,6 @@
 package io.github.sulfuro25.salati
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,11 +25,25 @@ import io.github.sulfuro25.salati.data.settings.SalatiPreferences
 import io.github.sulfuro25.salati.theme.SalatiTheme
 import io.github.sulfuro25.salati.ui.settings.LoadedSettingsCache
 import io.github.sulfuro25.salati.ui.settings.applyAppLanguage
+import io.github.sulfuro25.salati.ui.settings.wrapContextForLanguage
 
 class MainActivity : ComponentActivity() {
     private lateinit var permissionRefreshController: PermissionStateRefreshController
     private lateinit var preferences: SalatiPreferences
 
+    // Below API 33 there is no platform per-app locale, so the chosen language has to be
+    // baked into the Activity's own resources here. LoadedSettingsCache is written before
+    // the language sheet asks for a recreate, so the rebuilt Activity picks up the new
+    // choice on its first pass.
+    override fun attachBaseContext(newBase: android.content.Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            super.attachBaseContext(
+                wrapContextForLanguage(newBase, LoadedSettingsCache.latest?.appLanguageCode)
+            )
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

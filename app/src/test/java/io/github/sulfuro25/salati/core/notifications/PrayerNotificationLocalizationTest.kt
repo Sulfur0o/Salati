@@ -1,4 +1,4 @@
-﻿package io.github.sulfuro25.salati.core.notifications
+package io.github.sulfuro25.salati.core.notifications
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider

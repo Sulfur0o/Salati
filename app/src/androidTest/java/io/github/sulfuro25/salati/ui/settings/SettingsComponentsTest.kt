@@ -1,4 +1,4 @@
-﻿package io.github.sulfuro25.salati.ui.settings
+package io.github.sulfuro25.salati.ui.settings
 
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Surface

@@ -46,6 +46,7 @@ fun CalendarScreen(
     val context = LocalContext.current
     val displayLocale = LocalConfiguration.current.locales[0]
     val zoneId = remember(settings.timezoneId) { settings.safeZoneId() }
+    val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
     val today = remember(zoneId) { calendarDateAt(System.currentTimeMillis(), zoneId) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.from(today)) }
     var monthlyData by remember { mutableStateOf<List<AladhanDayData>>(emptyList()) }
@@ -167,8 +168,8 @@ fun CalendarScreen(
                         events = dayEvents[selectedDayIndex] ?: emptyList(),
                         locationContext = stringResource(R.string.daily_location_context, settings.cityName),
                         prayerTimes = times,
-                        timeFormatter = remember(displayLocale, zoneId) {
-                            calendarTimeFormatter(displayLocale, zoneId)
+                        timeFormatter = remember(displayLocale, zoneId, is24Hour) {
+                            calendarTimeFormatter(displayLocale, zoneId, is24Hour)
                         }
                     )
                 }
@@ -534,8 +535,12 @@ internal fun initialCalendarDay(yearMonth: YearMonth, today: LocalDate): Int =
 internal fun calendarDateAt(epochMillis: Long, zoneId: ZoneId): LocalDate =
     Instant.ofEpochMilli(epochMillis).atZone(zoneId).toLocalDate()
 
-internal fun calendarTimeFormatter(locale: Locale, zoneId: ZoneId): DateTimeFormatter =
-    DateTimeFormatter.ofPattern("HH:mm", locale).withZone(zoneId)
+internal fun calendarTimeFormatter(
+    locale: Locale,
+    zoneId: ZoneId,
+    is24Hour: Boolean = true
+): DateTimeFormatter =
+    DateTimeFormatter.ofPattern(if (is24Hour) "HH:mm" else "h:mm a", locale).withZone(zoneId)
 
 internal fun calendarMonthHeading(yearMonth: YearMonth, locale: Locale): String =
     DateTimeFormatter.ofPattern("MMMM uuuu", locale).format(yearMonth.atDay(1))

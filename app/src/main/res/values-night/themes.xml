@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        Dark starting window, so a cold launch in night mode does not flash white before
+        Compose draws. windowLightNavigationBar is API 27+ and is ignored on 24-26.
+    -->
     <style name="Theme.Salati" parent="android:Theme.Material.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <item name="android:windowBackground">#121413</item>
     </style>
 </resources>

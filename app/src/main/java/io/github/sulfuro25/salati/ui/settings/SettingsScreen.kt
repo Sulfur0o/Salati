@@ -71,6 +71,42 @@ internal fun shouldUpdateApplicationLocales(currentTags: String, langCode: Strin
     return currentTags != localeTagsForLanguageCode(langCode)
 }
 
+/**
+ * Language tag the current Activity's resources were built with on API < 33, where ""
+ * means "follow the system". Written by [wrapContextForLanguage] from
+ * `MainActivity.attachBaseContext`, so it always describes the resources actually in
+ * use rather than whatever the deprecated configuration override happened to leave
+ * behind. [applyAppLanguage] compares against it, which is what keeps a language change
+ * to exactly one recreate instead of a recreate loop.
+ */
+@Volatile
+internal var attachedLanguageTag: String = ""
+
+/**
+ * Builds the context an Activity should run on for [langCode] (API < 33). Returns [base]
+ * unchanged for "system default"; otherwise returns a configuration context whose
+ * resources genuinely carry the chosen locale, which survives `recreate()` because
+ * `attachBaseContext` re-applies it on every Activity instance.
+ */
+internal fun wrapContextForLanguage(
+    base: android.content.Context,
+    langCode: String?
+): android.content.Context {
+    attachedLanguageTag = localeTagsForLanguageCode(langCode)
+    if (langCode.isNullOrEmpty()) {
+        java.util.Locale.setDefault(
+            android.content.res.Resources.getSystem().configuration.locales[0]
+        )
+        return base
+    }
+    val target = java.util.Locale.forLanguageTag(langCode)
+    java.util.Locale.setDefault(target)
+    val config = android.content.res.Configuration(base.resources.configuration)
+    config.setLocale(target)
+    config.setLayoutDirection(target)
+    return base.createConfigurationContext(config)
+}
+
 internal fun applyAppLanguage(context: android.content.Context, langCode: String?) {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
         val localeManager = context.getSystemService(android.app.LocaleManager::class.java) ?: return
@@ -84,21 +120,13 @@ internal fun applyAppLanguage(context: android.content.Context, langCode: String
         }
         localeManager.applicationLocales = localeList
     } else {
-        val targetLocale = if (langCode.isNullOrEmpty()) {
-            android.content.res.Resources.getSystem().configuration.locales[0]
-        } else {
-            java.util.Locale.forLanguageTag(langCode)
-        }
-        val current = context.resources.configuration.locales[0]
-        if (current.toLanguageTag().equals(targetLocale.toLanguageTag(), ignoreCase = true)) {
+        // The Activity's resources were fixed at attachBaseContext time, so switching
+        // language means rebuilding the Activity. Comparing against the tag that was
+        // actually attached (rather than re-reading Resources, whose programmatic
+        // override may or may not survive a recreate) makes this converge in one pass.
+        if (localeTagsForLanguageCode(langCode) == attachedLanguageTag) {
             return
         }
-        java.util.Locale.setDefault(targetLocale)
-        val config = context.resources.configuration
-        config.setLocale(targetLocale)
-        config.setLayoutDirection(targetLocale)
-        @Suppress("DEPRECATION")
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
         (context as? android.app.Activity)?.recreate()
     }
 }

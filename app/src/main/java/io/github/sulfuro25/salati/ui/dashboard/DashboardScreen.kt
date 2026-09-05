@@ -57,7 +57,7 @@ import java.util.Locale
 @Composable
 fun DashboardScreen(
     settings: CalculationSettings,
-    onOpenQibla: () -> Unit = {},
+    onOpenQibla: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
