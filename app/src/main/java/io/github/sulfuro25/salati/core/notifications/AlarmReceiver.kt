@@ -64,9 +64,28 @@ class AlarmReceiver : BroadcastReceiver() {
                     )
                 }
                 showNotification(context, prayerName, resolvedKind, vibrateEnabled, soundEnabled)
-                runCatching { io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context) }
+                val widgetPendingResult = goAsync()
+                runCatching {
+                    io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context, widgetPendingResult)
+                }.onFailure {
+                    widgetPendingResult.finish()
+                }
             }
         }
+    }
+
+    internal fun localizedPrayerName(context: Context, key: String): String {
+        val resId = when (key.lowercase()) {
+            "fajr" -> R.string.prayer_fajr
+            "sunrise" -> R.string.prayer_sunrise
+            "dhuhr" -> R.string.prayer_dhuhr
+            "asr" -> R.string.prayer_asr
+            "maghrib" -> R.string.prayer_maghrib
+            "isha" -> R.string.prayer_isha
+            "white_days" -> R.string.event_white_day
+            else -> null
+        }
+        return if (resId != null) context.getString(resId) else key.replaceFirstChar { it.uppercase() }
     }
 
     private fun showNotification(
@@ -84,11 +103,12 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         val channelId = PrayerNotificationChannels.channelFor(vibrateEnabled, soundEnabled)
+        val displayPrayerName = localizedPrayerName(context, prayerName)
 
         val title = when (kind) {
             AlarmScheduler.KIND_WHITE_DAYS -> context.getString(R.string.notification_white_days_title)
-            AlarmScheduler.KIND_PRE_PRAYER -> context.getString(R.string.notification_pre_prayer_title, prayerName)
-            AlarmScheduler.KIND_PRAYER -> context.getString(R.string.notification_prayer_title, prayerName)
+            AlarmScheduler.KIND_PRE_PRAYER -> context.getString(R.string.notification_pre_prayer_title, displayPrayerName)
+            AlarmScheduler.KIND_PRAYER -> context.getString(R.string.notification_prayer_title, displayPrayerName)
             else -> {
                 Log.w(TAG, "Unknown notification kind: $kind, suppressing notification")
                 return
@@ -98,7 +118,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val contentText = when (kind) {
             AlarmScheduler.KIND_WHITE_DAYS -> context.getString(R.string.notification_white_days_message)
             AlarmScheduler.KIND_PRE_PRAYER -> context.getString(R.string.notification_pre_prayer_message)
-            AlarmScheduler.KIND_PRAYER -> context.getString(R.string.notification_prayer_message, prayerName)
+            AlarmScheduler.KIND_PRAYER -> context.getString(R.string.notification_prayer_message, displayPrayerName)
             else -> return
         }
 

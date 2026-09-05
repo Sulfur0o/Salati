@@ -38,6 +38,7 @@ import io.github.sulfuro25.salati.core.computation.PrayerRepository
 import io.github.sulfuro25.salati.core.computation.SalatiPrayerTimes
 import io.github.sulfuro25.salati.core.computation.HijriDateParts
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.safeZoneId
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.theme.SalatiTypeTokens
 import io.github.sulfuro25.salati.ui.components.PrayerTimeRow
@@ -56,12 +57,12 @@ import java.util.Locale
 @Composable
 fun DashboardScreen(
     settings: CalculationSettings,
-    onOpenQibla: () -> Unit,
+    onOpenQibla: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val zoneId = remember(settings.timezoneId) { ZoneId.of(settings.timezoneId) }
+    val zoneId = remember(settings.timezoneId) { settings.safeZoneId() }
     val today = rememberCurrentDashboardDate(zoneId)
     val currentYearMonth = YearMonth.from(today)
 
@@ -125,7 +126,8 @@ fun DashboardScreen(
     }
 
     val displayLocale = LocalConfiguration.current.locales[0]
-    val timeFormat = remember(displayLocale, zoneId) { dashboardTimeFormatter(displayLocale, zoneId) }
+    val is24Hour = android.text.format.DateFormat.is24HourFormat(context)
+    val timeFormat = remember(displayLocale, zoneId, is24Hour) { dashboardTimeFormatter(displayLocale, zoneId, is24Hour) }
     val dateFormat = remember(displayLocale) { dashboardDateFormatter(displayLocale) }
 
     val isAfterMaghrib = rememberIsAfterMaghrib(prayerTimes?.maghrib, zoneId)
@@ -135,8 +137,9 @@ fun DashboardScreen(
         }
     }
 
-    val nextPrayerInfo = if (prayerTimes != null && tomorrowTimes != null) {
-        rememberNextPrayerInfo(prayerTimes, tomorrowTimes.fajr)
+    val nextPrayerInfo = if (prayerTimes != null) {
+        val effectiveTomorrowFajr = tomorrowTimes?.fajr ?: prayerTimes.fajr.plus(java.time.Duration.ofDays(1))
+        rememberNextPrayerInfo(prayerTimes, effectiveTomorrowFajr)
     } else {
         null
     }
@@ -146,7 +149,7 @@ fun DashboardScreen(
             label = stringResource(R.string.daily_loading),
             modifier = modifier
         )
-        prayerTimes == null -> SalatiErrorState(
+        prayerTimes == null || nextPrayerInfo == null -> SalatiErrorState(
             title = stringResource(R.string.daily_error_title),
             message = stringResource(R.string.daily_error_message),
             retryLabel = stringResource(R.string.daily_retry),
@@ -157,7 +160,7 @@ fun DashboardScreen(
             modifier = modifier
         )
         else -> {
-            val activeNextPrayer = checkNotNull(nextPrayerInfo)
+            val activeNextPrayer = nextPrayerInfo
             val nextEventName = stringResource(activeNextPrayer.event.labelRes)
             val nextEventTime = timeFormat.format(activeNextPrayer.eventInstant)
             val nextEventIsDisplayOnly = activeNextPrayer.event == DailyEvent.SUNRISE
@@ -415,11 +418,11 @@ internal fun getNextPrayer(
 }
 
 internal fun formatCountdown(ms: Long): String {
-    val totalSecs = ms / 1000
+    val totalSecs = maxOf(0L, ms / 1000)
     val hours = totalSecs / 3600
     val minutes = (totalSecs % 3600) / 60
     val seconds = totalSecs % 60
-    return String.format(Locale.US, "%02dh %02dm %02ds", hours, minutes, seconds)
+    return String.format(Locale.ROOT, "%02dh %02dm %02ds", hours, minutes, seconds)
 }
 
 internal fun zonedDateAt(epochMillis: Long, zoneId: ZoneId): LocalDate {
@@ -428,8 +431,9 @@ internal fun zonedDateAt(epochMillis: Long, zoneId: ZoneId): LocalDate {
         .toLocalDate()
 }
 
-internal fun dashboardTimeFormatter(locale: Locale, zoneId: ZoneId): DateTimeFormatter {
-    return DateTimeFormatter.ofPattern("HH:mm", locale)
+internal fun dashboardTimeFormatter(locale: Locale, zoneId: ZoneId, is24Hour: Boolean = true): DateTimeFormatter {
+    val pattern = if (is24Hour) "HH:mm" else "h:mm a"
+    return DateTimeFormatter.ofPattern(pattern, locale)
         .withZone(zoneId)
 }
 

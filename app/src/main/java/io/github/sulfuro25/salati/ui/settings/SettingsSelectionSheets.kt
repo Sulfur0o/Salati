@@ -34,8 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import io.github.sulfuro25.salati.R
 import io.github.sulfuro25.salati.core.computation.zakatCurrencyOptions
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
@@ -74,13 +76,13 @@ fun CurrencySelectionSheet(
                 .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs)
         ) {
             Text(
-                text = "Select Zakat Currency",
+                text = stringResource(R.string.currency_sheet_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Used for Nisab threshold and asset valuation",
+                text = stringResource(R.string.currency_sheet_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -90,7 +92,7 @@ fun CurrencySelectionSheet(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Search currency or code...") },
+                placeholder = { Text(stringResource(R.string.currency_search_placeholder)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -101,7 +103,7 @@ fun CurrencySelectionSheet(
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { searchQuery = "" }) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.currency_clear))
                         }
                     }
                 },
@@ -148,8 +150,13 @@ fun CurrencySelectionSheet(
                         Spacer(modifier = Modifier.width(SalatiSpacing.md))
 
                         Column(modifier = Modifier.weight(1f)) {
+                            val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+                            val localizedName = remember(option.code, locale) {
+                                runCatching { java.util.Currency.getInstance(option.code).getDisplayName(locale) }
+                                    .getOrDefault(option.displayName)
+                            }
                             Text(
-                                text = "${option.code} — ${option.displayName}",
+                                text = "${option.code} — $localizedName",
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -197,13 +204,13 @@ fun MethodSelectionSheet(
                 .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs)
         ) {
             Text(
-                text = "Calculation Method",
+                text = stringResource(R.string.method_sheet_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Astronomical angle conventions used for prayer times",
+                text = stringResource(R.string.method_sheet_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

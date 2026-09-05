@@ -3,12 +3,15 @@ package io.github.sulfuro25.salati.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import io.github.sulfuro25.salati.MainActivity
 import io.github.sulfuro25.salati.R
+import io.github.sulfuro25.salati.core.computation.HijriCalendarHelper
+import io.github.sulfuro25.salati.core.computation.HijriDateParts
 import io.github.sulfuro25.salati.core.computation.MonthlyPrayerResult
 import io.github.sulfuro25.salati.core.computation.PrayerRepository
 import io.github.sulfuro25.salati.data.settings.SalatiPreferences
@@ -44,7 +47,7 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
     companion object {
         private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
 
-        fun updateAllWidgets(context: Context) {
+        fun updateAllWidgets(context: Context, pendingResult: BroadcastReceiver.PendingResult? = null) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val componentName = ComponentName(context, SalatiAppWidgetProvider::class.java)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
@@ -54,8 +57,12 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
                         updateWidgets(context, appWidgetManager, appWidgetIds)
                     } catch (e: Exception) {
                         android.util.Log.e("SalatiWidget", "Error updating widget from updateAllWidgets", e)
+                    } finally {
+                        pendingResult?.finish()
                     }
                 }
+            } else {
+                pendingResult?.finish()
             }
         }
 
@@ -76,7 +83,7 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
 
                 val preferences = SalatiPreferences(context)
                 val settings = preferences.settings.first()
-                val zoneId = runCatching { ZoneId.of(settings.timezoneId) }.getOrElse { ZoneId.systemDefault() }
+                val zoneId = io.github.sulfuro25.salati.data.settings.safeZoneId(settings.timezoneId)
                 val now = YearMonth.now(zoneId)
                 val today = LocalDate.now(zoneId)
                 val currentTime = LocalTime.now(zoneId)
@@ -94,18 +101,36 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
 
                 val timings = todaySchedule?.timings
 
+                val isAfterMaghrib = if (timings != null) {
+                    val maghribLocal = parseTime(timings.Maghrib)
+                    maghribLocal != null && currentTime.isAfter(maghribLocal)
+                } else false
+
+                val resolvedHijriDate = HijriCalendarHelper.resolveHijriDate(
+                    gregorianDate = today,
+                    offsetDays = settings.hijriOffset,
+                    isAfterMaghrib = isAfterMaghrib
+                ) { targetDate ->
+                    (result as? MonthlyPrayerResult.Success)?.data
+                        ?.firstOrNull { it.date.gregorian.day.toIntOrNull() == targetDate.dayOfMonth && it.date.gregorian.month.number == targetDate.monthValue }
+                        ?.date?.hijri?.let { h ->
+                            val dayInt = h.day.toIntOrNull()
+                            val yearInt = h.year.toIntOrNull()
+                            if (dayInt != null && yearInt != null) {
+                                HijriDateParts(dayInt, h.month.number, yearInt)
+                            } else null
+                        }
+                }
+
+                val hijriStr = resolvedHijriDate.format()
+
                 for (appWidgetId in appWidgetIds) {
                     val views = RemoteViews(context.packageName, R.layout.salati_widget_layout)
                     views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
 
                     val shortCity = settings.cityName.substringBefore(",")
                     views.setTextViewText(R.id.widget_location, shortCity)
-
-                    if (todaySchedule != null) {
-                        val hijri = todaySchedule.date.hijri
-                        val hijriStr = if (hijri != null) "${hijri.day} / ${hijri.month.number} AH" else todaySchedule.date.readable
-                        views.setTextViewText(R.id.widget_hijri_date, hijriStr)
-                    }
+                    views.setTextViewText(R.id.widget_hijri_date, hijriStr)
 
                     if (timings != null) {
                         val fajrTime = cleanTime(timings.Fajr)

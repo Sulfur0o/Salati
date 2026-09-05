@@ -3,6 +3,7 @@ package io.github.sulfuro25.salati.core.notifications
 import android.content.Context
 import android.util.Log
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.safeZoneId
 import io.github.sulfuro25.salati.data.settings.SalatiPreferences
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -94,7 +95,7 @@ object ReminderCoordinator {
                     context = context,
                     registrar = registrar,
                     clock = clock,
-                    zoneId = ZoneId.of(settings.timezoneId),
+                    zoneId = settings.safeZoneId(),
                     registry = registry,
                     registryReadResult = oldAlarmsResult
                 )

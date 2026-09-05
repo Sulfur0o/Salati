@@ -84,21 +84,22 @@ internal fun applyAppLanguage(context: android.content.Context, langCode: String
         }
         localeManager.applicationLocales = localeList
     } else {
-        val locale = if (langCode.isNullOrEmpty()) {
-            java.util.Locale.getDefault()
+        val targetLocale = if (langCode.isNullOrEmpty()) {
+            android.content.res.Resources.getSystem().configuration.locales[0]
         } else {
             java.util.Locale.forLanguageTag(langCode)
         }
         val current = context.resources.configuration.locales[0]
-        if (!langCode.isNullOrEmpty() && current.toLanguageTag().equals(locale.toLanguageTag(), ignoreCase = true)) {
+        if (current.toLanguageTag().equals(targetLocale.toLanguageTag(), ignoreCase = true)) {
             return
         }
-        java.util.Locale.setDefault(locale)
+        java.util.Locale.setDefault(targetLocale)
         val config = context.resources.configuration
-        config.setLocale(locale)
-        config.setLayoutDirection(locale)
+        config.setLocale(targetLocale)
+        config.setLayoutDirection(targetLocale)
         @Suppress("DEPRECATION")
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        (context as? android.app.Activity)?.recreate()
     }
 }
 

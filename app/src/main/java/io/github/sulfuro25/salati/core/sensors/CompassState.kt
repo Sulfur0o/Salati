@@ -183,7 +183,7 @@ fun rememberCompassReading(
                 Lifecycle.Event.ON_START -> sensorManager.registerListener(
                     listener,
                     rotationSensor,
-                    SensorManager.SENSOR_DELAY_GAME
+                    SensorManager.SENSOR_DELAY_UI
                 )
                 Lifecycle.Event.ON_STOP -> sensorManager.unregisterListener(listener)
                 else -> Unit

@@ -23,12 +23,20 @@ object AladhanPrayerResponseParser : PrayerResponseParser {
                     IllegalStateException("Aladhan response is empty or unsuccessful")
                 )
             } else {
-                // Strictly pre-validate every day entry so malformed timing strings or corrupt dates
-                // are rejected early and never saved into disk cache.
-                for (day in response.data) {
-                    SalatiPrayerTimeMapper.map(day, java.time.ZoneOffset.UTC)
+                // Filter and preserve all valid day entries rather than rejecting the entire month
+                // if a single malformed item occurs.
+                val validDays = response.data.filter { day ->
+                    runCatching {
+                        SalatiPrayerTimeMapper.map(day, java.time.ZoneOffset.UTC)
+                    }.isSuccess
                 }
-                PrayerResponseParseResult.Success(response.data)
+                if (validDays.isEmpty()) {
+                    PrayerResponseParseResult.Failure(
+                        IllegalStateException("Aladhan response contains no valid day records")
+                    )
+                } else {
+                    PrayerResponseParseResult.Success(validDays)
+                }
             }
         } catch (cause: Exception) {
             PrayerResponseParseResult.Failure(cause)

@@ -723,7 +723,7 @@ private fun NotificationsStep(
                     verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
                 ) {
                     Text(
-                        text = "Required Permissions",
+                        text = stringResource(R.string.onboarding_required_permissions),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -778,12 +778,17 @@ private fun NotificationsStep(
                     val isBatteryUnrestricted = permissionState.batteryOptimizationIgnored
                     PermissionStatusRow(
                         title = stringResource(R.string.battery_opt_title),
-                        description = if (isBatteryUnrestricted) "Battery saver does not restrict prayer alarms"
-                                      else "Prevent system battery saver from delaying prayer reminders",
-                        statusText = if (isBatteryUnrestricted) "Unrestricted" else "Restricted",
+                        description = stringResource(
+                            if (isBatteryUnrestricted) R.string.battery_opt_state_unrestricted_desc
+                            else R.string.battery_opt_state_restricted_desc
+                        ),
+                        statusText = stringResource(
+                            if (isBatteryUnrestricted) R.string.battery_opt_state_unrestricted
+                            else R.string.battery_opt_state_restricted
+                        ),
                         isAllowed = isBatteryUnrestricted,
                         onActionClick = { showBatteryHelp = true },
-                        actionText = "Optimize"
+                        actionText = stringResource(R.string.onboarding_action_optimize)
                     )
                 }
             }

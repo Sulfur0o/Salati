@@ -23,10 +23,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.sulfuro25.salati.R
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.theme.SalatiTypeTokens
@@ -126,7 +128,7 @@ fun PrayerTimeRow(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ) {
                         Text(
-                            text = "NEXT",
+                            text = stringResource(R.string.badge_next),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)

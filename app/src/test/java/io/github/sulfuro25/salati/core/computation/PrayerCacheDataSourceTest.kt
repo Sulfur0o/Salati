@@ -131,6 +131,27 @@ class PrayerCacheDataSourceTest {
         }
     }
 
+    @Test
+    fun cachePruningEvictsOldestAndExpiredFiles() {
+        val directory = temporaryDirectory()
+        val source = AtomicFilePrayerCacheDataSource(directory)
+
+        for (i in 1..15) {
+            val file = File(directory, "prayers_v2_lat50p850_lon4p352_2026_${i}_m3_s0_h1.json")
+            file.writeText("{}", Charsets.UTF_8)
+            file.setLastModified(System.currentTimeMillis() - (16 - i) * 1000L)
+        }
+
+        source.pruneCache(maxRetained = 12)
+
+        val remaining = directory.listFiles { f -> f.name.startsWith("prayers_v2_") } ?: emptyArray()
+        assertEquals(12, remaining.size)
+        for (i in 1..3) {
+            val file = File(directory, "prayers_v2_lat50p850_lon4p352_2026_${i}_m3_s0_h1.json")
+            assertTrue(!file.exists())
+        }
+    }
+
     private fun sourceWith(handle: AtomicFileHandle): AtomicFilePrayerCacheDataSource {
         return AtomicFilePrayerCacheDataSource(
             temporaryDirectory(),

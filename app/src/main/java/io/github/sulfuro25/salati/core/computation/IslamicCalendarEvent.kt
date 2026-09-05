@@ -1,4 +1,4 @@
-package io.github.sulfuro25.salati.core.computation
+﻿package io.github.sulfuro25.salati.core.computation
 
 import io.github.sulfuro25.salati.R
 import java.time.LocalDate
@@ -36,10 +36,11 @@ fun eventsForHijriDate(date: HijriCalendarHelper.HijriDateComponents): List<Isla
         day == 10 && month == 12 -> events.add(IslamicCalendarEvent(IslamicEventType.EID_AL_ADHA, R.string.event_eid_al_adha))
     }
     
-    // The 13th of Dhu al-Hijjah is the last Tashreeq day, when fasting is forbidden,
-    // so it isn't a White Day even though it falls in the usual 13-15 window.
-    val isForbiddenFastingDay = month == 12 && day == 13
-    if (day in 13..15 && !isForbiddenFastingDay) {
+    // Voluntary White Days fasting is not observed during Ramadan (month 9, obligatory fasting),
+    // and the 11th-13th of Dhu al-Hijjah are Tashreeq days when fasting is forbidden.
+    val isRamadan = month == 9
+    val isTashreeqDay = month == 12 && day in 11..13
+    if (day in 13..15 && !isRamadan && !isTashreeqDay) {
         events.add(IslamicCalendarEvent(IslamicEventType.WHITE_DAY, R.string.event_white_day))
     }
     

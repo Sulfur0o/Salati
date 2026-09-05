@@ -331,5 +331,15 @@
     <string name="settings_language_ar">العربية (Arabic)</string>
     <string name="settings_language_fr">Français (French)</string>
     <string name="settings_language_nl">Nederlands (Dutch)</string>
+    <string name="badge_next">NEXT</string>
+    <string name="currency_sheet_title">Select Zakat Currency</string>
+    <string name="currency_sheet_subtitle">Used for Nisab threshold and asset valuation</string>
+    <string name="currency_search_placeholder">Search currency or code…</string>
+    <string name="currency_clear">Clear</string>
+    <string name="method_sheet_title">Calculation Method</string>
+    <string name="method_sheet_subtitle">Astronomical angle conventions used for prayer times</string>
+    <string name="onboarding_required_permissions">Required Permissions</string>
+    <string name="onboarding_action_optimize">Optimize</string>
+    <string name="zakat_currency_mismatch_warning">Stored metal prices were quoted in %1$s. Please tap \'Refresh\' to calculate accurately in %2$s.</string>
 
 </resources>

@@ -67,6 +67,10 @@ fun MainNavigation(
         }
     }
 
+    androidx.activity.compose.BackHandler(enabled = backStack.size == 1 && currentKey != Dashboard) {
+        switchTab(Dashboard)
+    }
+
     // Hoisted here (rather than inside ZakatScreen) because tab switches remove and
     // re-add nav entries, tearing down and recreating the screen's own remembered state.
     val zakatSelectedStandard = androidx.compose.runtime.saveable.rememberSaveable {

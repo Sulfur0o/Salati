@@ -6,6 +6,7 @@ import io.github.sulfuro25.salati.core.computation.MonthlyPrayerResult
 import io.github.sulfuro25.salati.core.computation.PrayerRepository
 import io.github.sulfuro25.salati.core.computation.SalatiPrayerTimes
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.safeZoneId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Clock
@@ -90,7 +91,7 @@ object AlarmScheduler {
             return@withContext AlarmPreparationResult.Disabled
         }
 
-        val zoneId = ZoneId.of(settings.timezoneId)
+        val zoneId = settings.safeZoneId()
         val dates = getSchedulingDates(clock, zoneId)
 
         val monthData = mutableMapOf<YearMonth, Map<LocalDate, io.github.sulfuro25.salati.core.computation.AladhanDayData>>()

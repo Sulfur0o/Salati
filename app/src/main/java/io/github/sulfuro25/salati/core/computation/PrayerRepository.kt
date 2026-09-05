@@ -3,6 +3,7 @@ package io.github.sulfuro25.salati.core.computation
 import android.content.Context
 import android.util.Log
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.safeZoneId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -237,7 +238,7 @@ object PrayerRepository {
     }
 
     fun parsePrayerTimes(dayData: AladhanDayData, settings: CalculationSettings): SalatiPrayerTimes {
-        return SalatiPrayerTimeMapper.map(dayData, ZoneId.of(settings.timezoneId))
+        return SalatiPrayerTimeMapper.map(dayData, settings.safeZoneId())
     }
 
     internal fun buildApiUrl(

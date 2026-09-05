@@ -338,5 +338,15 @@
     <string name="settings_language_ar">العربية</string>
     <string name="settings_language_fr">الفرنسية (Français)</string>
     <string name="settings_language_nl">الهولندية (Nederlands)</string>
+    <string name="badge_next">التالي</string>
+    <string name="currency_sheet_title">اختر عملة الزكاة</string>
+    <string name="currency_sheet_subtitle">تُستخدم لتحديد نصاب الزكاة وتقييم الأصول</string>
+    <string name="currency_search_placeholder">ابحث عن العملة أو الرمز…</string>
+    <string name="currency_clear">مسح</string>
+    <string name="method_sheet_title">طريقة الحساب</string>
+    <string name="method_sheet_subtitle">الزوايا الفلكية المعتمدة لحساب أوقات الصلاة</string>
+    <string name="onboarding_required_permissions">الأذونات المطلوبة</string>
+    <string name="onboarding_action_optimize">تحسين</string>
+    <string name="zakat_currency_mismatch_warning">أسعار المعادن المخزنة كانت مقومة بـ %1$s. يرجى النقر على \"تحديث\" للحساب بدقة بـ %2$s.</string>
 
 </resources>

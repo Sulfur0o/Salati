@@ -241,6 +241,13 @@ fun CalculatorTabContent(
     )
     val currencySymbol = io.github.sulfuro25.salati.core.computation.zakatCurrencySymbolFor(settings.zakatCurrencyCode)
     val pricePerGramUnit = "$currencySymbol/g"
+    val displayLocale = LocalConfiguration.current.locales[0]
+    val formatAmount = remember(displayLocale, currencySymbol) {
+        { amount: Double, withGrouping: Boolean ->
+            val pattern = if (withGrouping) "%,.2f" else "%.2f"
+            currencySymbol + " " + String.format(displayLocale, pattern, amount)
+        }
+    }
 
     val goldPrice = settings.zakatGoldPrice
     val goldCarat = if (settings.zakatGoldCarat in setOf(24, 21, 18, 14, 10)) {
@@ -354,7 +361,11 @@ fun CalculatorTabContent(
                         tint = MaterialTheme.colorScheme.onErrorContainer
                     )
                     Text(
-                        text = "Stored metal prices were quoted in ${settings.zakatPricesCurrencyCode}. Please tap 'Refresh' to calculate accurately in ${settings.zakatCurrencyCode}.",
+                        text = stringResource(
+                            R.string.zakat_currency_mismatch_warning,
+                            settings.zakatPricesCurrencyCode,
+                            settings.zakatCurrencyCode
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onErrorContainer
                     )
@@ -588,7 +599,7 @@ fun CalculatorTabContent(
                                     )
                                 }
                                 Text(
-                                    text = currencySymbol + " " + String.format(Locale.US, "%,.2f", activeNisabValue),
+                                    text = formatAmount(activeNisabValue, true),
                                     fontWeight = FontWeight.Black,
                                     style = MaterialTheme.typography.headlineSmall,
                                     color = MaterialTheme.colorScheme.primary
@@ -638,7 +649,7 @@ fun CalculatorTabContent(
                                     Text(stringResource(R.string.zakat_nisab_silver_equiv), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 Text(
-                                    text = currencySymbol + " " + String.format(Locale.US, "%,.2f", activeNisabValue),
+                                    text = formatAmount(activeNisabValue, true),
                                     fontWeight = FontWeight.Black,
                                     style = MaterialTheme.typography.headlineSmall,
                                     color = MaterialTheme.colorScheme.primary
@@ -703,7 +714,7 @@ fun CalculatorTabContent(
 
                     ZakatDueRow(
                         label = stringResource(R.string.zakat_cash_due),
-                        amountText = currencySymbol + " " + String.format(Locale.US, "%.2f", cashZakatDue),
+                        amountText = formatAmount(cashZakatDue, false),
                         isNisabReached = isCashNisabReached,
                         labelWeight = FontWeight.Bold,
                         amountStyle = MaterialTheme.typography.titleMedium,
@@ -788,11 +799,11 @@ fun CalculatorTabContent(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(stringResource(R.string.zakat_estimated_value), style = MaterialTheme.typography.bodySmall)
-                                Text(currencySymbol + " " + String.format(Locale.US, "%.2f", estimatedGoldValue), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
+                                Text(formatAmount(estimatedGoldValue, false), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
                             }
                             ZakatDueRow(
                                 label = stringResource(R.string.zakat_gold_due),
-                                amountText = currencySymbol + " " + String.format(Locale.US, "%.2f", goldJewelryZakatDue),
+                                amountText = formatAmount(goldJewelryZakatDue, false),
                                 isNisabReached = isGoldJewelryNisabReached
                             )
                         }
@@ -812,7 +823,7 @@ fun CalculatorTabContent(
                                     Text(stringResource(R.string.zakat_nisab_value_title), style = MaterialTheme.typography.bodySmall)
                                     Text(stringResource(R.string.zakat_nisab_silver_equiv), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
-                                Text(currencySymbol + " " + String.format(Locale.US, "%.2f", silverNisabValue), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
+                                Text(formatAmount(silverNisabValue, false), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
                             }
                             OutlinedTextField(
                                 value = silverJewelryWeight,
@@ -829,11 +840,11 @@ fun CalculatorTabContent(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(stringResource(R.string.zakat_estimated_value), style = MaterialTheme.typography.bodySmall)
-                                Text(currencySymbol + " " + String.format(Locale.US, "%.2f", estimatedSilverValue), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
+                                Text(formatAmount(estimatedSilverValue, false), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
                             }
                             ZakatDueRow(
                                 label = stringResource(R.string.zakat_silver_due),
-                                amountText = currencySymbol + " " + String.format(Locale.US, "%.2f", silverJewelryZakatDue),
+                                amountText = formatAmount(silverJewelryZakatDue, false),
                                 isNisabReached = isSilverJewelryNisabReached
                             )
                         }
@@ -861,7 +872,7 @@ fun CalculatorTabContent(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = currencySymbol + " " + String.format(Locale.US, "%,.2f", totalZakatDue),
+                    text = formatAmount(totalZakatDue, true),
                     style = TextStyle(
                         fontSize = 36.sp,
                         fontWeight = FontWeight.Black,

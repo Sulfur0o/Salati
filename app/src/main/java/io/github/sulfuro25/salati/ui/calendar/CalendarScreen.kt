@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import io.github.sulfuro25.salati.R
 import io.github.sulfuro25.salati.core.computation.*
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.safeZoneId
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.ui.components.*
@@ -44,7 +45,7 @@ fun CalendarScreen(
 ) {
     val context = LocalContext.current
     val displayLocale = LocalConfiguration.current.locales[0]
-    val zoneId = remember(settings.timezoneId) { ZoneId.of(settings.timezoneId) }
+    val zoneId = remember(settings.timezoneId) { settings.safeZoneId() }
     val today = remember(zoneId) { calendarDateAt(System.currentTimeMillis(), zoneId) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.from(today)) }
     var monthlyData by remember { mutableStateOf<List<AladhanDayData>>(emptyList()) }

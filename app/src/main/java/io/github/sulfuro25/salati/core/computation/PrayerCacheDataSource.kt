@@ -89,7 +89,7 @@ class AtomicFilePrayerCacheDataSource internal constructor(
     }
 
     override fun write(request: PrayerMonthRequest, rawJson: String): PrayerCacheWriteResult {
-        return withLockedFile(request) { atomicFile ->
+        val result = withLockedFile(request) { atomicFile ->
             var stream: FileOutputStream? = null
             try {
                 stream = atomicFile.startWrite()
@@ -106,6 +106,43 @@ class AtomicFilePrayerCacheDataSource internal constructor(
                     }
                 }
                 PrayerCacheWriteResult.Failure(cause)
+            }
+        }
+        if (result is PrayerCacheWriteResult.Success) {
+            pruneCache()
+        }
+        return result
+    }
+
+    internal fun pruneCache(maxRetained: Int = 12, maxAgeMillis: Long = 90L * 24 * 60 * 60 * 1000) {
+        runCatching {
+            val cacheFiles = filesDir.listFiles { file ->
+                file.isFile && file.name.startsWith("prayers_v2_") && file.name.endsWith(".json")
+            } ?: return@runCatching
+
+            val thresholdTime = System.currentTimeMillis() - maxAgeMillis
+
+            for (file in cacheFiles) {
+                if (file.lastModified() < thresholdTime) {
+                    file.delete()
+                    File(file.path + ".bak").delete()
+                    File(file.path + ".new").delete()
+                }
+            }
+
+            val remainingFiles = filesDir.listFiles { file ->
+                file.isFile && file.name.startsWith("prayers_v2_") && file.name.endsWith(".json")
+            } ?: return@runCatching
+
+            if (remainingFiles.size > maxRetained) {
+                val sortedByAge = remainingFiles.sortedBy { it.lastModified() }
+                val toRemoveCount = remainingFiles.size - maxRetained
+                for (i in 0 until toRemoveCount) {
+                    val file = sortedByAge[i]
+                    file.delete()
+                    File(file.path + ".bak").delete()
+                    File(file.path + ".new").delete()
+                }
             }
         }
     }

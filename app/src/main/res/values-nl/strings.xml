@@ -321,4 +321,14 @@
     <string name="widget_placeholder_time">--:--</string>
     <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">Locatie</string>
+    <string name="badge_next">VOLGENDE</string>
+    <string name="currency_sheet_title">Selecteer Zakat-valuta</string>
+    <string name="currency_sheet_subtitle">Gebruikt voor Nisab-drempel en waardering van bezittingen</string>
+    <string name="currency_search_placeholder">Zoek valuta of code…</string>
+    <string name="currency_clear">Wissen</string>
+    <string name="method_sheet_title">Berekeningsmethode</string>
+    <string name="method_sheet_subtitle">Astronomische hoekconventies voor gebedstijden</string>
+    <string name="onboarding_required_permissions">Vereiste toestemmingen</string>
+    <string name="onboarding_action_optimize">Optimaliseren</string>
+    <string name="zakat_currency_mismatch_warning">Opgeslagen metaalprijzen waren in %1$s. Tik op \'Vernieuwen\' om nauwkeurig in %2$s te berekenen.</string>
 </resources>

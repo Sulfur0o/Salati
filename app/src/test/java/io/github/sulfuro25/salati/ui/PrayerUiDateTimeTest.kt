@@ -59,6 +59,16 @@ class PrayerUiDateTimeTest {
     }
 
     @Test
+    fun dashboardTimeFormatterSupportsTwelveHourFormat() {
+        val afternoon = Instant.parse("2026-07-15T13:23:00Z")
+        val morning = Instant.parse("2026-07-15T07:05:00Z")
+
+        assertEquals("3:23 PM", dashboardTimeFormatter(Locale.US, brusselsZone, is24Hour = false).format(afternoon))
+        assertEquals("9:05 AM", dashboardTimeFormatter(Locale.US, brusselsZone, is24Hour = false).format(morning))
+        assertEquals("15:23", dashboardTimeFormatter(Locale.US, brusselsZone, is24Hour = true).format(afternoon))
+    }
+
+    @Test
     fun dashboardFallbackAddsExactlyTwentyFourElapsedHoursAcrossDst() {
         val spring = prayerTimes(LocalDate.of(2026, 3, 28), Instant.parse("2026-03-28T19:00:00Z"))
         val autumn = prayerTimes(LocalDate.of(2026, 10, 24), Instant.parse("2026-10-24T18:00:00Z"))

@@ -323,4 +323,14 @@
     <string name="widget_placeholder_time">--:--</string>
     <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">Lieu</string>
+    <string name="badge_next">SUIVANT</string>
+    <string name="currency_sheet_title">Sélectionner la devise de la Zakat</string>
+    <string name="currency_sheet_subtitle">Utilisé pour le seuil du Nisab et l\'évaluation des avoirs</string>
+    <string name="currency_search_placeholder">Rechercher une devise ou un code…</string>
+    <string name="currency_clear">Effacer</string>
+    <string name="method_sheet_title">Méthode de calcul</string>
+    <string name="method_sheet_subtitle">Conventions d\'angles astronomiques utilisées pour les heures de prière</string>
+    <string name="onboarding_required_permissions">Autorisations requises</string>
+    <string name="onboarding_action_optimize">Optimiser</string>
+    <string name="zakat_currency_mismatch_warning">Les prix enregistrés des métaux étaient en %1$s. Appuyez sur « Actualiser » pour calculer précisément en %2$s.</string>
 </resources>

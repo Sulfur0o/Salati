@@ -96,4 +96,16 @@ class AlarmRelevantSettingsTest {
         assertEquals(false, enqueueOneReconciliationIfChanged(changed, changed) { calls++ })
         assertEquals(1, calls)
     }
+
+    @Test
+    fun safeZoneIdFallsBackToSystemDefaultOnInvalidOrEmptyTimezone() {
+        val valid = CalculationSettings(timezoneId = "Europe/Brussels")
+        assertEquals(java.time.ZoneId.of("Europe/Brussels"), io.github.sulfuro25.salati.data.settings.safeZoneId(valid.timezoneId))
+
+        val invalid = CalculationSettings(timezoneId = "Invalid/Timezone_Name")
+        assertEquals(java.time.ZoneId.systemDefault(), io.github.sulfuro25.salati.data.settings.safeZoneId(invalid.timezoneId))
+
+        val empty = CalculationSettings(timezoneId = "")
+        assertEquals(java.time.ZoneId.systemDefault(), io.github.sulfuro25.salati.data.settings.safeZoneId(empty.timezoneId))
+    }
 }

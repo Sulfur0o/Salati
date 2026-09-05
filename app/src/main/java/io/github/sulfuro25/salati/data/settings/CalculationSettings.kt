@@ -38,3 +38,12 @@ data class CalculationSettings(
     val isDarkMode: Boolean? = null,
     val appLanguageCode: String? = null // null = System default, "en", "ar", "fr", "nl"
 )
+
+fun CalculationSettings.safeZoneId(): java.time.ZoneId {
+    return safeZoneId(timezoneId)
+}
+
+fun safeZoneId(timezoneId: String?): java.time.ZoneId {
+    if (timezoneId.isNullOrBlank()) return java.time.ZoneId.systemDefault()
+    return runCatching { java.time.ZoneId.of(timezoneId) }.getOrElse { java.time.ZoneId.systemDefault() }
+}

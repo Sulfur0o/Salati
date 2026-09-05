@@ -67,13 +67,27 @@ object SalatiPrayerTimeMapper : PrayerTimeMapper {
     }
 
     private fun resolveInstant(localDateTime: LocalDateTime, zoneId: ZoneId): Instant {
-        val offsets = zoneId.rules.getValidOffsets(localDateTime)
-        val offset = when (offsets.size) {
-            0 -> throw DateTimeException("Nonexistent local time in $zoneId: $localDateTime")
-            1 -> offsets.single()
-            2 -> offsets.last()
-            else -> error("Unexpected offset count for $zoneId: ${offsets.size}")
+        val rules = zoneId.rules
+        val offsets = rules.getValidOffsets(localDateTime)
+        return when (offsets.size) {
+            1 -> localDateTime.toInstant(offsets.single())
+            0 -> {
+                // DST spring-forward gap: the clock jumped past this local time.
+                // Shift forward by the transition gap duration (standard ZonedDateTime behavior).
+                val transition = rules.getTransition(localDateTime)
+                val shifted = if (transition != null) {
+                    localDateTime.plus(transition.duration)
+                } else {
+                    localDateTime
+                }
+                val validOffset = rules.getOffset(shifted)
+                shifted.toInstant(validOffset)
+            }
+            2 -> {
+                // DST autumn fall-back overlap: use the later offset
+                localDateTime.toInstant(offsets.last())
+            }
+            else -> localDateTime.atZone(zoneId).toInstant()
         }
-        return localDateTime.toInstant(offset)
     }
 }

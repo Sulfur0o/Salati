@@ -41,8 +41,9 @@ class PrayerDateTimeCompatibilityTest {
     }
 
     @Test
-    fun springGapIsRejectedAndAutumnOverlapUsesLaterOffset() {
-        assertMappingFails(dayWithFajr("29-03-2026", "02:30"))
+    fun springGapIsHandledAndAutumnOverlapUsesLaterOffset() {
+        val spring = SalatiPrayerTimeMapper.map(dayWithFajr("29-03-2026", "02:30"), brusselsZone)
+        assertEquals(Instant.parse("2026-03-29T01:30:00Z"), spring.fajr)
 
         val overlap = SalatiPrayerTimeMapper.map(dayWithFajr("25-10-2026", "02:30"), brusselsZone)
         assertEquals(Instant.parse("2026-10-25T01:30:00Z"), overlap.fajr)
