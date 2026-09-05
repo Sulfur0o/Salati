@@ -341,5 +341,5 @@
     <string name="onboarding_required_permissions">Required Permissions</string>
     <string name="onboarding_action_optimize">Optimize</string>
     <string name="zakat_currency_mismatch_warning">Stored metal prices were quoted in %1$s. Please tap \'Refresh\' to calculate accurately in %2$s.</string>
-
+    <string name="widget_description">Glanceable daily prayer times and countdown widget</string>
 </resources>

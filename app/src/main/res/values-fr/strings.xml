@@ -333,4 +333,5 @@
     <string name="onboarding_required_permissions">Autorisations requises</string>
     <string name="onboarding_action_optimize">Optimiser</string>
     <string name="zakat_currency_mismatch_warning">Les prix enregistrés des métaux étaient en %1$s. Appuyez sur « Actualiser » pour calculer précisément en %2$s.</string>
+    <string name="widget_description">Horaires de prière quotidiens et compte à rebours sur l\'écran d\'accueil</string>
 </resources>

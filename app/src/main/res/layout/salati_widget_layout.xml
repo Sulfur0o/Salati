@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/widget_next_prayer"
                 android:textColor="#6E7E74"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
 

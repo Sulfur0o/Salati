@@ -348,5 +348,5 @@
     <string name="onboarding_required_permissions">الأذونات المطلوبة</string>
     <string name="onboarding_action_optimize">تحسين</string>
     <string name="zakat_currency_mismatch_warning">أسعار المعادن المخزنة كانت مقومة بـ %1$s. يرجى النقر على \"تحديث\" للحساب بدقة بـ %2$s.</string>
-
+    <string name="widget_description">أوقات الصلاة اليومية والعد التنازلي للشاشة الرئيسية</string>
 </resources>
