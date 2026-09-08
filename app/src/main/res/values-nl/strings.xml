@@ -120,8 +120,6 @@
     <string name="notification_pre_prayer_message">Het gebed begint binnen enkele minuten.</string>
 
     <string name="settings_reminders_pre_prayer">Duur voorafgaande waarschuwing</string>
-    <string name="settings_reminders_pre_prayer_value">%1$d minuten van tevoren</string>
-    <string name="settings_reminders_pre_prayer_accessibility">%1$d minuten voor het gebed</string>
 
     <string name="settings_calendar_hijri_offset">Hijri-datumcorrectie</string>
     <string name="settings_calendar_hijri_offset_zero">0 dagen</string>
@@ -381,7 +379,7 @@
     <string name="settings_status_granted">Verleend</string>
     <string name="settings_status_denied">Geweigerd</string>
     <string name="settings_status_unrestricted">Onbeperkt</string>
-    <string name="settings_status_restricted">Tik om te optimaliseren</string>
+    <string name="settings_status_restricted">Beperkt</string>
     <string name="settings_status_notifications">Meldingen</string>
     <string name="settings_status_exact_alarms">Exacte alarmen</string>
     <string name="settings_status_battery">Batterij</string>
@@ -391,4 +389,52 @@
 
     <string name="settings_reminders_sound">Meldingsgeluid</string>
     <string name="settings_reminders_sound_description">Speel een geluid af op gebedstijden</string>
+    <string name="daily_computed_locally">Offline — tijden op dit apparaat berekend</string>
+    <string name="notification_channel_vibrate_name">Gebedsherinneringen (trillen)</string>
+    <string name="notification_channel_vibrate_description">Meldingen voor gebedstijden die trillen zonder geluid af te spelen</string>
+    <string name="notification_channel_silent_name">Gebedsherinneringen (stil)</string>
+    <string name="notification_channel_silent_description">Meldingen voor gebedstijden die stil verschijnen, zonder geluid of trilling</string>
+    <string name="notification_channel_sound_vibrate_name">Gebedsherinneringen (geluid en trillen)</string>
+    <string name="notification_channel_sound_vibrate_description">Meldingen voor gebedstijden die een geluid afspelen en trillen</string>
+    <string name="notification_channel_sound_name">Gebedsherinneringen (geluid)</string>
+    <string name="notification_channel_sound_description">Meldingen voor gebedstijden die een geluid afspelen zonder te trillen</string>
+    <string name="notification_channel_adhan_name">Adhan afspelen</string>
+    <string name="notification_channel_adhan_description">Zichtbaar terwijl een gedownloade adhan speelt, met een knop om te stoppen</string>
+    <string name="adhan_playing">Adhan speelt</string>
+    <string name="adhan_stop">Stoppen</string>
+    <string name="settings_adhan_sound_title">Adhan-geluid</string>
+    <string name="settings_adhan_sound_row">Adhan-geluid</string>
+    <string name="settings_adhan_device_tone">Meldingstoon van het apparaat</string>
+    <string name="settings_adhan_device_tone_description">Een kort signaal met het meldingsgeluid van je telefoon</string>
+    <string name="settings_adhan_loading">Beschikbare opnamen laden…</string>
+    <string name="settings_adhan_unreachable">Kan de lijst met opnamen niet bereiken. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="settings_adhan_unavailable">De lijst met opnamen kon niet worden gelezen.</string>
+    <string name="settings_adhan_empty">Er zijn nog geen opnamen beschikbaar.</string>
+    <string name="settings_adhan_size">Download van %1$s MB</string>
+    <string name="settings_adhan_not_downloaded">Nog niet gedownload</string>
+    <string name="settings_adhan_download">%1$s downloaden</string>
+    <string name="settings_adhan_delete">%1$s verwijderen</string>
+    <string name="settings_adhan_preview">Beluisteren</string>
+    <string name="settings_adhan_download_offline">Download mislukt. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="settings_adhan_download_failed">Deze opname kon niet worden opgeslagen.</string>
+    <plurals name="settings_reminders_pre_prayer_value">
+        <item quantity="one">%1$d minuut van tevoren</item>
+        <item quantity="other">%1$d minuten van tevoren</item>
+    </plurals>
+    <plurals name="settings_reminders_pre_prayer_accessibility">
+        <item quantity="one">%1$d minuut voor het gebed</item>
+        <item quantity="other">%1$d minuten voor het gebed</item>
+    </plurals>
+    <string name="settings_reminders_pre_prayer_off">Uit</string>
+    <string name="settings_reminders_pre_prayer_off_accessibility">Herinnering voor het gebed uit</string>
+    <string name="app_logo_description">Salati-logo</string>
+    <string name="settings_adhan_fajr_row">Fajr-adhan</string>
+    <string name="settings_adhan_fajr_title">Adhan voor Fajr</string>
+    <string name="settings_adhan_fajr_same">Zelfde als andere gebeden</string>
+    <string name="settings_adhan_fajr_same_description">Gebruik de hierboven gekozen adhan ook voor Fajr</string>
+    <string name="settings_adhan_fajr_description">De oproep bij dageraad voegt “gebed is beter dan slaap” toe</string>
+    <string name="settings_status_action_allow">Toestaan</string>
+    <string name="settings_status_action_optimize">Optimaliseren</string>
+    <string name="settings_status_battery_action_description">Batterijoptimalisatie voor Salati uitschakelen</string>
+    <string name="settings_status_dnd_action_description">Toegang tot Niet storen toestaan</string>
 </resources>

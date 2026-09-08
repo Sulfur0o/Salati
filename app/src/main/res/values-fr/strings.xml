@@ -120,8 +120,6 @@
     <string name="notification_pre_prayer_message">Prière imminente dans quelques minutes.</string>
 
     <string name="settings_reminders_pre_prayer">Délai du rappel pré-prière</string>
-    <string name="settings_reminders_pre_prayer_value">%1$d minutes avant</string>
-    <string name="settings_reminders_pre_prayer_accessibility">%1$d minutes avant la prière</string>
 
     <string name="settings_calendar_hijri_offset">Ajustement du calendrier hégirien</string>
     <string name="settings_calendar_hijri_offset_zero">0 jour</string>
@@ -383,7 +381,7 @@
     <string name="settings_status_granted">Accordée</string>
     <string name="settings_status_denied">Refusée</string>
     <string name="settings_status_unrestricted">Sans restriction</string>
-    <string name="settings_status_restricted">Appuyez pour optimiser</string>
+    <string name="settings_status_restricted">Restreinte</string>
     <string name="settings_status_notifications">Notifications</string>
     <string name="settings_status_exact_alarms">Alarmes exactes</string>
     <string name="settings_status_battery">Batterie</string>
@@ -393,4 +391,54 @@
 
     <string name="settings_reminders_sound">Son de notification</string>
     <string name="settings_reminders_sound_description">Émettre un son aux heures de prière</string>
+    <string name="daily_computed_locally">Hors ligne — horaires calculés sur cet appareil</string>
+    <string name="notification_channel_vibrate_name">Rappels de prière (vibration)</string>
+    <string name="notification_channel_vibrate_description">Alertes des heures de prière qui vibrent sans émettre de son</string>
+    <string name="notification_channel_silent_name">Rappels de prière (silencieux)</string>
+    <string name="notification_channel_silent_description">Alertes des heures de prière discrètes, sans son ni vibration</string>
+    <string name="notification_channel_sound_vibrate_name">Rappels de prière (son et vibration)</string>
+    <string name="notification_channel_sound_vibrate_description">Alertes des heures de prière qui émettent un son et vibrent</string>
+    <string name="notification_channel_sound_name">Rappels de prière (son)</string>
+    <string name="notification_channel_sound_description">Alertes des heures de prière qui émettent un son sans vibrer</string>
+    <string name="notification_channel_adhan_name">Lecture de l’adhan</string>
+    <string name="notification_channel_adhan_description">Affiché pendant la lecture d’un adhan téléchargé, avec un bouton pour l’arrêter</string>
+    <string name="adhan_playing">Adhan en cours</string>
+    <string name="adhan_stop">Arrêter</string>
+    <string name="settings_adhan_sound_title">Son de l’adhan</string>
+    <string name="settings_adhan_sound_row">Son de l’adhan</string>
+    <string name="settings_adhan_device_tone">Son de notification de l’appareil</string>
+    <string name="settings_adhan_device_tone_description">Une alerte brève, avec le son de notification de votre téléphone</string>
+    <string name="settings_adhan_loading">Chargement des enregistrements disponibles…</string>
+    <string name="settings_adhan_unreachable">Impossible d’accéder à la liste des enregistrements. Vérifiez votre connexion et réessayez.</string>
+    <string name="settings_adhan_unavailable">La liste des enregistrements n’a pas pu être lue.</string>
+    <string name="settings_adhan_empty">Aucun enregistrement n’est encore disponible.</string>
+    <string name="settings_adhan_size">Téléchargement de %1$s Mo</string>
+    <string name="settings_adhan_not_downloaded">Pas encore téléchargé</string>
+    <string name="settings_adhan_download">Télécharger %1$s</string>
+    <string name="settings_adhan_delete">Supprimer %1$s</string>
+    <string name="settings_adhan_preview">Écouter</string>
+    <string name="settings_adhan_download_offline">Échec du téléchargement. Vérifiez votre connexion et réessayez.</string>
+    <string name="settings_adhan_download_failed">Cet enregistrement n’a pas pu être enregistré.</string>
+    <plurals name="settings_reminders_pre_prayer_value">
+        <item quantity="one">%1$d minute avant</item>
+        <item quantity="many">%1$d de minutes avant</item>
+        <item quantity="other">%1$d minutes avant</item>
+    </plurals>
+    <plurals name="settings_reminders_pre_prayer_accessibility">
+        <item quantity="one">%1$d minute avant la prière</item>
+        <item quantity="many">%1$d de minutes avant la prière</item>
+        <item quantity="other">%1$d minutes avant la prière</item>
+    </plurals>
+    <string name="settings_reminders_pre_prayer_off">Désactivé</string>
+    <string name="settings_reminders_pre_prayer_off_accessibility">Rappel avant la prière désactivé</string>
+    <string name="app_logo_description">Logo Salati</string>
+    <string name="settings_adhan_fajr_row">Adhan du Fajr</string>
+    <string name="settings_adhan_fajr_title">Adhan pour le Fajr</string>
+    <string name="settings_adhan_fajr_same">Comme les autres prières</string>
+    <string name="settings_adhan_fajr_same_description">Utiliser aussi pour le Fajr l’adhan choisi ci-dessus</string>
+    <string name="settings_adhan_fajr_description">L’appel de l’aube ajoute « la prière est meilleure que le sommeil »</string>
+    <string name="settings_status_action_allow">Autoriser</string>
+    <string name="settings_status_action_optimize">Optimiser</string>
+    <string name="settings_status_battery_action_description">Désactiver l’optimisation de la batterie pour Salati</string>
+    <string name="settings_status_dnd_action_description">Autoriser l’accès au mode Ne pas déranger</string>
 </resources>

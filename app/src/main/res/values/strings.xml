@@ -119,8 +119,6 @@
     <string name="notification_pre_prayer_message">Upcoming prayer in a few minutes.</string>
 
     <string name="settings_reminders_pre_prayer">Pre-Prayer Alert Duration</string>
-    <string name="settings_reminders_pre_prayer_value">%1$d minutes before</string>
-    <string name="settings_reminders_pre_prayer_accessibility">%1$d minutes before prayer</string>
 
     <string name="settings_calendar_hijri_offset">Hijri Date Offset</string>
     <string name="settings_calendar_hijri_offset_zero">0 days</string>
@@ -391,7 +389,7 @@
     <string name="settings_status_granted">Granted</string>
     <string name="settings_status_denied">Denied</string>
     <string name="settings_status_unrestricted">Unrestricted</string>
-    <string name="settings_status_restricted">Tap to optimize</string>
+    <string name="settings_status_restricted">Restricted</string>
     <string name="settings_status_notifications">Notifications</string>
     <string name="settings_status_exact_alarms">Exact alarms</string>
     <string name="settings_status_battery">Battery</string>
@@ -401,4 +399,52 @@
 
     <string name="settings_reminders_sound">Notification Sound</string>
     <string name="settings_reminders_sound_description">Play a sound at prayer times</string>
+    <string name="daily_computed_locally">Offline — times calculated on this device</string>
+    <string name="notification_channel_vibrate_name">Prayer reminders (vibrate)</string>
+    <string name="notification_channel_vibrate_description">Prayer time alerts that vibrate without playing a sound</string>
+    <string name="notification_channel_silent_name">Prayer reminders (silent)</string>
+    <string name="notification_channel_silent_description">Prayer time alerts that appear quietly, with no sound or vibration</string>
+    <string name="notification_channel_sound_vibrate_name">Prayer reminders (sound and vibration)</string>
+    <string name="notification_channel_sound_vibrate_description">Prayer time alerts that play a sound and vibrate</string>
+    <string name="notification_channel_sound_name">Prayer reminders (sound)</string>
+    <string name="notification_channel_sound_description">Prayer time alerts that play a sound without vibrating</string>
+    <string name="notification_channel_adhan_name">Adhan playback</string>
+    <string name="notification_channel_adhan_description">Shown while a downloaded adhan is playing, with a button to stop it</string>
+    <string name="adhan_playing">Adhan playing</string>
+    <string name="adhan_stop">Stop</string>
+    <string name="settings_adhan_sound_title">Adhan sound</string>
+    <string name="settings_adhan_sound_row">Adhan sound</string>
+    <string name="settings_adhan_device_tone">Device notification tone</string>
+    <string name="settings_adhan_device_tone_description">A short alert, using your phone’s own notification sound</string>
+    <string name="settings_adhan_loading">Loading available recordings…</string>
+    <string name="settings_adhan_unreachable">Could not reach the recordings list. Check your connection and try again.</string>
+    <string name="settings_adhan_unavailable">The recordings list could not be read.</string>
+    <string name="settings_adhan_empty">No recordings are available yet.</string>
+    <string name="settings_adhan_size">%1$s MB download</string>
+    <string name="settings_adhan_not_downloaded">Not downloaded yet</string>
+    <string name="settings_adhan_download">Download %1$s</string>
+    <string name="settings_adhan_delete">Delete %1$s</string>
+    <string name="settings_adhan_preview">Preview</string>
+    <string name="settings_adhan_download_offline">Download failed. Check your connection and try again.</string>
+    <string name="settings_adhan_download_failed">That recording could not be saved.</string>
+    <plurals name="settings_reminders_pre_prayer_value">
+        <item quantity="one">%1$d minute before</item>
+        <item quantity="other">%1$d minutes before</item>
+    </plurals>
+    <plurals name="settings_reminders_pre_prayer_accessibility">
+        <item quantity="one">%1$d minute before prayer</item>
+        <item quantity="other">%1$d minutes before prayer</item>
+    </plurals>
+    <string name="settings_reminders_pre_prayer_off">Off</string>
+    <string name="settings_reminders_pre_prayer_off_accessibility">Pre-prayer reminder off</string>
+    <string name="app_logo_description">Salati logo</string>
+    <string name="settings_adhan_fajr_row">Fajr adhan</string>
+    <string name="settings_adhan_fajr_title">Adhan for Fajr</string>
+    <string name="settings_adhan_fajr_same">Same as other prayers</string>
+    <string name="settings_adhan_fajr_same_description">Use the adhan chosen above for Fajr as well</string>
+    <string name="settings_adhan_fajr_description">The dawn call adds “prayer is better than sleep”</string>
+    <string name="settings_status_action_allow">Allow</string>
+    <string name="settings_status_action_optimize">Optimize</string>
+    <string name="settings_status_battery_action_description">Turn off battery optimisation for Salati</string>
+    <string name="settings_status_dnd_action_description">Allow Do Not Disturb access</string>
 </resources>

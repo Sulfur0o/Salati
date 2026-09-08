@@ -45,8 +45,16 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
-        /** Parses the API's fixed 24-hour timing strings; never used for display. */
-        private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+        /**
+         * Parses the API's fixed 24-hour timing strings; never used for display.
+         *
+         * Pinned to [java.util.Locale.ROOT] because the input is machine data. With the
+         * default locale, a device set to Arabic or Persian expects Arabic-Indic digits
+         * and fails to parse "05:30" at all, which silently dropped the widget back to
+         * raw 24-hour text and ignored the user's 12-hour preference.
+         */
+        private val TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("HH:mm", java.util.Locale.ROOT)
 
         /**
          * Renders a parsed timing for the widget, honouring the device's 12/24-hour
@@ -103,12 +111,19 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
                 val today = LocalDate.now(zoneId)
                 val currentTime = LocalTime.now(zoneId)
 
+                // No network here: this runs inside a broadcast's goAsync() window, which
+                // the system may end after about ten seconds, and a slow connection is
+                // exactly when that budget runs out. The widget still has something to
+                // show, because it does accept a computed month - it only renders times,
+                // it never decides whether to go and fetch them, so answering it from the
+                // on-device calculation cannot stop a real refresh from happening.
                 val result = PrayerRepository.getMonthlyPrayers(
                     context = context,
                     settings = settings,
                     year = now.year,
                     month = now.monthValue,
-                    requireCacheOnly = false
+                    requireCacheOnly = true,
+                    allowOnDeviceFallback = true
                 )
 
                 val todaySchedule = (result as? MonthlyPrayerResult.Success)?.data
@@ -198,7 +213,8 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
                                     settings = settings,
                                     year = tomorrowMonth.year,
                                     month = tomorrowMonth.monthValue,
-                                    requireCacheOnly = true
+                                    requireCacheOnly = true,
+                                    allowOnDeviceFallback = true
                                 )
                                 (nextMonthResult as? MonthlyPrayerResult.Success)?.data
                                     ?.firstOrNull { it.date.gregorian.day.toIntOrNull() == tomorrow.dayOfMonth }

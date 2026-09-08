@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="salati_icon_background">#191A1E</color>
-    <color name="salati_emerald">#1B6D53</color>
+
+    <!--
+        The home-screen widget is always dark, whatever the phone's theme, so it carries
+        its own copy of the night palette rather than following the app's. These track
+        Color.kt: surface, outlineVariant, primary, onBackground and onSurfaceVariant.
+
+        The widget previously accented with the *light* theme's emerald (#1B6D53) on a
+        near-black card, which measured 2.76:1 - unreadable. It now uses the dark
+        theme's emerald at 6.90:1.
+    -->
+    <color name="salati_widget_surface">#1A2520</color>
+    <color name="salati_widget_outline">#33463D</color>
+    <color name="salati_widget_accent">#46C08A</color>
+    <color name="salati_widget_on_surface">#DCDCD2</color>
+    <color name="salati_widget_on_surface_variant">#8C9A91</color>
 </resources>

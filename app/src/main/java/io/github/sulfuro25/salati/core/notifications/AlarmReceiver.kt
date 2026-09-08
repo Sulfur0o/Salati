@@ -1,16 +1,13 @@
 package io.github.sulfuro25.salati.core.notifications
 
 import android.Manifest
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import io.github.sulfuro25.salati.MainActivity
 import io.github.sulfuro25.salati.R
+import io.github.sulfuro25.salati.core.audio.AdhanPlaybackService
 
 class AlarmReceiver : BroadcastReceiver() {
     
@@ -28,6 +25,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val isPreReminder = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_PRE_REMINDER, false)
             val vibrateEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_VIBRATE_ENABLED, true)
             val soundEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_SOUND_ENABLED, false)
+            val adhanSoundId = intent.getStringExtra(AlarmScheduler.EXTRA_ADHAN_SOUND_ID)
             val alarmTime = intent.getLongExtra(
                 AlarmScheduler.EXTRA_ALARM_TIME,
                 System.currentTimeMillis()
@@ -63,7 +61,14 @@ class AlarmReceiver : BroadcastReceiver() {
                         )
                     )
                 }
-                showNotification(context, prayerName, resolvedKind, vibrateEnabled, soundEnabled)
+                showNotification(
+                    context = context,
+                    prayerName = prayerName,
+                    kind = resolvedKind,
+                    vibrateEnabled = vibrateEnabled,
+                    soundEnabled = soundEnabled,
+                    adhanSoundId = adhanSoundId
+                )
                 val widgetPendingResult = goAsync()
                 runCatching {
                     io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context, widgetPendingResult)
@@ -97,17 +102,18 @@ class AlarmReceiver : BroadcastReceiver() {
         prayerName: String,
         kind: String,
         vibrateEnabled: Boolean,
-        soundEnabled: Boolean
+        soundEnabled: Boolean,
+        adhanSoundId: String? = null
     ) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         PrayerNotificationChannels.create(context)
         if (!canPostNotifications(context)) {
             Log.w(TAG, "Notification permission is unavailable; alarm notification suppressed")
             return
         }
 
-        val channelId = PrayerNotificationChannels.channelFor(vibrateEnabled, soundEnabled)
         val displayPrayerName = localizedPrayerName(context, prayerName)
+
+        val channelId = PrayerNotificationChannels.channelFor(vibrateEnabled, soundEnabled)
 
         val title = when (kind) {
             AlarmScheduler.KIND_WHITE_DAYS -> context.getString(R.string.notification_white_days_title)
@@ -126,47 +132,39 @@ class AlarmReceiver : BroadcastReceiver() {
             else -> return
         }
 
-        val appIntent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            appIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
-            .setContentText(contentText)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
-            builder.setSound(
-                if (soundEnabled) android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
-                else null
-            )
-            builder.setVibrate(
-                if (vibrateEnabled) PrayerNotificationChannels.VIBRATION_PATTERN
-                else longArrayOf(0L)
-            )
-        }
-
         val notificationId = when (kind) {
             AlarmScheduler.KIND_WHITE_DAYS -> 300
             AlarmScheduler.KIND_PRE_PRAYER -> 200 + prayerName.hashCode()
             else -> 100 + prayerName.hashCode()
         }
-        try {
-            notificationManager.notify(notificationId, builder.build())
-            Log.d(TAG, "Notification shown: $title on channel $channelId")
-        } catch (securityException: SecurityException) {
-            Log.w(TAG, "Notification permission changed before delivery", securityException)
+
+        val alert = PrayerAlertNotification.Content(
+            notificationId = notificationId,
+            channelId = channelId,
+            title = title,
+            text = contentText,
+            soundEnabled = soundEnabled,
+            vibrateEnabled = vibrateEnabled
+        )
+
+        // A chosen adhan replaces the notification tone for the prayer itself. Pre-prayer
+        // reminders and white-day nudges keep the short tone: they are a heads-up, not a
+        // call to prayer, and a full recitation would misrepresent them.
+        //
+        // The alert travels with the request, and the service owns it from the moment it
+        // accepts one: while the recitation plays it shows its own notification with a
+        // stop button, and if playback never starts - focus denied, the file gone or
+        // undecodable - it posts this one instead. Whether the audio works is not known
+        // until long after this receiver has returned, so handing the alert over is the
+        // only way the prayer cannot end up with no notification at all.
+        if (kind == AlarmScheduler.KIND_PRAYER &&
+            !adhanSoundId.isNullOrBlank() &&
+            AdhanPlaybackService.start(context, adhanSoundId, displayPrayerName, alert)
+        ) {
+            return
         }
+
+        PrayerAlertNotification.post(context, alert)
     }
 
     internal fun canPostNotifications(context: Context): Boolean {

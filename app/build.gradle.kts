@@ -42,13 +42,13 @@ if (signingProperties != null) {
 
 android {
     namespace = "io.github.sulfuro25.salati"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.sulfuro.salati"
         minSdk = 24
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.1.0"
+        versionCode = 4
+        versionName = "1.2.0"
     }
 
     buildTypes {

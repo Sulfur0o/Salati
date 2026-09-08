@@ -1,5 +1,6 @@
 package io.github.sulfuro25.salati.data.settings
 
+import androidx.compose.runtime.Immutable
 import io.github.sulfuro25.salati.core.computation.ZakatGoldItem
 import io.github.sulfuro25.salati.core.computation.ZakatSilverItem
 import kotlinx.serialization.Serializable
@@ -11,6 +12,16 @@ object TimeFormatPreference {
     const val TWENTY_FOUR_HOUR = "24H"
 }
 
+/**
+ * Marked immutable for Compose's benefit, and it genuinely is: every property is a `val`,
+ * the two lists are only ever replaced wholesale by `copy`, and instances come from
+ * deserialising the settings store rather than being edited in place.
+ *
+ * Without the annotation Compose sees `List` and infers the whole class unstable, which
+ * makes every composable taking a [CalculationSettings] non-skippable - all four settings
+ * cards, the Zakat steps, the dashboard - so any recomposition redraws all of them.
+ */
+@Immutable
 @Serializable
 data class CalculationSettings(
     val hasCompletedOnboarding: Boolean = false,
@@ -26,6 +37,16 @@ data class CalculationSettings(
     val prePrayerMinutes: Int = 10,
     val vibrateEnabled: Boolean = true,
     val soundEnabled: Boolean = false,
+    // Id of a downloaded adhan recording, or null to use the device notification tone.
+    val adhanSoundId: String? = null,
+    // Stored alongside the id so Settings can name the choice without refetching the
+    // catalogue, which would leave the row blank whenever the user is offline.
+    val adhanSoundName: String? = null,
+    // The Fajr adhan, kept separate because it is a different call: it carries
+    // "as-salatu khayrun min an-nawm", which belongs at dawn and nowhere else. Null means
+    // the user has not chosen one, and Fajr falls back to [adhanSoundId].
+    val fajrAdhanSoundId: String? = null,
+    val fajrAdhanSoundName: String? = null,
     val notificationsMuted: Boolean = false,
     val whiteDaysReminder: Boolean = false,
     val silentModeAutomationEnabled: Boolean = false,
@@ -34,7 +55,6 @@ data class CalculationSettings(
     
     // Zakat Parameters
     val zakatGoldPrice: Double = 70.0,      // Default 24k gold price per gram, in zakatCurrencyCode
-    val zakatGoldCarat: Int = 24,           // Jewelry purity used for gold valuation (24, 21, 18, 14, 10)
     val zakatNisabGram: Double = 85.0,      // Gold threshold in grams
     val zakatSilverPrice: Double = 0.8,     // Default silver price per gram, in zakatCurrencyCode
     val zakatNisabSilverGram: Double = 595.0, // Silver threshold in grams
@@ -60,6 +80,28 @@ data class CalculationSettings(
     val appLanguageCode: String? = null, // null = System default, "en", "ar", "fr", "nl"
     val timeFormat: String = TimeFormatPreference.SYSTEM
 )
+
+/** Prayer key the scheduler uses for the dawn prayer; see `AlarmScheduler.addAlarm`. */
+private const val FAJR_KEY = "fajr"
+
+/**
+ * The recitation to play for one prayer.
+ *
+ * The Fajr adhan is not the same call as the other four: it adds
+ * "as-salatu khayrun min an-nawm" - prayer is better than sleep - which is only said at
+ * dawn. Playing a Fajr recording at Asr would announce it four times a day at the wrong
+ * time, so the two are stored separately and chosen per prayer here.
+ *
+ * Falls back to the general choice when no Fajr recording has been picked, which keeps
+ * every install that predates this setting behaving exactly as it did.
+ */
+fun CalculationSettings.adhanSoundIdFor(prayerKey: String): String? {
+    return if (prayerKey.equals(FAJR_KEY, ignoreCase = true)) {
+        fajrAdhanSoundId ?: adhanSoundId
+    } else {
+        adhanSoundId
+    }
+}
 
 fun CalculationSettings.safeZoneId(): java.time.ZoneId {
     return safeZoneId(timezoneId)

@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import io.github.sulfuro25.salati.theme.SalatiAccents
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.theme.SalatiTypeTokens
@@ -71,7 +72,7 @@ fun SalatiHeroCard(
             Text(
                 text = countdownFormatter(remainingMillis),
                 style = SalatiTypeTokens.Countdown,
-                color = MaterialTheme.colorScheme.primary
+                color = SalatiAccents.countdown
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm),

@@ -18,7 +18,13 @@ sealed interface RestoreResult {
 }
 
 interface AlarmRegistrar {
-    fun scheduleAlarm(context: Context, alarm: PreparedAlarm, vibrateEnabled: Boolean, soundEnabled: Boolean = false): ScheduleResult
+    fun scheduleAlarm(
+        context: Context,
+        alarm: PreparedAlarm,
+        vibrateEnabled: Boolean,
+        soundEnabled: Boolean = false,
+        adhanSoundId: String? = null
+    ): ScheduleResult
     fun restoreAlarm(context: Context, alarm: RegisteredAlarm): RestoreResult
     fun cancelAlarm(context: Context, alarm: RegisteredAlarm)
     fun cancelLegacyAlarm(context: Context, requestCode: Int)
@@ -54,7 +60,13 @@ class SystemAlarmRegistrar : AlarmRegistrar {
         private const val TAG = "SystemAlarmRegistrar"
     }
 
-    override fun scheduleAlarm(context: Context, alarm: PreparedAlarm, vibrateEnabled: Boolean, soundEnabled: Boolean): ScheduleResult {
+    override fun scheduleAlarm(
+        context: Context,
+        alarm: PreparedAlarm,
+        vibrateEnabled: Boolean,
+        soundEnabled: Boolean,
+        adhanSoundId: String?
+    ): ScheduleResult {
         return try {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                 ?: throw IllegalStateException("AlarmManager not available")
@@ -73,6 +85,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
                 putExtra(AlarmScheduler.EXTRA_NOTIFICATION_KIND, kind)
                 putExtra(AlarmScheduler.EXTRA_VIBRATE_ENABLED, vibrateEnabled)
                 putExtra(AlarmScheduler.EXTRA_SOUND_ENABLED, soundEnabled)
+                putExtra(AlarmScheduler.EXTRA_ADHAN_SOUND_ID, adhanSoundId)
                 putExtra(AlarmScheduler.EXTRA_ALARM_REQUEST_CODE, alarm.requestCode)
                 putExtra(
                     AlarmScheduler.EXTRA_SILENT_MODE_AUTOMATION_ENABLED,
@@ -106,6 +119,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
                     triggerAtMillis = alarm.triggerAtMillis,
                     vibrateEnabled = vibrateEnabled,
                     soundEnabled = soundEnabled,
+                    adhanSoundId = adhanSoundId,
                     silentModeAutomationEnabled = alarm.silentModeAutomationEnabled,
                     silentModeMinutesAfterAdhan = alarm.silentModeMinutesAfterAdhan,
                     silentModeDurationMinutes = alarm.silentModeDurationMinutes
@@ -136,6 +150,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
                 putExtra(AlarmScheduler.EXTRA_NOTIFICATION_KIND, kind)
                 putExtra(AlarmScheduler.EXTRA_VIBRATE_ENABLED, alarm.vibrateEnabled)
                 putExtra(AlarmScheduler.EXTRA_SOUND_ENABLED, alarm.soundEnabled)
+                putExtra(AlarmScheduler.EXTRA_ADHAN_SOUND_ID, alarm.adhanSoundId)
                 putExtra(AlarmScheduler.EXTRA_ALARM_REQUEST_CODE, alarm.requestCode)
                 putExtra(
                     AlarmScheduler.EXTRA_SILENT_MODE_AUTOMATION_ENABLED,

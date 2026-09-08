@@ -46,6 +46,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -79,6 +80,7 @@ import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.ui.components.StatusPill
 import io.github.sulfuro25.salati.ui.settings.CurrencySelectionSheet
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
@@ -89,6 +91,19 @@ import java.util.UUID
 internal const val ZAKAT_STEP_COUNT = 4
 
 /**
+ * How long typing has to stop before the assessment is written to disk. Long enough to
+ * swallow a burst of keystrokes, short enough that leaving the screen straight after the
+ * last character still finds the edit queued rather than lost.
+ */
+private const val TYPING_SETTLE_MILLIS = 400L
+
+private fun CalculationSettings.withGoldItem(edited: ZakatGoldItem): CalculationSettings =
+    copy(zakatGoldItems = zakatGoldItems.map { if (it.id == edited.id) edited else it })
+
+private fun CalculationSettings.withSilverItem(edited: ZakatSilverItem): CalculationSettings =
+    copy(zakatSilverItems = zakatSilverItems.map { if (it.id == edited.id) edited else it })
+
+/**
  * Four-step Zakat walkthrough.
  *
  * The assessment is long enough that a single scrolling form buries the parts that
@@ -96,9 +111,11 @@ internal const val ZAKAT_STEP_COUNT = 4
  * wealth, itemise precious metals at their real purities, then review and optionally
  * book the next Hawl in the user's own calendar.
  *
- * Every answer is written straight through to [SalatiPreferences] rather than held in
- * screen state: the tab bar tears this screen down on every switch, and the assessment
- * is revisited a lunar year later, so losing the inputs is worse than a few small writes.
+ * Every answer is persisted to [SalatiPreferences] rather than held in screen state: the
+ * tab bar tears this screen down on every switch, and the assessment is revisited a lunar
+ * year later, so losing the inputs is the one outcome worth spending writes to avoid.
+ * Typing is coalesced rather than written per character - see [TYPING_SETTLE_MILLIS] - and
+ * whatever is still queued when the screen goes away is handed to a scope that outlives it.
  */
 @Composable
 fun ZakatScreen(
@@ -121,9 +138,51 @@ fun ZakatScreen(
         }
     }
 
-    val update = { transform: (CalculationSettings) -> CalculationSettings ->
-        scope.launch { preferences.updateSettings(transform) }
-        Unit
+    // Text fields fire a transform on every keystroke, and each write serialises the whole
+    // settings document - jewellery lists included - and fsyncs it. Typing "1250" is four
+    // of those. So keystroke edits are queued and flushed once typing stops, while
+    // discrete actions (choosing a currency, adding or deleting an item, picking a date)
+    // still write immediately, because their result has to appear on screen at once.
+    //
+    // Ordering is kept by composing whatever is queued into the immediate write rather
+    // than racing it: a pending weight edit followed by "remove this item" applies in
+    // that order, and never resurrects the item.
+    val pendingEdit = remember { mutableStateOf<((CalculationSettings) -> CalculationSettings)?>(null) }
+
+    val update = remember(preferences, scope) {
+        { transform: (CalculationSettings) -> CalculationSettings ->
+            val queued = pendingEdit.value
+            pendingEdit.value = null
+            val composed = if (queued == null) transform else { c: CalculationSettings -> transform(queued(c)) }
+            scope.launch { preferences.updateSettings(composed) }
+            Unit
+        }
+    }
+
+    val updateWhileTyping = remember {
+        { transform: (CalculationSettings) -> CalculationSettings ->
+            val queued = pendingEdit.value
+            pendingEdit.value =
+                if (queued == null) transform else { c: CalculationSettings -> transform(queued(c)) }
+        }
+    }
+
+    LaunchedEffect(pendingEdit.value) {
+        val transform = pendingEdit.value ?: return@LaunchedEffect
+        delay(TYPING_SETTLE_MILLIS)
+        preferences.updateSettings(transform)
+        // Only clear what was actually written. Anything typed since is a newer queue
+        // that has already restarted this effect.
+        if (pendingEdit.value === transform) pendingEdit.value = null
+    }
+
+    DisposableEffect(preferences) {
+        onDispose {
+            // Switching tabs destroys this screen mid-edit, taking `scope` with it, so the
+            // last few characters have to be written by someone who outlives it.
+            pendingEdit.value?.let { preferences.updateSettingsDetached(it) }
+            pendingEdit.value = null
+        }
     }
 
     var showCurrencySheet by remember { mutableStateOf(false) }
@@ -218,11 +277,11 @@ fun ZakatScreen(
                             receivables = settings.zakatReceivables,
                             liabilities = settings.zakatLiabilities,
                             subtotalText = formatAmount(assessment.liquidAssets, true),
-                            onCashOnHandChange = { v -> update { it.copy(zakatCashOnHand = v) } },
-                            onBankBalanceChange = { v -> update { it.copy(zakatBankBalance = v) } },
-                            onInvestmentsChange = { v -> update { it.copy(zakatInvestments = v) } },
-                            onReceivablesChange = { v -> update { it.copy(zakatReceivables = v) } },
-                            onLiabilitiesChange = { v -> update { it.copy(zakatLiabilities = v) } }
+                            onCashOnHandChange = { v -> updateWhileTyping { it.copy(zakatCashOnHand = v) } },
+                            onBankBalanceChange = { v -> updateWhileTyping { it.copy(zakatBankBalance = v) } },
+                            onInvestmentsChange = { v -> updateWhileTyping { it.copy(zakatInvestments = v) } },
+                            onReceivablesChange = { v -> updateWhileTyping { it.copy(zakatReceivables = v) } },
+                            onLiabilitiesChange = { v -> updateWhileTyping { it.copy(zakatLiabilities = v) } }
                         )
 
                         2 -> ZakatMetalsStep(
@@ -245,13 +304,10 @@ fun ZakatScreen(
                                 }
                             },
                             onUpdateGoldItem = { edited ->
-                                update { current ->
-                                    current.copy(
-                                        zakatGoldItems = current.zakatGoldItems.map {
-                                            if (it.id == edited.id) edited else it
-                                        }
-                                    )
-                                }
+                                update { current -> current.withGoldItem(edited) }
+                            },
+                            onEditGoldItemText = { edited ->
+                                updateWhileTyping { current -> current.withGoldItem(edited) }
                             },
                             onRemoveGoldItem = { id ->
                                 update { current ->
@@ -269,13 +325,10 @@ fun ZakatScreen(
                                 }
                             },
                             onUpdateSilverItem = { edited ->
-                                update { current ->
-                                    current.copy(
-                                        zakatSilverItems = current.zakatSilverItems.map {
-                                            if (it.id == edited.id) edited else it
-                                        }
-                                    )
-                                }
+                                update { current -> current.withSilverItem(edited) }
+                            },
+                            onEditSilverItemText = { edited ->
+                                updateWhileTyping { current -> current.withSilverItem(edited) }
                             },
                             onRemoveSilverItem = { id ->
                                 update { current ->

@@ -121,8 +121,6 @@
     <string name="notification_pre_prayer_message">الصلاة القادمة بعد قليل.</string>
 
     <string name="settings_reminders_pre_prayer">تنبيه مسبق قبل الصلاة</string>
-    <string name="settings_reminders_pre_prayer_value">قبل الصلاة بـ %1$d دقيقة</string>
-    <string name="settings_reminders_pre_prayer_accessibility">قبل الصلاة بـ %1$d دقيقة</string>
 
     <string name="settings_calendar_hijri_offset">تعديل التاريخ الهجري</string>
     <string name="settings_calendar_hijri_offset_zero">0 يوم</string>
@@ -398,7 +396,7 @@
     <string name="settings_status_granted">ممنوح</string>
     <string name="settings_status_denied">مرفوض</string>
     <string name="settings_status_unrestricted">غير مقيّد</string>
-    <string name="settings_status_restricted">اضغط للتحسين</string>
+    <string name="settings_status_restricted">مقيّد</string>
     <string name="settings_status_notifications">الإشعارات</string>
     <string name="settings_status_exact_alarms">التنبيهات الدقيقة</string>
     <string name="settings_status_battery">البطارية</string>
@@ -408,4 +406,60 @@
 
     <string name="settings_reminders_sound">صوت الإشعار</string>
     <string name="settings_reminders_sound_description">تشغيل صوت عند دخول أوقات الصلاة</string>
+    <string name="daily_computed_locally">غير متصل — حُسبت الأوقات على هذا الجهاز</string>
+    <string name="notification_channel_vibrate_name">تنبيهات الصلاة (اهتزاز)</string>
+    <string name="notification_channel_vibrate_description">تنبيهات أوقات الصلاة تهتز دون تشغيل صوت</string>
+    <string name="notification_channel_silent_name">تنبيهات الصلاة (صامت)</string>
+    <string name="notification_channel_silent_description">تنبيهات أوقات الصلاة تظهر بهدوء، بلا صوت أو اهتزاز</string>
+    <string name="notification_channel_sound_vibrate_name">تنبيهات الصلاة (صوت واهتزاز)</string>
+    <string name="notification_channel_sound_vibrate_description">تنبيهات أوقات الصلاة تشغّل صوتًا وتهتز</string>
+    <string name="notification_channel_sound_name">تنبيهات الصلاة (صوت)</string>
+    <string name="notification_channel_sound_description">تنبيهات أوقات الصلاة تشغّل صوتًا دون اهتزاز</string>
+    <string name="notification_channel_adhan_name">تشغيل الأذان</string>
+    <string name="notification_channel_adhan_description">يظهر أثناء تشغيل أذان مُنزَّل، مع زر لإيقافه</string>
+    <string name="adhan_playing">جارٍ تشغيل الأذان</string>
+    <string name="adhan_stop">إيقاف</string>
+    <string name="settings_adhan_sound_title">صوت الأذان</string>
+    <string name="settings_adhan_sound_row">صوت الأذان</string>
+    <string name="settings_adhan_device_tone">نغمة إشعارات الجهاز</string>
+    <string name="settings_adhan_device_tone_description">تنبيه قصير يستخدم صوت الإشعارات في هاتفك</string>
+    <string name="settings_adhan_loading">جارٍ تحميل التسجيلات المتاحة…</string>
+    <string name="settings_adhan_unreachable">تعذّر الوصول إلى قائمة التسجيلات. تحقّق من اتصالك ثم أعد المحاولة.</string>
+    <string name="settings_adhan_unavailable">تعذّرت قراءة قائمة التسجيلات.</string>
+    <string name="settings_adhan_empty">لا تتوفر تسجيلات بعد.</string>
+    <string name="settings_adhan_size">التنزيل %1$s ميغابايت</string>
+    <string name="settings_adhan_not_downloaded">لم يُنزَّل بعد</string>
+    <string name="settings_adhan_download">تنزيل %1$s</string>
+    <string name="settings_adhan_delete">حذف %1$s</string>
+    <string name="settings_adhan_preview">استماع</string>
+    <string name="settings_adhan_download_offline">فشل التنزيل. تحقّق من اتصالك ثم أعد المحاولة.</string>
+    <string name="settings_adhan_download_failed">تعذّر حفظ هذا التسجيل.</string>
+    <plurals name="settings_reminders_pre_prayer_value">
+        <item quantity="zero">قبل الصلاة بـ %1$d دقيقة</item>
+        <item quantity="one">قبل الصلاة بدقيقة واحدة</item>
+        <item quantity="two">قبل الصلاة بدقيقتين</item>
+        <item quantity="few">قبل الصلاة بـ %1$d دقائق</item>
+        <item quantity="many">قبل الصلاة بـ %1$d دقيقة</item>
+        <item quantity="other">قبل الصلاة بـ %1$d دقيقة</item>
+    </plurals>
+    <plurals name="settings_reminders_pre_prayer_accessibility">
+        <item quantity="zero">قبل الصلاة بـ %1$d دقيقة</item>
+        <item quantity="one">قبل الصلاة بدقيقة واحدة</item>
+        <item quantity="two">قبل الصلاة بدقيقتين</item>
+        <item quantity="few">قبل الصلاة بـ %1$d دقائق</item>
+        <item quantity="many">قبل الصلاة بـ %1$d دقيقة</item>
+        <item quantity="other">قبل الصلاة بـ %1$d دقيقة</item>
+    </plurals>
+    <string name="settings_reminders_pre_prayer_off">معطّل</string>
+    <string name="settings_reminders_pre_prayer_off_accessibility">تنبيه ما قبل الصلاة معطّل</string>
+    <string name="app_logo_description">شعار صلاتي</string>
+    <string name="settings_adhan_fajr_row">أذان الفجر</string>
+    <string name="settings_adhan_fajr_title">أذان صلاة الفجر</string>
+    <string name="settings_adhan_fajr_same">مثل باقي الصلوات</string>
+    <string name="settings_adhan_fajr_same_description">استخدم الأذان المختار أعلاه للفجر أيضًا</string>
+    <string name="settings_adhan_fajr_description">أذان الفجر يزيد «الصلاة خير من النوم»</string>
+    <string name="settings_status_action_allow">السماح</string>
+    <string name="settings_status_action_optimize">تحسين</string>
+    <string name="settings_status_battery_action_description">إيقاف تحسين البطارية لتطبيق صلاتي</string>
+    <string name="settings_status_dnd_action_description">السماح بالوصول إلى وضع عدم الإزعاج</string>
 </resources>

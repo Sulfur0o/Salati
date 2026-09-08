@@ -49,7 +49,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         preferences = SalatiPreferences(applicationContext)
-        PrayerNotificationChannels.create(applicationContext)
+        // Deliberately this Activity and not applicationContext: below API 33 only the
+        // Activity carries the app's chosen language, and the channel labels are what the
+        // user reads in Android's notification settings. Re-running on every recreate is
+        // also what re-labels them after a language change.
+        PrayerNotificationChannels.create(this)
         permissionRefreshController = PermissionStateRefreshController(
             initialState = readAppPermissionState(this),
             enqueueRefresh = { AlarmWorkScheduler.enqueueRefresh(applicationContext) }

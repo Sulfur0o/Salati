@@ -30,8 +30,20 @@ data class SalatiPrayerTimes(
     val hijri: HijriDateParts?
 )
 
+/** Where a month of prayer times came from. */
+enum class PrayerDataOrigin {
+    /** Aladhan, either freshly fetched or replayed from the on-disk cache. */
+    NETWORK,
+
+    /** Computed by [LocalPrayerTimeCalculator] because the cache missed and the network failed. */
+    ON_DEVICE
+}
+
 sealed interface MonthlyPrayerResult {
-    data class Success(val data: List<AladhanDayData>) : MonthlyPrayerResult
+    data class Success(
+        val data: List<AladhanDayData>,
+        val origin: PrayerDataOrigin = PrayerDataOrigin.NETWORK
+    ) : MonthlyPrayerResult
     data object CacheMiss : MonthlyPrayerResult
     data class TemporaryNetworkFailure(val cause: IOException) : MonthlyPrayerResult
     data class RetryableServerFailure(val statusCode: Int) : MonthlyPrayerResult
@@ -43,6 +55,9 @@ sealed interface MonthlyPrayerResult {
 
 object PrayerRepository {
     private const val TAG = "PrayerRepository"
+
+    /** Shared across the app so every screen and the widget warm the same entries. */
+    private val monthsInMemory: PrayerMemoryCache = LruPrayerMemoryCache()
     private val gregorianDateFormatter = DateTimeFormatter.ofPattern("dd-MM-uuuu", Locale.ROOT)
         .withResolverStyle(ResolverStyle.STRICT)
 
@@ -110,7 +125,8 @@ object PrayerRepository {
         year: Int,
         month: Int,
         requireCacheOnly: Boolean = false,
-        apiClient: PrayerApiClient = UrlConnectionPrayerApiClient
+        apiClient: PrayerApiClient = UrlConnectionPrayerApiClient,
+        allowOnDeviceFallback: Boolean = !requireCacheOnly
     ): MonthlyPrayerResult = withContext(Dispatchers.IO) {
         val request = try {
             createRequest(settings, year, month)
@@ -123,7 +139,10 @@ object PrayerRepository {
             requireCacheOnly = requireCacheOnly,
             cacheDataSource = AtomicFilePrayerCacheDataSource(context.filesDir),
             remoteDataSource = AladhanPrayerRemoteDataSource(apiClient),
-            responseParser = AladhanPrayerResponseParser
+            responseParser = AladhanPrayerResponseParser,
+            fallbackZoneId = settings.safeZoneId(),
+            memoryCache = monthsInMemory,
+            allowOnDeviceFallback = allowOnDeviceFallback
         )
     }
 
@@ -164,7 +183,53 @@ object PrayerRepository {
         return resultMap
     }
 
+    /**
+     * @param fallbackZoneId when non-null and the network has actually been tried and
+     *   failed, prayer times are computed on the device instead of giving up. Null
+     *   disables the fallback, which is what the unit tests use to exercise the
+     *   cache-and-network state machine on its own.
+     * @param allowOnDeviceFallback whether a computed month is an acceptable answer.
+     *   Defaults to the opposite of [requireCacheOnly], because a caller that declines
+     *   the network is usually asking whether authoritative data is on disk. A pure
+     *   display consumer that only wants something to show - the widget - overrides it.
+     */
     internal fun getMonthlyPrayers(
+        request: PrayerMonthRequest,
+        requireCacheOnly: Boolean,
+        cacheDataSource: PrayerCacheDataSource,
+        remoteDataSource: PrayerRemoteDataSource,
+        responseParser: PrayerResponseParser,
+        fallbackZoneId: ZoneId? = null,
+        memoryCache: PrayerMemoryCache = NoPrayerMemoryCache,
+        allowOnDeviceFallback: Boolean = !requireCacheOnly
+    ): MonthlyPrayerResult {
+        memoryCache.get(request)?.let { return MonthlyPrayerResult.Success(it) }
+
+        val result = resolveMonthlyPrayers(
+            request, requireCacheOnly, cacheDataSource, remoteDataSource, responseParser
+        )
+        if (result is MonthlyPrayerResult.Success) {
+            memoryCache.put(request, result.data)
+            return result
+        }
+        if (fallbackZoneId == null) return result
+
+        // Normally only after a real network attempt: a caller passing requireCacheOnly is
+        // asking whether authoritative data is already on disk, and answering "yes, here
+        // is something I worked out myself" would stop it from ever going and fetching
+        // the real thing.
+        if (!allowOnDeviceFallback) return result
+
+        val computed = LocalPrayerTimeCalculator.calculateMonth(request, fallbackZoneId)
+        if (computed.isEmpty()) return result
+
+        Log.i(TAG, "Aladhan unavailable for ${request.year}-${request.month}; computed on device")
+        // Deliberately not written to the cache: a computed month must never shadow the
+        // authoritative one the next successful fetch will bring.
+        return MonthlyPrayerResult.Success(computed, PrayerDataOrigin.ON_DEVICE)
+    }
+
+    private fun resolveMonthlyPrayers(
         request: PrayerMonthRequest,
         requireCacheOnly: Boolean,
         cacheDataSource: PrayerCacheDataSource,

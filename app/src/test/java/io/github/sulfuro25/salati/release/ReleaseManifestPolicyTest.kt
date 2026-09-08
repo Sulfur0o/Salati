@@ -58,11 +58,11 @@ class ReleaseManifestPolicyTest {
     }
 
     @Test
-    fun manifestWiresExplicitNoBackupPolicy() {
+    fun manifestWiresExplicitBackupPolicy() {
         val document = parseXml(sourceFile("src/main/AndroidManifest.xml"))
         val application = document.getElementsByTagName("application").item(0) as Element
 
-        assertEquals("false", application.getAttributeNS(androidNamespace, "allowBackup"))
+        assertEquals("true", application.getAttributeNS(androidNamespace, "allowBackup"))
         assertEquals("false", application.getAttributeNS(androidNamespace, "usesCleartextTraffic"))
         assertEquals("@xml/backup_rules", application.getAttributeNS(androidNamespace, "fullBackupContent"))
         assertEquals(
@@ -71,18 +71,40 @@ class ReleaseManifestPolicyTest {
         )
     }
 
+    /**
+     * The settings store is backed up, and it is the only thing that is - on every route
+     * out of the device, and on every API level.
+     *
+     * An `include` is exclusive: naming one path opts every other file out. That is what
+     * keeps this narrow, so the assertion is not "the prayer cache is excluded" but "the
+     * set of included paths is exactly this one".
+     */
     @Test
-    fun legacyAndModernRulesExcludeEveryAppDataDomain() {
-        val expectedDomains = setOf("root", "file", "database", "sharedpref", "external")
+    fun onlyTheSettingsStoreIsEverBackedUp() {
+        val settingsStore = setOf("file" to "datastore/salati_settings.preferences_pb")
 
+        // API 30 and below: one document covering cloud backup and device transfer alike.
         val legacy = parseXml(sourceFile("src/main/res/xml/backup_rules.xml"))
-        assertEquals(expectedDomains, excludedDomains(legacy.documentElement))
+        assertEquals(settingsStore, includedPaths(legacy.documentElement))
 
         val modern = parseXml(sourceFile("src/main/res/xml/data_extraction_rules.xml"))
         val cloud = modern.getElementsByTagName("cloud-backup").item(0) as Element
         val transfer = modern.getElementsByTagName("device-transfer").item(0) as Element
-        assertEquals(expectedDomains, excludedDomains(cloud))
-        assertEquals(expectedDomains, excludedDomains(transfer))
+        assertEquals(settingsStore, includedPaths(cloud))
+        assertEquals(settingsStore, includedPaths(transfer))
+    }
+
+    @Test
+    fun volatileDeviceStateIsNeverRestoredOntoANewPhone() {
+        val forbidden = listOf("alarm_registry", "prayers_v2_", "androidx.work")
+        val documents = listOf("backup_rules.xml", "data_extraction_rules.xml")
+            .map { sourceFile("src/main/res/xml/$it").readText() }
+
+        for (document in documents) {
+            for (name in forbidden) {
+                assertFalse("$name must never be backed up", document.contains(name))
+            }
+        }
     }
 
     @Test
@@ -109,8 +131,8 @@ class ReleaseManifestPolicyTest {
 
         assertTrue(buildScript.contains("namespace = \"io.github.sulfuro25.salati\""))
         assertTrue(buildScript.contains("applicationId = \"com.sulfuro.salati\""))
-        assertTrue(buildScript.contains("versionCode = 3"))
-        assertTrue(buildScript.contains("versionName = \"1.1.0\""))
+        assertTrue(buildScript.contains("versionCode = 4"))
+        assertTrue(buildScript.contains("versionName = \"1.2.0\""))
         assertTrue(buildScript.contains("isMinifyEnabled = true"))
         assertTrue(buildScript.contains("isShrinkResources = true"))
     }
@@ -122,10 +144,10 @@ class ReleaseManifestPolicyTest {
         val application = document.getElementsByTagName("application").item(0) as Element
 
         assertEquals("com.sulfuro.salati", manifest.getAttribute("package"))
-        assertEquals("3", manifest.getAttributeNS(androidNamespace, "versionCode"))
-        assertEquals("1.1.0", manifest.getAttributeNS(androidNamespace, "versionName"))
+        assertEquals("4", manifest.getAttributeNS(androidNamespace, "versionCode"))
+        assertEquals("1.2.0", manifest.getAttributeNS(androidNamespace, "versionName"))
         assertFalse(application.getAttributeNS(androidNamespace, "debuggable").toBoolean())
-        assertEquals("false", application.getAttributeNS(androidNamespace, "allowBackup"))
+        assertEquals("true", application.getAttributeNS(androidNamespace, "allowBackup"))
         assertEquals("false", application.getAttributeNS(androidNamespace, "usesCleartextTraffic"))
         assertEquals("@xml/backup_rules", application.getAttributeNS(androidNamespace, "fullBackupContent"))
         assertEquals(
@@ -152,10 +174,10 @@ class ReleaseManifestPolicyTest {
         )
     }
 
-    private fun excludedDomains(parent: Element): Set<String> {
-        val excludes = parent.getElementsByTagName("exclude").asElements()
-        assertTrue(excludes.all { it.getAttribute("path") == "." })
-        return excludes.map { it.getAttribute("domain") }.toSet()
+    private fun includedPaths(parent: Element): Set<Pair<String, String>> {
+        return parent.getElementsByTagName("include").asElements()
+            .map { it.getAttribute("domain") to it.getAttribute("path") }
+            .toSet()
     }
 
     private fun parseXml(file: File) = DocumentBuilderFactory.newInstance().apply {

@@ -83,8 +83,13 @@ class PrayerRepositoryTest {
         assertEquals(0, networkCalls)
     }
 
+    /**
+     * Being offline used to leave the user with no prayer times and no alarms. The error
+     * taxonomy still exists underneath - [PrayerRepositorySeparationTest] pins it - but it
+     * is no longer what the app is handed, because a computed month beats nothing.
+     */
     @Test
-    fun ioFailureIsTypedAsTemporaryNetworkFailure() = runBlocking {
+    fun networkFailureFallsBackToTimesComputedOnDevice() = runBlocking {
         deleteDefaultCache(2096, 10)
         val result = PrayerRepository.getMonthlyPrayers(
             context = context,
@@ -94,37 +99,87 @@ class PrayerRepositoryTest {
             apiClient = PrayerApiClient { throw IOException("offline") }
         )
 
-        assertTrue(result is MonthlyPrayerResult.TemporaryNetworkFailure)
+        assertTrue(result is MonthlyPrayerResult.Success)
+        val success = result as MonthlyPrayerResult.Success
+        assertEquals(PrayerDataOrigin.ON_DEVICE, success.origin)
+        assertEquals(31, success.data.size)
+        // Usable, not merely present: every day maps to an ordered set of instants.
+        val times = PrayerRepository.parsePrayerTimes(success.data.first(), CalculationSettings())
+        assertTrue(times.fajr.isBefore(times.sunrise))
+        assertTrue(times.dhuhr.isBefore(times.asr))
+        assertTrue(times.asr.isBefore(times.maghrib))
+        assertTrue(times.maghrib.isBefore(times.isha))
     }
 
     @Test
-    fun retryableAndPermanentHttpFailuresRemainDistinct() = runBlocking {
+    fun serverFailuresAlsoFallBackAndAreNeverCached() = runBlocking {
         deleteDefaultCache(2095, 9)
-        val retryable = PrayerRepository.getMonthlyPrayers(
-            context,
-            CalculationSettings(),
-            2095,
-            9,
-            apiClient = PrayerApiClient { PrayerHttpResponse(503, "") }
+        for (statusCode in listOf(503, 429, 400)) {
+            val result = PrayerRepository.getMonthlyPrayers(
+                context,
+                CalculationSettings(),
+                2095,
+                9,
+                apiClient = PrayerApiClient { PrayerHttpResponse(statusCode, "") }
+            )
+            assertTrue("HTTP $statusCode should still yield times", result is MonthlyPrayerResult.Success)
+            assertEquals(PrayerDataOrigin.ON_DEVICE, (result as MonthlyPrayerResult.Success).origin)
+        }
+
+        // A computed month must never be written to disk, or it would shadow the real
+        // one the next successful fetch brings back.
+        val cacheFile = PrayerRepository.getCacheFile(
+            context, 2095, 9, 3, 0, "3",
+            CalculationSettings().latitude, CalculationSettings().longitude
         )
-        val rateLimited = PrayerRepository.getMonthlyPrayers(
-            context,
-            CalculationSettings(),
-            2095,
-            9,
-            apiClient = PrayerApiClient { PrayerHttpResponse(429, "") }
-        )
-        val permanent = PrayerRepository.getMonthlyPrayers(
-            context,
-            CalculationSettings(),
-            2095,
-            9,
-            apiClient = PrayerApiClient { PrayerHttpResponse(400, "") }
+        assertTrue("computed months must not be cached", !cacheFile.exists())
+    }
+
+    @Test
+    fun cacheOnlyCallersStillSeeTheMissSoTheyGoAndFetch() = runBlocking {
+        deleteDefaultCache(2094, 8)
+        // The cheap path exists to find out whether authoritative data is already on
+        // disk. Answering it with a computed month would stop the network refresh that
+        // the miss is supposed to trigger.
+        val result = PrayerRepository.getMonthlyPrayers(
+            context = context,
+            settings = CalculationSettings(),
+            year = 2094,
+            month = 8,
+            requireCacheOnly = true,
+            apiClient = PrayerApiClient { throw IOException("network path must not open") }
         )
 
-        assertEquals(MonthlyPrayerResult.RetryableServerFailure(503), retryable)
-        assertEquals(MonthlyPrayerResult.RetryableServerFailure(429), rateLimited)
-        assertEquals(MonthlyPrayerResult.PermanentHttpFailure(400), permanent)
+        assertTrue(result is MonthlyPrayerResult.CacheMiss)
+    }
+
+    /**
+     * The widget is the exception: it renders times and never decides whether to fetch
+     * them, so answering it from the on-device calculation cannot suppress a refresh. It
+     * runs inside a broadcast's goAsync window, which is why it declines the network and
+     * still needs an answer.
+     */
+    @Test
+    fun aDisplayOnlyCallerCanTakeAComputedMonthWithoutOpeningTheNetwork() = runBlocking {
+        deleteDefaultCache(2093, 7)
+        var networkCalls = 0
+        val result = PrayerRepository.getMonthlyPrayers(
+            context = context,
+            settings = CalculationSettings(),
+            year = 2093,
+            month = 7,
+            requireCacheOnly = true,
+            apiClient = PrayerApiClient {
+                networkCalls++
+                throw IOException("network path must not open")
+            },
+            allowOnDeviceFallback = true
+        )
+
+        assertTrue(result is MonthlyPrayerResult.Success)
+        assertEquals(PrayerDataOrigin.ON_DEVICE, (result as MonthlyPrayerResult.Success).origin)
+        assertEquals(31, result.data.size)
+        assertEquals(0, networkCalls)
     }
 
     @Test

@@ -60,13 +60,18 @@ private class FakeAlarmRegistrar : AlarmRegistrar {
     val cancelledAlarms = mutableListOf<RegisteredAlarm>()
     val cancelledLegacyCodes = mutableListOf<Int>()
 
+    /** prayer key -> the recitation the coordinator chose for it. */
+    val chosenAdhans = mutableListOf<Pair<String, String?>>()
+
     override fun scheduleAlarm(
         context: Context,
         alarm: PreparedAlarm,
         vibrateEnabled: Boolean,
-        soundEnabled: Boolean
+        soundEnabled: Boolean,
+        adhanSoundId: String?
     ): ScheduleResult {
         scheduleCalls++
+        chosenAdhans += alarm.prayerKey to adhanSoundId
         if (scheduleCalls == failOnScheduleNumber) {
             return ScheduleResult.Failure(IllegalStateException("deliberate schedule failure"))
         }
@@ -116,6 +121,10 @@ private class FixedPreparationSource(
 
 private object DefaultSettingsSource : AlarmSettingsSource {
     override suspend fun getSettings(): CalculationSettings = CalculationSettings()
+}
+
+private class FixedSettingsSource(private val settings: CalculationSettings) : AlarmSettingsSource {
+    override suspend fun getSettings(): CalculationSettings = settings
 }
 
 @RunWith(AndroidJUnit4::class)
@@ -336,6 +345,75 @@ class ReminderCoordinatorTest {
         assertTrue(second.await() is AlarmRefreshResult.Success)
         assertEquals(2, calls.get())
     }
+
+    /**
+     * The dawn call adds "as-salatu khayrun min an-nawm", so a Fajr recording is right at
+     * Fajr and wrong everywhere else. One adhan id for the whole batch would have played
+     * "prayer is better than sleep" at Asr, Maghrib and Isha.
+     */
+    @Test
+    fun onlyFajrGetsTheFajrRecitation() = runBlocking {
+        val registrar = FakeAlarmRegistrar()
+        val alarms = listOf(
+            preparedFor("fajr", 301, 7_000L),
+            preparedFor("dhuhr", 302, 8_000L),
+            preparedFor("asr", 303, 9_000L),
+            preparedFor("maghrib", 304, 10_000L),
+            preparedFor("isha", 305, 11_000L)
+        )
+
+        ReminderCoordinator.refreshAlarms(
+            context = context,
+            registrar = registrar,
+            clock = clock,
+            preparationSource = FixedPreparationSource(AlarmPreparationResult.Success(alarms)),
+            registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
+            settingsSource = FixedSettingsSource(
+                CalculationSettings(
+                    adhanSoundId = "makkah_mullah",
+                    fajrAdhanSoundId = "fajr_makkah"
+                )
+            )
+        )
+
+        assertEquals("fajr_makkah", registrar.chosenAdhans.single { it.first == "fajr" }.second)
+        assertEquals(
+            listOf("makkah_mullah", "makkah_mullah", "makkah_mullah", "makkah_mullah"),
+            registrar.chosenAdhans.filterNot { it.first == "fajr" }.map { it.second }
+        )
+    }
+
+    /** Nobody who has not chosen a Fajr recording should notice this feature exists. */
+    @Test
+    fun fajrFallsBackToTheGeneralAdhanWhenNoneIsChosen() = runBlocking {
+        val registrar = FakeAlarmRegistrar()
+
+        ReminderCoordinator.refreshAlarms(
+            context = context,
+            registrar = registrar,
+            clock = clock,
+            preparationSource = FixedPreparationSource(
+                AlarmPreparationResult.Success(
+                    listOf(preparedFor("fajr", 401, 7_000L), preparedFor("asr", 402, 8_000L))
+                )
+            ),
+            registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
+            settingsSource = FixedSettingsSource(
+                CalculationSettings(adhanSoundId = "madinah", fajrAdhanSoundId = null)
+            )
+        )
+
+        assertEquals(listOf("madinah", "madinah"), registrar.chosenAdhans.map { it.second })
+    }
+
+    private fun preparedFor(prayerKey: String, requestCode: Int, triggerAtMillis: Long) =
+        PreparedAlarm(
+            requestCode = requestCode,
+            uri = "salati://alarm/2026-07-15/$prayerKey/main/$requestCode",
+            prayerKey = prayerKey,
+            isPreReminder = false,
+            triggerAtMillis = triggerAtMillis
+        )
 
     private suspend fun refresh(
         registry: AlarmRegistryStore,

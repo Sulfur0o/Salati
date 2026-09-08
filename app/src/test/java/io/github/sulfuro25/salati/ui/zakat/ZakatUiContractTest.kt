@@ -24,14 +24,18 @@ class ZakatUiContractTest {
     }
 
     @Test
-    fun jewelryGoldUsesSelectedCaratWhileNisabStaysAt24k() {
-        val settings = CalculationSettings(zakatGoldPrice = 70.0, zakatGoldCarat = 18)
+    fun jewelryGoldIsValuedByPureWeightWhileNisabStaysAt24k() {
+        // Nisab is 85 g of *pure* gold, so it is priced at the 24k rate however impure
+        // the user's own jewellery happens to be.
+        val settings = CalculationSettings(zakatGoldPrice = 70.0)
         val nisab = settings.zakatNisabGram * settings.zakatGoldPrice
-        val jewelryPrice = io.github.sulfuro25.salati.core.computation.ZakatCalculator
-            .calculateEffectiveCaratPrice(settings.zakatGoldPrice, settings.zakatGoldCarat)
+        val calculator = io.github.sulfuro25.salati.core.computation.ZakatCalculator
+        val pureWeight = calculator.normalizePureGoldWeight(weightGrams = 100.0, karat = 18)
+        val jewelryValue = calculator.valueForPureWeight(pureWeight, settings.zakatGoldPrice)
 
         assertEquals(5950.0, nisab, 0.01)
-        assertEquals(52.5, jewelryPrice, 0.01)
+        assertEquals(75.0, pureWeight, 0.01)
+        assertEquals(5250.0, jewelryValue, 0.01)
     }
 
     @Test

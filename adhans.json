@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "adhans": [
+    {
+      "id": "makkah_mullah",
+      "name": "Masjid al-Haram — Sheikh Ali Mullah",
+      "reciter": "Makkah Al-Mukarramah",
+      "url": "https://salati.sulfuro.xyz/audio/makkah_mullah.mp3",
+      "bytes": 4722523,
+      "seconds": 193.6,
+      "sha256": "44c04d493972f0ef0d5bd6cd5366e22495bfaec5d36e7755d2ee5e3d910cb117"
+    },
+    {
+      "id": "makkah_faydah",
+      "name": "Masjid al-Haram — Sheikh Naif Faydah",
+      "reciter": "Makkah Al-Mukarramah",
+      "url": "https://salati.sulfuro.xyz/audio/makkah_faydah.mp3",
+      "bytes": 5409648,
+      "seconds": 222.2,
+      "sha256": "19493cb302914a2bd8871f7297ab4be3983c6bb368c386c0fc17d997c44b1e5f"
+    },
+    {
+      "id": "madinah",
+      "name": "Al-Masjid an-Nabawi (Madinah)",
+      "reciter": "Full Adhan",
+      "url": "https://salati.sulfuro.xyz/audio/madinah.mp3",
+      "bytes": 379784,
+      "seconds": 189.8,
+      "sha256": "619605b98536264f6143d0b9d4d2725cf20ee85a827e4c038dc6e42583272958"
+    },
+    {
+      "id": "madinah_short",
+      "name": "Al-Masjid an-Nabawi — Short Takbir",
+      "reciter": "Opening Takbir Only (15s)",
+      "url": "https://salati.sulfuro.xyz/audio/madinah_short.mp3",
+      "bytes": 30066,
+      "seconds": 15.0,
+      "sha256": "f0e7f6eca986eb777f498e7892578718c49cb3ab11769adc315340c382c4c52e"
+    },
+    {
+      "id": "aqsa",
+      "name": "Al-Masjid al-Aqsa (Jerusalem)",
+      "reciter": "Sheikh Naji Qazzaz",
+      "url": "https://salati.sulfuro.xyz/audio/aqsa.mp3",
+      "bytes": 452864,
+      "seconds": 226.4,
+      "sha256": "705f78b53cc9336e9ad0ce145857cbb2804d2a5956d16e8c0d9ddcf4132a90fc"
+    },
+    {
+      "id": "quba",
+      "name": "Masjid Quba (Madinah)",
+      "reciter": "Historic Medina Recitation",
+      "url": "https://salati.sulfuro.xyz/audio/quba.mp3",
+      "bytes": 411224,
+      "seconds": 205.6,
+      "sha256": "ff7dfd9e87536fec43e7a3210e9b207ae6baca80bc3baaa92f9bbf6495f0ec73"
+    },
+    {
+      "id": "abdul_basit",
+      "name": "Sheikh Abdul Basit Abdus Samad",
+      "reciter": "Egyptian Classic (Maqam Bayati)",
+      "url": "https://salati.sulfuro.xyz/audio/abdul_basit.mp3",
+      "bytes": 489872,
+      "seconds": 244.9,
+      "sha256": "7647b908b03ab1944b1497d8cbbd726f26a288435cf35011f26b1593f7d0202d"
+    },
+    {
+      "id": "al_surehi",
+      "name": "Sheikh Abdul Majid Al-Suraihi",
+      "reciter": "Imam of Masjid Quba · Madinah",
+      "url": "https://salati.sulfuro.xyz/audio/al_surehi.mp3",
+      "bytes": 828962,
+      "seconds": 206.2,
+      "sha256": "d5bb342f3aac4aedbd4ecd948b533332ee89a5c69d547c4ad2d013cbbbd44e6c"
+    },
+    {
+      "id": "fajr_makkah",
+      "name": "Masjid al-Haram (Makkah)",
+      "reciter": "With Tathweeb (Dawn Adhan)",
+      "url": "https://salati.sulfuro.xyz/audio/fajr_makkah.mp3",
+      "bytes": 450002,
+      "seconds": 222.9,
+      "fajr": true,
+      "sha256": "3f556c76c74af088d89afdccc13293beb320d70c7c3cbd48f2e02cd9c886fa68"
+    },
+    {
+      "id": "fajr_madinah",
+      "name": "Al-Masjid an-Nabawi (Madinah)",
+      "reciter": "With Tathweeb (Dawn Adhan)",
+      "url": "https://salati.sulfuro.xyz/audio/fajr_madinah.mp3",
+      "bytes": 561776,
+      "seconds": 278.8,
+      "fajr": true,
+      "sha256": "0df433d909388b11a4fe556f8f76786cc2349fcab5b49b7d14df0496ed4f3f2f"
+    },
+    {
+      "id": "fajr_abdul_basit",
+      "name": "Sheikh Abdul Basit Abdus Samad",
+      "reciter": "Egyptian Dawn Adhan",
+      "url": "https://salati.sulfuro.xyz/audio/fajr_abdul_basit.mp3",
+      "bytes": 11744593,
+      "seconds": 293.5,
+      "fajr": true,
+      "sha256": "4da254fe3d44a990264b7a38c32009d2ea9671f7dcb00828df9a9bc829ba771b"
+    }
+  ]
+}

@@ -27,6 +27,13 @@ import org.junit.Test
 class ReleaseSerializationCompatibilityTest {
     private val json = Json { encodeDefaults = true }
 
+    /**
+     * Configured exactly as SalatiPreferences configures its own decoder, so tests about
+     * what an existing install can still read are answered by the real policy rather than
+     * by a stricter one that only exists here.
+     */
+    private val storedSettingsJson = Json { ignoreUnknownKeys = true }
+
     @Test
     fun calculationSettingsRoundTripKeepsPersistedFieldNamesAndValues() {
         val settings = CalculationSettings(
@@ -42,7 +49,6 @@ class ReleaseSerializationCompatibilityTest {
             silentModeMinutesAfterAdhan = 10,
             silentModeDurationMinutes = 30,
             zakatGoldPrice = 72.5,
-            zakatGoldCarat = 21,
             zakatCurrencyCode = "USD",
             zakatHawlStartEpochDay = 20_000L
         )
@@ -61,9 +67,27 @@ class ReleaseSerializationCompatibilityTest {
             "silentModeMinutesAfterAdhan",
             "silentModeDurationMinutes",
             "zakatCurrencyCode",
-            "zakatGoldCarat",
             "zakatHawlStartEpochDay"
         ).forEach { assertTrue(encoded.contains("\"$it\"")) }
+    }
+
+    /**
+     * zakatGoldCarat was the single-purity gold model, replaced by the itemised
+     * multi-carat list. Installs made before the change still have it in their stored
+     * JSON, so decoding has to skip it rather than fall back to defaults and lose
+     * everything the user had entered.
+     */
+    @Test
+    fun settingsFromBeforeTheMultiCaratRefactorStillDecode() {
+        val withRetiredField = """{"hasCompletedOnboarding":true,"zakatGoldCarat":21,"zakatCurrencyCode":"USD"}"""
+
+        val decoded = storedSettingsJson.decodeFromString(
+            CalculationSettings.serializer(),
+            withRetiredField
+        )
+
+        assertEquals(true, decoded.hasCompletedOnboarding)
+        assertEquals("USD", decoded.zakatCurrencyCode)
     }
 
     @Test
@@ -76,7 +100,6 @@ class ReleaseSerializationCompatibilityTest {
         assertEquals(0, decoded.silentModeMinutesAfterAdhan)
         assertEquals(20, decoded.silentModeDurationMinutes)
         assertEquals(null, decoded.zakatHawlStartEpochDay)
-        assertEquals(24, decoded.zakatGoldCarat)
     }
 
     @Test

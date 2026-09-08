@@ -3,6 +3,7 @@ package io.github.sulfuro25.salati.core.notifications
 import android.content.Context
 import android.util.Log
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.adhanSoundIdFor
 import io.github.sulfuro25.salati.data.settings.safeZoneId
 import io.github.sulfuro25.salati.data.settings.SalatiPreferences
 import kotlinx.coroutines.flow.first
@@ -136,7 +137,16 @@ object ReminderCoordinator {
         var failureCause: Throwable? = null
 
         for (preparedAlarm in preparedAlarms) {
-            when (val result = registrar.scheduleAlarm(context, preparedAlarm, settings.vibrateEnabled, settings.soundEnabled)) {
+            when (val result = registrar.scheduleAlarm(
+                context,
+                preparedAlarm,
+                settings.vibrateEnabled,
+                settings.soundEnabled,
+                // Resolved per alarm, not once for the batch: Fajr gets its own recording.
+                // The choice is stored on the registered alarm, so a restore after a
+                // reboot replays the same one without having to work it out again.
+                settings.adhanSoundIdFor(preparedAlarm.prayerKey)
+            )) {
                 is ScheduleResult.Success -> newRegisteredAlarms += result.alarm
                 is ScheduleResult.Failure -> {
                     failureCause = result.cause

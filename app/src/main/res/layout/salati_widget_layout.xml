@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textColor="@color/salati_emerald"
+            android:textColor="@color/salati_widget_accent"
             android:textStyle="bold"
             android:textSize="14sp" />
 
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/widget_dot"
-            android:textColor="#6E7E74"
+            android:textColor="@color/salati_widget_on_surface_variant"
             android:textSize="13sp" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/widget_location_placeholder"
-            android:textColor="#8F9E94"
+            android:textColor="@color/salati_widget_on_surface_variant"
             android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -46,14 +46,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#6E7E74"
+            android:textColor="@color/salati_widget_on_surface_variant"
             android:textSize="12sp" />
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#243428"
+        android:background="@color/salati_widget_outline"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@null" />
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_next_prayer"
-                android:textColor="#6E7E74"
+                android:textColor="@color/salati_widget_on_surface_variant"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#FFFFFF"
+                android:textColor="@color/salati_widget_on_surface"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/widget_placeholder_time"
-            android:textColor="@color/salati_emerald"
+            android:textColor="@color/salati_widget_accent"
             android:textSize="24sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -103,7 +103,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#243428"
+        android:background="@color/salati_widget_outline"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@null" />
@@ -127,14 +127,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_fajr"
-                android:textColor="#7A8B80"
+                android:textColor="@color/salati_widget_on_surface_variant"
                 android:textSize="11sp" />
             <TextView
                 android:id="@+id/widget_time_fajr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_placeholder_time"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -150,14 +150,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_dhuhr"
-                android:textColor="#7A8B80"
+                android:textColor="@color/salati_widget_on_surface_variant"
                 android:textSize="11sp" />
             <TextView
                 android:id="@+id/widget_time_dhuhr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_placeholder_time"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -173,14 +173,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_asr"
-                android:textColor="#7A8B80"
+                android:textColor="@color/salati_widget_on_surface_variant"
                 android:textSize="11sp" />
             <TextView
                 android:id="@+id/widget_time_asr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_placeholder_time"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -196,14 +196,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_maghrib"
-                android:textColor="#7A8B80"
+                android:textColor="@color/salati_widget_on_surface_variant"
                 android:textSize="11sp" />
             <TextView
                 android:id="@+id/widget_time_maghrib"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_placeholder_time"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -219,14 +219,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_isha"
-                android:textColor="#7A8B80"
+                android:textColor="@color/salati_widget_on_surface_variant"
                 android:textSize="11sp" />
             <TextView
                 android:id="@+id/widget_time_isha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/widget_placeholder_time"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -54,7 +54,13 @@ class WhiteDaysRollbackTest {
         val scheduledAlarms = mutableListOf<RegisteredAlarm>()
         val cancelledAlarms = mutableListOf<RegisteredAlarm>()
 
-        override fun scheduleAlarm(context: Context, alarm: PreparedAlarm, vibrateEnabled: Boolean, soundEnabled: Boolean): ScheduleResult {
+        override fun scheduleAlarm(
+            context: Context,
+            alarm: PreparedAlarm,
+            vibrateEnabled: Boolean,
+            soundEnabled: Boolean,
+            adhanSoundId: String?
+        ): ScheduleResult {
             scheduleCalls++
             if (scheduleCalls == failOnScheduleNumber) return ScheduleResult.Failure(Exception("fail"))
             val reg = RegisteredAlarm(alarm.requestCode, alarm.uri, alarm.prayerKey, alarm.isPreReminder, alarm.triggerAtMillis, vibrateEnabled, soundEnabled)

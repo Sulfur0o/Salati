@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 31 and above. One file is backed up: the settings store.
+
+  That is the user's own configuration - city, calculation method, reminder choices, and
+  their Zakat assessment - and losing it means setting the app up from scratch on a new
+  phone, so it travels both ways: to Google's backup and straight across on a
+  device-to-device transfer.
+
+  Nothing else does. The prayer cache is re-fetchable and would only restore stale months.
+  The alarm registry holds request codes for alarms registered with the old device's
+  AlarmManager, and restoring those would leave the app believing it has alarms that do
+  not exist. Downloaded adhan audio is megabytes of re-downloadable files and has no place
+  in a backup quota.
+-->
 <data-extraction-rules>
     <cloud-backup>
-        <exclude domain="root" path="." />
-        <exclude domain="file" path="." />
-        <exclude domain="database" path="." />
-        <exclude domain="sharedpref" path="." />
-        <exclude domain="external" path="." />
+        <include domain="file" path="datastore/salati_settings.preferences_pb" />
     </cloud-backup>
     <device-transfer>
-        <exclude domain="root" path="." />
-        <exclude domain="file" path="." />
-        <exclude domain="database" path="." />
-        <exclude domain="sharedpref" path="." />
-        <exclude domain="external" path="." />
+        <include domain="file" path="datastore/salati_settings.preferences_pb" />
     </device-transfer>
 </data-extraction-rules>

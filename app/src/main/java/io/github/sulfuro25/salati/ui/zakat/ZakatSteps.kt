@@ -34,6 +34,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -318,9 +319,11 @@ internal fun ZakatMetalsStep(
     totalFineSilverText: String,
     onAddGoldItem: () -> Unit,
     onUpdateGoldItem: (ZakatGoldItem) -> Unit,
+    onEditGoldItemText: (ZakatGoldItem) -> Unit,
     onRemoveGoldItem: (String) -> Unit,
     onAddSilverItem: () -> Unit,
     onUpdateSilverItem: (ZakatSilverItem) -> Unit,
+    onEditSilverItemText: (ZakatSilverItem) -> Unit,
     onRemoveSilverItem: (String) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(SalatiSpacing.md)) {
@@ -341,6 +344,7 @@ internal fun ZakatMetalsStep(
                     item = item,
                     index = index,
                     onUpdate = onUpdateGoldItem,
+                    onEditText = onEditGoldItemText,
                     onRemove = { onRemoveGoldItem(item.id) }
                 )
             }
@@ -371,6 +375,7 @@ internal fun ZakatMetalsStep(
                     item = item,
                     index = index,
                     onUpdate = onUpdateSilverItem,
+                    onEditText = onEditSilverItemText,
                     onRemove = { onRemoveSilverItem(item.id) }
                 )
             }
@@ -420,6 +425,7 @@ private fun GoldItemCard(
     item: ZakatGoldItem,
     index: Int,
     onUpdate: (ZakatGoldItem) -> Unit,
+    onEditText: (ZakatGoldItem) -> Unit,
     onRemove: () -> Unit
 ) {
     ItemCard(
@@ -431,8 +437,10 @@ private fun GoldItemCard(
             R.string.zakat_item_pure_weight,
             formatGrams(ZakatCalculator.normalizePureGoldWeight(item.weightGrams, item.karat))
         ),
-        onLabelChange = { onUpdate(item.copy(label = it)) },
-        onWeightChange = { onUpdate(item.copy(weightGrams = it)) },
+        // Typed fields go through onEditText, which the screen coalesces; the purity chips
+        // are a tap and have to redraw at once, so they take the immediate path.
+        onLabelChange = { onEditText(item.copy(label = it)) },
+        onWeightChange = { onEditText(item.copy(weightGrams = it)) },
         onRemove = onRemove
     ) {
         PurityChipRow(
@@ -448,6 +456,7 @@ private fun SilverItemCard(
     item: ZakatSilverItem,
     index: Int,
     onUpdate: (ZakatSilverItem) -> Unit,
+    onEditText: (ZakatSilverItem) -> Unit,
     onRemove: () -> Unit
 ) {
     ItemCard(
@@ -459,8 +468,8 @@ private fun SilverItemCard(
             R.string.zakat_item_pure_weight,
             formatGrams(ZakatCalculator.normalizeFineSilverWeight(item.weightGrams, item.millesimal))
         ),
-        onLabelChange = { onUpdate(item.copy(label = it)) },
-        onWeightChange = { onUpdate(item.copy(weightGrams = it)) },
+        onLabelChange = { onEditText(item.copy(label = it)) },
+        onWeightChange = { onEditText(item.copy(weightGrams = it)) },
         onRemove = onRemove
     ) {
         PurityChipRow(
@@ -598,8 +607,19 @@ private fun silverPurityLabel(purity: SilverPurity): String = when (purity) {
     SilverPurity.STERLING_925 -> stringResource(R.string.zakat_purity_sterling)
 }
 
-internal fun formatGrams(value: Double): String =
-    java.lang.String.format(java.util.Locale.US, "%.2f", value)
+/**
+ * A weight as the user reads it. Composable so it follows the display locale, the same as
+ * the money totals beside it - fixed at US, an Arabic reader got "85.00 g" in Western
+ * digits next to an amount written in Arabic-Indic ones.
+ *
+ * Not to be confused with [trimTrailingZeros], which fills a text field and stays at
+ * [java.util.Locale.US] on purpose: that string has to survive being parsed back.
+ */
+@Composable
+internal fun formatGrams(value: Double): String {
+    val locale = LocalConfiguration.current.locales[0]
+    return java.lang.String.format(locale, "%.2f", value)
+}
 
 // ---------------------------------------------------------------------------
 // Step 4 - Summary

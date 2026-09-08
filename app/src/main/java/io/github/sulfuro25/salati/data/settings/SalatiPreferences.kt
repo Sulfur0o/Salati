@@ -7,6 +7,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
@@ -54,7 +58,27 @@ class SalatiPreferences(private val context: Context) {
         }
     }
 
+    /**
+     * Applies [transform] without waiting for it, on a scope that outlives the caller.
+     *
+     * For the last edit of a debounced field: the screen that owns the pending change may
+     * be leaving composition at that moment - the tab bar tears screens down on every
+     * switch - and a write launched in its scope would be cancelled before it lands.
+     */
+    fun updateSettingsDetached(transform: (CalculationSettings) -> CalculationSettings) {
+        detachedWrites.launch {
+            runCatching { updateSettings(transform) }
+                .onFailure { Log.w(TAG, "Detached settings write failed", it) }
+        }
+    }
+
     private companion object {
         const val TAG = "SalatiPreferences"
+
+        /**
+         * Process-lifetime, deliberately. DataStore serialises writes to the file itself,
+         * so ordering with the caller's own writes is preserved.
+         */
+        val detachedWrites = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 }

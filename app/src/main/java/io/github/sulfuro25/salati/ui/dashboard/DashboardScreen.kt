@@ -42,6 +42,8 @@ import io.github.sulfuro25.salati.data.settings.safeZoneId
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.theme.SalatiTypeTokens
 import io.github.sulfuro25.salati.ui.components.PrayerTimeRow
+import io.github.sulfuro25.salati.core.computation.PrayerDataOrigin
+import io.github.sulfuro25.salati.ui.components.SalatiComputedLocallyNotice
 import io.github.sulfuro25.salati.ui.components.SalatiErrorState
 import io.github.sulfuro25.salati.ui.components.SalatiHeroCard
 import io.github.sulfuro25.salati.ui.components.SalatiLoadingState
@@ -70,6 +72,7 @@ fun DashboardScreen(
     var hijriMetadata by remember { mutableStateOf<Map<LocalDate, HijriDateParts>>(emptyMap()) }
     var isLoading by remember { mutableStateOf(true) }
     var retryTrigger by remember { mutableIntStateOf(0) }
+    var timesWereComputedLocally by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentYearMonth, today, settings.hijriOffset, settings.calculationMethod, settings.highLatitudeRule, settings.madhab, settings.latitude, settings.longitude, retryTrigger) {
         isLoading = true
@@ -80,6 +83,8 @@ fun DashboardScreen(
             currentYearMonth.monthValue
         )
         var dataList = (result as? MonthlyPrayerResult.Success)?.data.orEmpty()
+        timesWereComputedLocally =
+            (result as? MonthlyPrayerResult.Success)?.origin == PrayerDataOrigin.ON_DEVICE
 
         // Handle month-end boundary: fetch next month's day 1 for true astronomical Fajr
         val tomorrow = today.plusDays(1)
@@ -195,6 +200,12 @@ fun DashboardScreen(
                     locationContext = stringResource(R.string.daily_location_context, settings.cityName),
                     onOpenQibla = onOpenQibla
                 )
+
+                if (timesWereComputedLocally) {
+                    SalatiComputedLocallyNotice(
+                        label = stringResource(R.string.daily_computed_locally)
+                    )
+                }
 
                 SalatiHeroCard(
                     eventLabel = stringResource(R.string.daily_next_event),

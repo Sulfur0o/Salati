@@ -22,6 +22,7 @@ data class RegisteredAlarm(
     val triggerAtMillis: Long,
     val vibrateEnabled: Boolean,
     val soundEnabled: Boolean = false,
+    val adhanSoundId: String? = null,
     val silentModeAutomationEnabled: Boolean = false,
     val silentModeMinutesAfterAdhan: Int = 0,
     val silentModeDurationMinutes: Int = 20

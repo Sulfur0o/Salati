@@ -51,24 +51,6 @@ object ZakatCalculator {
     }
 
     /**
-     * Calculates effective gold price per gram based on carat (24k is pure base).
-     */
-    fun calculateEffectiveCaratPrice(
-        pure24kPrice: Double,
-        carat: Int
-    ): Double {
-        val multiplier = when (carat) {
-            24 -> 1.0
-            21 -> 21.0 / 24.0
-            18 -> 18.0 / 24.0
-            14 -> 14.0 / 24.0
-            10 -> 10.0 / 24.0
-            else -> 1.0
-        }
-        return pure24kPrice * multiplier
-    }
-
-    /**
      * Normalises a gold piece to the pure 24k weight it contains: `weight × karat / 24`.
      *
      * Zakat is owed on the fine metal, and the price feed quotes pure gold, so mixing

@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -53,7 +54,6 @@ import io.github.sulfuro25.salati.data.settings.CalculationSettings
 import io.github.sulfuro25.salati.theme.SalatiShapeTokens
 import io.github.sulfuro25.salati.theme.SalatiSpacing
 import io.github.sulfuro25.salati.ui.components.StatusPill
-import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -92,7 +92,13 @@ fun QiblaScreen(
         label = "compassRoseRotation"
     )
 
-    val bearingText = String.format(Locale.US, "%.0f°", qiblaBearing)
+    // The bearing is read aloud and shown on screen, so it follows the display locale like
+    // every other number in the app. Locale.US here gave an Arabic user "42°" in Western
+    // digits beside prayer times written in Arabic-Indic ones.
+    val displayLocale = LocalConfiguration.current.locales[0]
+    val bearingText = remember(displayLocale, qiblaBearing) {
+        String.format(displayLocale, "%.0f°", qiblaBearing)
+    }
     val compassPoint = remember(qiblaBearing) { QiblaCalculator.compassPointFor(qiblaBearing) }
     val screenDescription = stringResource(
         R.string.qibla_accessibility,

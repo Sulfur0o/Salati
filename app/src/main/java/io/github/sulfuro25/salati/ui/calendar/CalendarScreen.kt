@@ -56,6 +56,7 @@ fun CalendarScreen(
     var hijriMetadata by remember { mutableStateOf<Map<LocalDate, HijriDateParts>>(emptyMap()) }
     var isLoading by remember { mutableStateOf(true) }
     var retryTrigger by remember { mutableIntStateOf(0) }
+    var timesWereComputedLocally by remember { mutableStateOf(false) }
     val hawlStartDate = remember(settings.zakatHawlStartEpochDay) {
         settings.zakatHawlStartEpochDay?.let(LocalDate::ofEpochDay)
     }
@@ -66,6 +67,8 @@ fun CalendarScreen(
             context, settings, currentYearMonth.year, currentYearMonth.monthValue
         )
         monthlyData = (result as? MonthlyPrayerResult.Success)?.data.orEmpty()
+        timesWereComputedLocally =
+            (result as? MonthlyPrayerResult.Success)?.origin == PrayerDataOrigin.ON_DEVICE
         hijriMetadata = PrayerRepository.getHijriMetadataRange(
             context = context,
             settings = settings,
@@ -145,6 +148,11 @@ fun CalendarScreen(
                 modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 240.dp)
             )
             else -> {
+                if (timesWereComputedLocally) {
+                    SalatiComputedLocallyNotice(
+                        label = stringResource(R.string.daily_computed_locally)
+                    )
+                }
                 SalatiSectionCard(modifier = Modifier.fillMaxWidth()) {
                     CalendarMonthGrid(
                         yearMonth = currentYearMonth,
