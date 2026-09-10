@@ -2,7 +2,7 @@
 
 ## Product boundary
 
-Salati's prayer location is user-configurable from Settings (city name, latitude, longitude), persisted in `CalculationSettings`, and used everywhere prayer times, dates, and alarms are computed. There is no default city: a fresh install has empty coordinates until the user sets a location during onboarding (GPS or city search). The device's own timezone does not drive date selection or scheduling once a location is saved — the saved prayer-location coordinates and timezone do. The application ID is `com.sulfuro.salati`; the Kotlin namespace remains `io.github.sulfuro25.salati`. Current release: `versionCode 5` / `versionName 1.3.0`.
+Salati's prayer location is user-configurable from Settings (city name, latitude, longitude), persisted in `CalculationSettings`, and used everywhere prayer times, dates, and alarms are computed. There is no default city: a fresh install has empty coordinates until the user sets a location during onboarding (GPS or city search). The device's own timezone does not drive date selection or scheduling once a location is saved — the saved prayer-location coordinates and timezone do. The application ID and Kotlin namespace are both `com.sulfuro.salati`. Current release: `versionCode 5` / `versionName 1.3.0`.
 
 Changing location persists city name, coordinates, and timezone in a single settings update. Timezone resolution prefers the IANA zone Aladhan reports on a successful network fetch. If that lookup fails (offline or invalid payload), `CoordinateTimezoneLookup` estimates a zone from the *new* coordinates. The previous city's timezone is never kept just because the network was down.
 

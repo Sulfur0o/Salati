@@ -41,7 +41,7 @@ if (signingProperties != null) {
 }
 
 android {
-    namespace = "io.github.sulfuro25.salati"
+    namespace = "com.sulfuro.salati"
     compileSdk = 37
     defaultConfig {
         applicationId = "com.sulfuro.salati"
