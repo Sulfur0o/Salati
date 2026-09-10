@@ -25,6 +25,7 @@ import io.github.sulfuro25.salati.data.settings.SalatiPreferences
 import io.github.sulfuro25.salati.theme.SalatiTheme
 import io.github.sulfuro25.salati.ui.settings.LoadedSettingsCache
 import io.github.sulfuro25.salati.ui.settings.applyAppLanguage
+import io.github.sulfuro25.salati.core.audio.withoutRetiredAdhanChoices
 import io.github.sulfuro25.salati.ui.settings.wrapContextForLanguage
 
 class MainActivity : ComponentActivity() {
@@ -83,6 +84,13 @@ class MainActivity : ComponentActivity() {
                     ) {}
                 }
             } else {
+                LaunchedEffect(loadedSettings.adhanSoundId, loadedSettings.fajrAdhanSoundId) {
+                    io.github.sulfuro25.salati.core.audio.AdhanAudioStore.deleteRetired(applicationContext)
+                    val cleaned = loadedSettings.withoutRetiredAdhanChoices()
+                    if (cleaned != loadedSettings) {
+                        preferences.updateSettings { cleaned }
+                    }
+                }
                 LaunchedEffect(loadedSettings.appLanguageCode) {
                     if (loadedSettings.appLanguageCode != null) {
                         applyAppLanguage(this@MainActivity, loadedSettings.appLanguageCode)

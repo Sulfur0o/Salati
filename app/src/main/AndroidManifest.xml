@@ -68,7 +68,7 @@
         <service
             android:name=".core.audio.AdhanPlaybackService"
             android:exported="false"
-            android:stopWithTask="true"
+            android:stopWithTask="false"
             android:foregroundServiceType="mediaPlayback" />
 
         <!-- Salati Home Screen App Widget (4x2 Timetable) -->

@@ -69,6 +69,10 @@
     <string name="monthly_weekday_friday">Vendredi</string>
     <string name="monthly_weekday_saturday">Samedi</string>
     <string name="monthly_weekday_sunday">Dimanche</string>
+    <string name="qibla_cardinal_north">N</string>
+    <string name="qibla_cardinal_east">E</string>
+    <string name="qibla_cardinal_south">S</string>
+    <string name="qibla_cardinal_west">O</string>
     <string name="qibla_title">Qibla</string>
     <string name="qibla_open">Ouvrir la boussole de la Qibla</string>
     <string name="qibla_back">Retour</string>
@@ -227,9 +231,8 @@
     <string name="onboarding_location_title">Définir votre position</string>
     <string name="onboarding_location_subtitle">Salati a besoin de vos coordonnées pour calculer les horaires de prière avec précision</string>
     <string name="onboarding_location_auto">Détecter automatiquement ma position</string>
-    <string name="onboarding_location_auto_desc">Utiliser le GPS de l\'appareil pour déterminer votre position avec précision. Vous pouvez ignorer cette étape et conserver la position par défaut, ou saisir les coordonnées manuellement.</string>
+    <string name="onboarding_location_auto_desc">Utilisez le GPS de l\'appareil, ou recherchez une ville par son nom. Les horaires de prière ne peuvent pas être calculés tant qu\'une position n\'est pas définie.</string>
     <string name="onboarding_location_detect">Détecter ma position</string>
-    <string name="onboarding_location_skip">Ignorer pour l\'instant et utiliser la position par défaut</string>
     <string name="onboarding_location_selected">Position sélectionnée</string>
     <string name="onboarding_method_title">Méthode de calcul</string>
     <string name="onboarding_method_subtitle">Choisissez la méthode de calcul standard pour votre région</string>
@@ -365,7 +368,7 @@
     <string name="settings_location_search_city_description">Trouvez votre ville par son nom, sans coordonnées</string>
     <string name="city_search_title">Rechercher une ville</string>
     <string name="city_search_subtitle">Choisissez votre ville pour définir les horaires et le fuseau horaire</string>
-    <string name="city_search_placeholder">Nom de ville, par ex. Bruxelles</string>
+    <string name="city_search_placeholder">Nom de ville, par ex. Istanbul</string>
     <string name="city_search_clear">Effacer la recherche</string>
     <string name="city_search_hint">Saisissez au moins deux lettres pour lancer la recherche.</string>
     <string name="city_search_searching">Recherche…</string>
@@ -412,6 +415,7 @@
     <string name="notification_channel_adhan_description">Affiché pendant la lecture d’un adhan téléchargé, avec un bouton pour l’arrêter</string>
     <string name="adhan_playing">Adhan en cours</string>
     <string name="adhan_stop">Arrêter</string>
+    <string name="adhan_play">Lire l\'adhan</string>
     <string name="settings_adhan_sound_title">Son de l’adhan</string>
     <string name="settings_adhan_sound_row">Son de l’adhan</string>
     <string name="settings_adhan_device_tone">Son de notification de l’appareil</string>

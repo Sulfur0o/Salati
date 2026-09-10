@@ -6,6 +6,7 @@ import io.github.sulfuro25.salati.core.computation.MonthlyPrayerResult
 import io.github.sulfuro25.salati.core.computation.PrayerRepository
 import io.github.sulfuro25.salati.core.computation.SalatiPrayerTimes
 import io.github.sulfuro25.salati.data.settings.CalculationSettings
+import io.github.sulfuro25.salati.data.settings.hasConfiguredLocation
 import io.github.sulfuro25.salati.data.settings.safeZoneId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -88,7 +89,10 @@ object AlarmScheduler {
         requireCacheOnly: Boolean = false,
         clock: Clock = Clock.systemUTC()
     ): AlarmPreparationResult = withContext(Dispatchers.IO) {
-        if (!settings.hasCompletedOnboarding || settings.notificationsMuted) {
+        if (!settings.hasCompletedOnboarding ||
+            !settings.hasConfiguredLocation() ||
+            settings.notificationsMuted
+        ) {
             return@withContext AlarmPreparationResult.Disabled
         }
 

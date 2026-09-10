@@ -162,10 +162,17 @@ class AlarmReceiver : BroadcastReceiver() {
         // undecodable - it posts this one instead. Whether the audio works is not known
         // until long after this receiver has returned, so handing the alert over is the
         // only way the prayer cannot end up with no notification at all.
-        if (kind == AlarmScheduler.KIND_PRAYER &&
-            !adhanSoundId.isNullOrBlank() &&
-            AdhanPlaybackService.start(context, adhanSoundId, displayPrayerName, alert)
-        ) {
+        if (kind == AlarmScheduler.KIND_PRAYER && !adhanSoundId.isNullOrBlank()) {
+            if (AdhanPlaybackService.start(context, adhanSoundId, displayPrayerName, alert)) {
+                return
+            }
+            // The platform refused a background foreground-service start (typical when
+            // the alarm had to be inexact). The user can still start playback from the
+            // notification, which Android treats as a user-initiated start.
+            PrayerAlertNotification.post(
+                context,
+                alert.copy(playAdhanId = adhanSoundId, playPrayerLabel = displayPrayerName)
+            )
             return
         }
 

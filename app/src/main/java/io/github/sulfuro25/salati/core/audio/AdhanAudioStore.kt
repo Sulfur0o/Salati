@@ -8,6 +8,7 @@ import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import io.github.sulfuro25.salati.data.settings.CalculationSettings
 import java.security.MessageDigest
 
 sealed interface AdhanDownloadResult {
@@ -67,6 +68,28 @@ object AdhanAudioStore {
     fun delete(context: Context, id: String): Boolean {
         val file = fileFor(context, id)
         return !file.exists() || file.delete()
+    }
+
+    /**
+     * Recordings that were previously offered without a documented redistribution
+     * license. They must not be played or kept on disk after an app update.
+     */
+    val RETIRED_IDS: Set<String> = setOf(
+        "makkah_mullah",
+        "makkah_faydah",
+        "madinah_short",
+        "quba",
+        "al_surehi",
+        "fajr_makkah",
+        "fajr_madinah",
+        "fajr_abdul_basit",
+        "aaqib_azeez"
+    )
+
+    fun deleteRetired(context: Context) {
+        for (id in RETIRED_IDS) {
+            delete(context, id)
+        }
     }
 
     suspend fun download(
@@ -198,4 +221,15 @@ object AdhanAudioStore {
             instanceFollowRedirects = true
         }
     }
+}
+
+fun CalculationSettings.withoutRetiredAdhanChoices(): CalculationSettings {
+    var next = this
+    if (adhanSoundId in AdhanAudioStore.RETIRED_IDS) {
+        next = next.copy(adhanSoundId = null, adhanSoundName = null)
+    }
+    if (fajrAdhanSoundId in AdhanAudioStore.RETIRED_IDS) {
+        next = next.copy(fajrAdhanSoundId = null, fajrAdhanSoundName = null)
+    }
+    return next
 }

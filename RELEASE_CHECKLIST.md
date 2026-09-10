@@ -1,6 +1,6 @@
 # Salati Google Play Release Checklist
 
-This checklist is for application ID `io.github.sulfuro25.salati`, version code `2`, version name `1.1.0`.
+This checklist is for application ID `com.sulfuro.salati`, version code `5`, version name `1.3.0`.
 
 ## 1. Run the release gates
 
@@ -37,19 +37,24 @@ $env:SALATI_SIGNING_PROPERTIES = 'C:\secure\salati-signing.properties'
 
 Upload `app/build/outputs/bundle/release/app-release.aab`. Enroll in Play App Signing and securely back up the upload key and its passwords. Never commit the keystore or signing properties.
 
-Before every later release, increase `versionCode`. Keep the application ID unchanged after the first Play upload.
+Before every later release, increase `versionCode`. Keep the application ID `com.sulfuro.salati` unchanged after the first Play upload.
+
+Confirm Play Console reports 16 KB page-size compatibility for the native libraries in the bundle. Local ELF check of the current AndroidX `.so` files (`libandroidx.graphics.path.so`, `libdatastore_shared_counter.so`) shows `p_align >= 16384` on every ABI.
+
+After pushing, deploy `adhans.json` and `audio/aaqib_azeez.mp3` to `https://salati.sulfuro.xyz/` and remove the old unlicensed MP3s from that host.
 
 ## 3. Complete Play Console declarations
 
-- Verify the developer identity and register the app/package in Play Console.
+- Verify the developer identity and register the package `com.sulfuro.salati`.
 - App access: all functionality is available without an account.
 - Ads: no.
-- Target audience: select only the age groups the listing is actually designed for. Selecting children invokes the Families policy.
-- Complete the IARC content-rating questionnaire; do not enter a rating manually as a substitute.
-- Complete the Data safety form using `PLAY_STORE_METADATA.md`. Automatic location can transmit approximate or precise coordinates to the Aladhan API for app functionality, so do not declare that all processing stays on-device.
-- Privacy policy URL: `https://salati.sulfuro.xyz/privacy.html`. Confirm that this public URL works before submission; the same URL is available from in-app Settings.
-- Review sensitive-permission declarations shown by Play Console. The app uses user-granted `SCHEDULE_EXACT_ALARM`, foreground-only location, and notifications. It does not request background location or `USE_EXACT_ALARM`.
-- If this is a personal developer account created after November 13, 2023, complete the required closed test with at least 12 continuously opted-in testers for 14 days before applying for production access.
+- Target audience: 13+ only. Selecting children invokes the Families policy.
+- Complete the IARC content-rating questionnaire; do not enter a rating manually.
+- Complete the Data safety form using `PLAY_STORE_METADATA.md`. Location is sent to Aladhan. Android Backup is **on** for the settings store (location + preferences + Zakat inputs). Do not declare that backup is disabled.
+- Privacy policy URL: `https://salati.sulfuro.xyz/privacy.html`. Confirm that this public URL matches the current policy before submission.
+- Support email: `salati@sulfuro.eu`.
+- Declare exact alarms, foreground-only location, notifications, optional DND access, and the `mediaPlayback` foreground service used for adhan playback. The app does not request background location or `USE_EXACT_ALARM`.
+- Personal developer accounts created after 13 November 2023 need a closed test with at least 12 testers opted in for 14 consecutive days before production access. Opt-in is what counts, not merely adding emails to a list.
 
 ## 4. Store listing assets
 
@@ -57,11 +62,12 @@ Before every later release, increase `versionCode`. Keep the application ID unch
 - 1024 x 500 JPEG or 24-bit PNG feature graphic.
 - At least two phone screenshots; four portrait screenshots at 1080 x 1920 or higher are recommended.
 - Verify the app name, short description, and full description in `PLAY_STORE_METADATA.md` against the final build.
-- Add a support email in Play Console and keep the GitHub issues URL available for support and privacy questions.
 
 ## 5. Manual device checks
 
-- API 24: launch, onboarding, manual location, prayer schedule, calendar, Qibla fallback, and Zakat.
+- Fresh install: onboarding **requires** a location (GPS or city search). There is no skip-to-default-city path.
+- Offline location change: new coordinates must not keep the previous city's timezone.
+- API 24: launch, onboarding, city search, prayer schedule, calendar, Qibla fallback, and Zakat.
 - API 31/32: exact-alarm access denied and granted; confirm the inexact fallback and settings return flow.
 - API 33+: notification permission denied and granted.
 - API 35/36: edge-to-edge layout, predictive back, notification delivery, and alarm restoration.
@@ -70,5 +76,6 @@ Before every later release, increase `versionCode`. Keep the application ID unch
 - Timezone and daylight-saving changes, manual clock changes, reboot, app update, and force-stop recovery.
 - Light/dark themes, RTL layout, TalkBack labels, and touch-target sizes.
 - A real device with compass sensors, including low-accuracy/calibration behavior.
+- Xiaomi / Samsung / Oppo: Fajr delivery with battery restrictions on and off.
 
-Do a staged production rollout after internal/closed testing and monitor Play pre-launch reports and Android vitals before increasing rollout percentage.
+Do a staged production rollout after closed testing and monitor Play pre-launch reports and Android vitals before increasing rollout percentage.

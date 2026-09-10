@@ -69,6 +69,10 @@
     <string name="monthly_weekday_friday">Vrijdag</string>
     <string name="monthly_weekday_saturday">Zaterdag</string>
     <string name="monthly_weekday_sunday">Zondag</string>
+    <string name="qibla_cardinal_north">N</string>
+    <string name="qibla_cardinal_east">O</string>
+    <string name="qibla_cardinal_south">Z</string>
+    <string name="qibla_cardinal_west">W</string>
     <string name="qibla_title">Qibla</string>
     <string name="qibla_open">Open Qibla-kompas</string>
     <string name="qibla_back">Terug</string>
@@ -225,9 +229,8 @@
     <string name="onboarding_location_title">Stel uw locatie in</string>
     <string name="onboarding_location_subtitle">Salati heeft coördinaten nodig om lokale gebedstijden nauwkeurig te berekenen</string>
     <string name="onboarding_location_auto">Mijn locatie automatisch detecteren</string>
-    <string name="onboarding_location_auto_desc">Gebruik het apparaat-gps om uw positie met hoge nauwkeurigheid te bepalen. U kunt dit overslaan en de standaardlocatie behouden, of coördinaten handmatig invoeren.</string>
+    <string name="onboarding_location_auto_desc">Gebruik het apparaat-gps, of zoek een stad op naam. Gebedstijden kunnen pas worden berekend nadat een locatie is ingesteld.</string>
     <string name="onboarding_location_detect">Mijn locatie detecteren</string>
-    <string name="onboarding_location_skip">Nu overslaan en de standaardlocatie gebruiken</string>
     <string name="onboarding_location_selected">Locatie geselecteerd</string>
     <string name="onboarding_method_title">Berekeningsmethode</string>
     <string name="onboarding_method_subtitle">Kies de standaard berekeningsmethode voor uw regio</string>
@@ -363,7 +366,7 @@
     <string name="settings_location_search_city_description">Vind uw stad op naam, zonder coördinaten</string>
     <string name="city_search_title">Stad zoeken</string>
     <string name="city_search_subtitle">Kies uw stad om gebedstijden en tijdzone in te stellen</string>
-    <string name="city_search_placeholder">Stadsnaam, bijv. Brussel</string>
+    <string name="city_search_placeholder">Stadsnaam, bijv. Istanboel</string>
     <string name="city_search_clear">Zoekopdracht wissen</string>
     <string name="city_search_hint">Typ minstens twee letters om te zoeken.</string>
     <string name="city_search_searching">Zoeken…</string>
@@ -410,6 +413,7 @@
     <string name="notification_channel_adhan_description">Zichtbaar terwijl een gedownloade adhan speelt, met een knop om te stoppen</string>
     <string name="adhan_playing">Adhan speelt</string>
     <string name="adhan_stop">Stoppen</string>
+    <string name="adhan_play">Adhan afspelen</string>
     <string name="settings_adhan_sound_title">Adhan-geluid</string>
     <string name="settings_adhan_sound_row">Adhan-geluid</string>
     <string name="settings_adhan_device_tone">Meldingstoon van het apparaat</string>

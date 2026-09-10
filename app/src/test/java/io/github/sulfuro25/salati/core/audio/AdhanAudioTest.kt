@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -185,7 +186,7 @@ class AdhanAudioTest {
             {
               "version": 1,
               "adhans": [
-                {"id":"makkah","name":"Makkah","url":"https://salati.sulfuro.xyz/a/makkah.mp3","bytes":3418938},
+                {"id":"makkah","name":"Makkah","url":"https://salati.sulfuro.xyz/a/makkah.mp3","bytes":3418938,"license":"CC BY-SA 4.0"},
                 {"id":"madinah","name":"Madinah","url":"http://insecure.example/a.mp3"},
                 {"id":"","name":"No id","url":"https://salati.sulfuro.xyz/a/x.mp3"},
                 {"id":"makkah","name":"Duplicate","url":"https://salati.sulfuro.xyz/a/dupe.mp3"}
@@ -197,7 +198,7 @@ class AdhanAudioTest {
 
         assertTrue(result is AdhanCatalogResult.Available)
         val options = (result as AdhanCatalogResult.Available).options
-        // Plain HTTP, a blank id, and the duplicate are all dropped; the good one survives.
+        // Plain HTTP, a blank id, the duplicate, and unlicensed rows are dropped.
         assertEquals(listOf("makkah"), options.map { it.id })
         assertEquals("Makkah", options.single().name)
         assertEquals(3418938L, options.single().sizeBytes)
@@ -207,7 +208,7 @@ class AdhanAudioTest {
     fun catalogueSurvivesUnknownFieldsButRejectsRubbish() {
         val forwardCompatible = """
             {"version":2,"adhans":[
-              {"id":"makkah","name":"Makkah","url":"https://salati.sulfuro.xyz/a.mp3","licence":"CC-BY"}
+              {"id":"makkah","name":"Makkah","url":"https://salati.sulfuro.xyz/a.mp3","license":"CC BY-SA 4.0","licence":"ignored"}
             ],"notes":"added later"}
         """.trimIndent()
         assertTrue(AdhanCatalog.parse(forwardCompatible) is AdhanCatalogResult.Available)
@@ -221,6 +222,46 @@ class AdhanAudioTest {
         val result = AdhanCatalog.parse("""{"version":1,"adhans":[]}""")
 
         assertEquals(AdhanCatalogResult.Available(emptyList()), result)
+    }
+
+    @Test
+    fun retiredRecordingsAreDeletedFromDiskAndClearedFromSettings() {
+        val file = AdhanAudioStore.fileFor(context, "makkah_mullah")
+        file.parentFile?.mkdirs()
+        file.writeBytes(mp3Bytes)
+        assertTrue(AdhanAudioStore.isDownloaded(context, "makkah_mullah"))
+
+        AdhanAudioStore.deleteRetired(context)
+        assertFalse(AdhanAudioStore.isDownloaded(context, "makkah_mullah"))
+
+        val settings = io.github.sulfuro25.salati.data.settings.CalculationSettings(
+            adhanSoundId = "makkah_mullah",
+            adhanSoundName = "Ali Mullah",
+            fajrAdhanSoundId = "fajr_makkah",
+            fajrAdhanSoundName = "Fajr Makkah"
+        )
+        val cleaned = settings.withoutRetiredAdhanChoices()
+        assertNull(cleaned.adhanSoundId)
+        assertNull(cleaned.adhanSoundName)
+        assertNull(cleaned.fajrAdhanSoundId)
+        assertNull(cleaned.fajrAdhanSoundName)
+    }
+
+    @Test
+    fun hostedCatalogueOnlyOffersHttpsRecordingsWithUsableIds() {
+        val file = listOf(
+            java.io.File("adhans.json"),
+            java.io.File("..", "adhans.json")
+        ).firstOrNull { it.isFile } ?: error("adhans.json missing")
+        val result = AdhanCatalog.parse(file.readText())
+        assertTrue(result is AdhanCatalogResult.Available)
+        val options = (result as AdhanCatalogResult.Available).options
+        assertTrue(options.isNotEmpty())
+        for (option in options) {
+            assertTrue(option.hasUsableId)
+            assertTrue(option.url.startsWith("https://"))
+            assertFalse(AdhanAudioStore.RETIRED_IDS.contains(option.id))
+        }
     }
 
     private fun manifestConnection(

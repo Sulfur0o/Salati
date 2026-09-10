@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import io.github.sulfuro25.salati.MainActivity
 
 private const val ALARM_RECEIVER_CLASS_NAME =
     "io.github.sulfuro25.salati.core.notifications.AlarmReceiver"
@@ -115,7 +116,13 @@ class SystemAlarmRegistrar : AlarmRegistrar {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            scheduleWithAlarmManager(alarmManager, pendingIntent, alarm.triggerAtMillis)
+            scheduleWithAlarmManager(
+                context = context,
+                alarmManager = alarmManager,
+                pendingIntent = pendingIntent,
+                triggerAtMillis = alarm.triggerAtMillis,
+                useAlarmClock = !alarm.isPreReminder && alarm.prayerKey != "white_days"
+            )
 
             ScheduleResult.Success(
                 RegisteredAlarm(
@@ -180,7 +187,13 @@ class SystemAlarmRegistrar : AlarmRegistrar {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            scheduleWithAlarmManager(alarmManager, pendingIntent, alarm.triggerAtMillis)
+            scheduleWithAlarmManager(
+                context = context,
+                alarmManager = alarmManager,
+                pendingIntent = pendingIntent,
+                triggerAtMillis = alarm.triggerAtMillis,
+                useAlarmClock = !alarm.isPreReminder && alarm.prayerKey != "white_days"
+            )
 
             RestoreResult.Success(alarm)
         } catch (e: Exception) {
@@ -189,19 +202,48 @@ class SystemAlarmRegistrar : AlarmRegistrar {
         }
     }
 
-    private fun scheduleWithAlarmManager(alarmManager: AlarmManager, pendingIntent: PendingIntent, triggerAtMillis: Long) {
+    private fun scheduleWithAlarmManager(
+        context: Context,
+        alarmManager: AlarmManager,
+        pendingIntent: PendingIntent,
+        triggerAtMillis: Long,
+        useAlarmClock: Boolean
+    ) {
         val canScheduleExact = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             alarmManager.canScheduleExactAlarms()
         } else {
             true
         }
+        val showIntent = PendingIntent.getActivity(
+            context,
+            0,
+            Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         scheduleWithExactFallback(
             canScheduleExact = canScheduleExact,
             scheduleExact = {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+                if (useAlarmClock) {
+                    alarmManager.setAlarmClock(
+                        AlarmManager.AlarmClockInfo(triggerAtMillis, showIntent),
+                        pendingIntent
+                    )
+                } else {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        triggerAtMillis,
+                        pendingIntent
+                    )
+                }
             },
             scheduleInexact = {
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerAtMillis,
+                    pendingIntent
+                )
             },
             onExactFailure = { Log.w(TAG, "Exact alarm denied; using inexact fallback", it) }
         )

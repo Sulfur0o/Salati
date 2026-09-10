@@ -106,8 +106,10 @@ object SalatiWidgetData {
                 allowOnDeviceFallback = true
             )
 
-            val todaySchedule = (result as? MonthlyPrayerResult.Success)?.data
-                ?.firstOrNull { it.date.gregorian.day.toIntOrNull() == today.dayOfMonth }
+            val daysByDate = (result as? MonthlyPrayerResult.Success)?.data
+                ?.let { PrayerRepository.indexPrayerDataByDate(it) }
+                .orEmpty()
+            val todaySchedule = daysByDate[today]
 
             val timings = todaySchedule?.timings
 
@@ -121,8 +123,7 @@ object SalatiWidgetData {
                 offsetDays = settings.hijriOffset,
                 isAfterMaghrib = isAfterMaghrib
             ) { targetDate ->
-                (result as? MonthlyPrayerResult.Success)?.data
-                    ?.firstOrNull { it.date.gregorian.day.toIntOrNull() == targetDate.dayOfMonth && it.date.gregorian.month.number == targetDate.monthValue }
+                daysByDate[targetDate]
                     ?.date?.hijri?.let { h ->
                         val dayInt = h.day.toIntOrNull()
                         val yearInt = h.year.toIntOrNull()
@@ -185,8 +186,7 @@ object SalatiWidgetData {
                 val tomorrow = today.plusDays(1)
                 val tomorrowMonth = YearMonth.from(tomorrow)
                 val tomorrowSchedule = if (tomorrowMonth == now) {
-                    (result as MonthlyPrayerResult.Success).data
-                        .firstOrNull { it.date.gregorian.day.toIntOrNull() == tomorrow.dayOfMonth }
+                    daysByDate[tomorrow]
                 } else {
                     val nextMonthResult = PrayerRepository.getMonthlyPrayers(
                         context = context,
@@ -197,7 +197,8 @@ object SalatiWidgetData {
                         allowOnDeviceFallback = true
                     )
                     (nextMonthResult as? MonthlyPrayerResult.Success)?.data
-                        ?.firstOrNull { it.date.gregorian.day.toIntOrNull() == tomorrow.dayOfMonth }
+                        ?.let { PrayerRepository.indexPrayerDataByDate(it) }
+                        ?.get(tomorrow)
                 }
                 val tomorrowFajr = tomorrowSchedule?.timings?.Fajr?.let(::cleanTime) ?: fajrRaw
                 Triple(

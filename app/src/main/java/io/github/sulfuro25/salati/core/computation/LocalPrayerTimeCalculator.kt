@@ -259,8 +259,7 @@ object LocalPrayerTimeCalculator {
 
     /**
      * Clamps Fajr and Isha to a portion of the night when the sun never reaches the
-     * twilight angle, which happens every summer above roughly 48 degrees of latitude
-     * and is exactly the case Brussels, the default location, runs into.
+     * twilight angle, which happens every summer above roughly 48 degrees of latitude.
      */
     private fun adjustForHighLatitude(
         times: DayTimes,

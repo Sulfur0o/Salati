@@ -71,6 +71,10 @@ class AdhanFallbackAlertTest {
             "the alert must travel with the start request",
             receiver.contains("AdhanPlaybackService.start(context, adhanSoundId, displayPrayerName, alert)")
         )
+        assertTrue(
+            "a refused foreground-service start still posts the prayer alert",
+            receiver.contains("playAdhanId = adhanSoundId")
+        )
         // The unconditional post is the last statement, so every path that does not hand
         // the alert to the service still notifies.
         assertTrue(receiver.trimEnd().contains("PrayerAlertNotification.post(context, alert)"))

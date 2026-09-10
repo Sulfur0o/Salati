@@ -13,9 +13,9 @@ import kotlin.coroutines.resume
 
 /** One geocoded place the user can pick, already reduced to what Salati needs. */
 data class CitySuggestion(
-    /** Full label shown in the list, e.g. "Brussels, Brussels-Capital, Belgium". */
+    /** Full label shown in the list, e.g. "Istanbul, Istanbul, Türkiye". */
     val displayName: String,
-    /** Stored in settings and shown on the dashboard, e.g. "Brussels, Belgium". */
+    /** Stored in settings and shown on the dashboard, e.g. "Istanbul, Türkiye". */
     val cityName: String,
     val countryName: String,
     val latitude: Double,

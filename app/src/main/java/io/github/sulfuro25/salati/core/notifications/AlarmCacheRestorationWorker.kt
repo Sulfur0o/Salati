@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import io.github.sulfuro25.salati.core.audio.withoutRetiredAdhanChoices
 import io.github.sulfuro25.salati.data.settings.SalatiPreferences
 import kotlinx.coroutines.flow.first
 
@@ -13,7 +14,13 @@ class AlarmCacheRestorationWorker(
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
+        io.github.sulfuro25.salati.core.audio.AdhanAudioStore.deleteRetired(applicationContext)
         val preferences = SalatiPreferences(applicationContext)
+        val currentSettings = preferences.settings.first()
+        val cleaned = currentSettings.withoutRetiredAdhanChoices()
+        if (cleaned != currentSettings) {
+            preferences.updateSettings { cleaned }
+        }
         val startedWith = preferences.settings.first().alarmRelevantFingerprint()
         val refreshResult = performCacheOnlyAlarmRefresh { requireCacheOnly ->
             ReminderCoordinator.refreshAlarms(

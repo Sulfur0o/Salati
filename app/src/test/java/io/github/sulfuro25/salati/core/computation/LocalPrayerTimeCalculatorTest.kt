@@ -169,13 +169,13 @@ class LocalPrayerTimeCalculatorTest {
     fun everyDayParsesBackIntoAnOrderedSetOfInstants() {
         // The output is only useful if the shared mapper accepts it, so run a whole
         // month through the real one rather than trusting the strings.
-        val settings = io.github.sulfuro25.salati.data.settings.CalculationSettings()
+        val zone = ZoneId.of("Europe/Brussels")
         val request = PrayerMonthRequest(2026, 6, 3, 0, "3", 50.8503, 4.3517)
-        val month = LocalPrayerTimeCalculator.calculateMonth(request, ZoneId.of("Europe/Brussels"))
+        val month = LocalPrayerTimeCalculator.calculateMonth(request, zone)
 
         assertEquals(30, month.size)
         for (day in month) {
-            val times = SalatiPrayerTimeMapper.map(day, ZoneId.of("Europe/Brussels"))
+            val times = SalatiPrayerTimeMapper.map(day, zone)
             val label = day.date.gregorian.date
             assertTrue("$label fajr before sunrise", times.fajr.isBefore(times.sunrise))
             assertTrue("$label sunrise before dhuhr", times.sunrise.isBefore(times.dhuhr))
@@ -184,7 +184,7 @@ class LocalPrayerTimeCalculatorTest {
             assertTrue("$label maghrib before isha", times.maghrib.isBefore(times.isha))
             assertTrue("$label isha before last third", times.isha.isBefore(times.lastThirdOfTheNight))
         }
-        assertEquals(settings.timezoneId, month.first().meta?.timezone)
+        assertEquals(zone.id, month.first().meta?.timezone)
     }
 
     @Test

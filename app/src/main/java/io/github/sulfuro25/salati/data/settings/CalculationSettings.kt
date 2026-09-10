@@ -25,11 +25,11 @@ object TimeFormatPreference {
 @Serializable
 data class CalculationSettings(
     val hasCompletedOnboarding: Boolean = false,
-    val latitude: Double = 50.8503, // Default fallback coordinates
-    val longitude: Double = 4.3517,
-    val cityName: String = "Brussels, Belgium",
-    val countryName: String = "Belgium",
-    val timezoneId: String = "Europe/Brussels",
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val cityName: String = "",
+    val countryName: String = "",
+    val timezoneId: String = "",
     val calculationMethod: String = "MUSLIM_WORLD_LEAGUE",
     val madhab: String = "SHAFI",
     val highLatitudeRule: String = "TWILIGHT_ANGLE",
@@ -105,6 +105,20 @@ fun CalculationSettings.adhanSoundIdFor(prayerKey: String): String? {
 
 fun CalculationSettings.safeZoneId(): java.time.ZoneId {
     return safeZoneId(timezoneId)
+}
+
+/**
+ * Whether the user has actually chosen a prayer location.
+ *
+ * New installs start with empty coordinates and must set a city (GPS or search)
+ * during onboarding. Older installs that already wrote coordinates keep working:
+ * a named city, or any non-origin coordinate pair, counts as configured.
+ */
+fun CalculationSettings.hasConfiguredLocation(): Boolean {
+    if (!latitude.isFinite() || !longitude.isFinite()) return false
+    if (kotlin.math.abs(latitude) > 90.0 || kotlin.math.abs(longitude) > 180.0) return false
+    if (cityName.isNotBlank()) return true
+    return latitude != 0.0 || longitude != 0.0
 }
 
 fun safeZoneId(timezoneId: String?): java.time.ZoneId {

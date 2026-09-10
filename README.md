@@ -1,12 +1,12 @@
 # Salati
 
-**Salati** is a private, accurate, and ad-free Android prayer companion application for Muslims worldwide.
+**Salati** is a private, accurate, and ad-free Android prayer companion application for Muslims worldwide. Licensed under the [MIT License](LICENSE).
 
 ---
 
-## ✨ Features
+## Features
 
-- **Worldwide Prayer Calculations**: Optional GPS detection, manual latitude/longitude entry, or a default location. Supports all major calculation authorities:
+- **Worldwide Prayer Calculations**: GPS detection or city search during setup (no default city). Supports all major calculation authorities:
   - Muslim World League (MWL)
   - Umm al-Qura University, Makkah
   - Islamic Society of North America (ISNA)
@@ -17,15 +17,15 @@
 - **3D Tilt-Compensated Qibla Compass**: Real-time Kaaba direction indicator with dynamic pitch compensation (accurate flat or held upright).
 - **Islamic Calendar & Hijri Events**: Side-by-side Gregorian and Hijri calendar, key Islamic holidays, and White Days fasting reminders.
 - **Zakat al-Maal Engine**: Comprehensive calculation across cash, bank balances, gold (10k–24k), and silver with customizable live metal valuation.
-- **Reliable On-Time Alarms**: Exact alarms scheduled per prayer with pre-prayer reminders, vibration alerts, and background restoration across device reboots and timezone shifts.
+- **Prayer Alarms**: Exact alarms when Android allows them, with an inexact fallback, pre-prayer reminders, optional adhan playback, vibration, and restoration after reboot. Manufacturer battery savers can still delay delivery.
 - **Battery Optimization Helper**: OEM-tailored background execution guides for Xiaomi/HyperOS, Samsung, Oppo, and Huawei devices.
-- **Privacy-First**: Zero ads, accounts, analytics, or tracking SDKs. Settings stay on-device; configured coordinates are sent only to the prayer-times API when a schedule is downloaded.
+- **Privacy-First**: Zero ads, accounts, analytics, or tracking SDKs. Settings stay in the app sandbox (and may be included in Android Backup). Configured coordinates are sent only to the prayer-times API when a schedule is downloaded.
 
 ---
 
 ## 🔒 Permissions and Privacy
 
-- **Location (`ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`)**: Optional; used only when you tap to detect GPS. You can skip this or enter coordinates manually.
+- **Location (`ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`)**: Optional; used only when you tap to detect GPS. You can refuse GPS and search for a city by name instead. There is no default city.
 - **Notifications (`POST_NOTIFICATIONS`)**: Used to post prayer alerts and reminders on Android 13+.
 - **Exact Alarms (`SCHEDULE_EXACT_ALARM`)**: Used solely to ensure prayer reminders trigger at the exact calculated prayer time. Falls back to inexact alarms if denied.
 - **Notification policy (`ACCESS_NOTIFICATION_POLICY`)**: Optional prayer silent mode; previous ringer mode is always restored.

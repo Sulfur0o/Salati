@@ -59,7 +59,7 @@ import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
-private val CardinalDirections = listOf("N" to 0f, "E" to 90f, "S" to 180f, "W" to 270f)
+
 
 @Composable
 fun QiblaScreen(
@@ -170,6 +170,12 @@ fun QiblaScreen(
             }
         }
         val pointerPath = remember { Path() }
+        val cardinals = listOf(
+            stringResource(R.string.qibla_cardinal_north) to 0f,
+            stringResource(R.string.qibla_cardinal_east) to 90f,
+            stringResource(R.string.qibla_cardinal_south) to 180f,
+            stringResource(R.string.qibla_cardinal_west) to 270f
+        )
 
         Box(
             modifier = Modifier
@@ -192,6 +198,7 @@ fun QiblaScreen(
                     northPaint = northPaint,
                     cardinalPaint = cardinalPaint,
                     markerColor = markerColor,
+                    cardinals = cardinals,
                     labelCounterRotationDegrees = if (heading != null) {
                         animatedRoseRotation.value
                     } else {
@@ -284,6 +291,7 @@ private fun DrawScope.drawCompassRose(
     northPaint: android.graphics.Paint,
     cardinalPaint: android.graphics.Paint,
     markerColor: Color,
+    cardinals: List<Pair<String, Float>>,
     labelCounterRotationDegrees: Float
 ) {
     val center = Offset(size.width / 2f, size.height / 2f)
@@ -309,12 +317,12 @@ private fun DrawScope.drawCompassRose(
         )
     }
 
-    CardinalDirections.forEach { (label, bearing) ->
+    cardinals.forEach { (label, bearing) ->
         val angle = Math.toRadians(bearing.toDouble())
         val labelRadius = radius - 34.dp.toPx()
         val x = center.x + labelRadius * sin(angle).toFloat()
         val y = center.y - labelRadius * cos(angle).toFloat()
-        val paint = if (label == "N") northPaint else cardinalPaint
+        val paint = if (bearing == 0f) northPaint else cardinalPaint
         paint.textSize = 17.dp.toPx()
         drawContext.canvas.nativeCanvas.apply {
             // The rose rotates as a graphics layer; counter-rotate glyphs so they stay upright.

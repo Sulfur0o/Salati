@@ -6,8 +6,8 @@ Only the latest release of Salati receives security updates and patches.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.1.x   | :white_check_mark: |
-| < 1.1.0 | :x:                |
+| 1.3.x   | :white_check_mark: |
+| < 1.3.0 | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -15,7 +15,7 @@ We take the security of Salati and our users' privacy seriously. If you discover
 
 ### How to Report
 - **GitHub Private Vulnerability Reporting:** Please submit a report through GitHub's [Security Advisories](https://github.com/Sulfur0o/Salati/security/advisories/new) tab on this repository.
-- **Email:** Alternatively, you can contact the maintainer directly at **security@sulfuro.xyz** (or via GitHub issues labeled confidential).
+- **Email:** Alternatively, you can contact the maintainer at **salati@sulfuro.eu**.
 
 ### What to Include
 Please provide:

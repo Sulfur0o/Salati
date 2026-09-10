@@ -181,11 +181,11 @@ fun AdhanSoundSheet(
                         offered.forEach { option ->
                             val isDownloaded = option.id in downloadedIds
                             val sizeText = sizeLabel(option)
-                            val supportingText = if (option.reciter.isNullOrBlank()) {
-                                sizeText
-                            } else {
-                                "${option.reciter} · $sizeText"
-                            }
+                            val supportingText = listOfNotNull(
+                                option.reciter?.takeIf { it.isNotBlank() },
+                                option.license?.takeIf { it.isNotBlank() },
+                                sizeText.takeIf { it.isNotBlank() }
+                            ).joinToString(" · ")
                             AdhanRow(
                                 label = option.name,
                                 supporting = supportingText,

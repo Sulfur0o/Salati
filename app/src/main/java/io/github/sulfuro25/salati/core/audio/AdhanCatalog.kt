@@ -25,7 +25,9 @@ data class AdhanOption(
     @SerialName("bytes") val sizeBytes: Long = 0L,
     val reciter: String? = null,
     val sha256: String? = null,
-    @SerialName("fajr") val isFajr: Boolean = false
+    @SerialName("fajr") val isFajr: Boolean = false,
+    val license: String? = null,
+    val attribution: String? = null
 ) {
     /** Guards against a manifest entry that would write outside the adhan directory. */
     val hasUsableId: Boolean
@@ -67,7 +69,7 @@ object AdhanCatalog {
     const val MANIFEST_URL = "https://salati.sulfuro.xyz/adhans.json"
 
     /** A manifest is a short list of short strings; anything larger is not one. */
-    internal const val MAX_MANIFEST_BYTES = 64 * 1024
+    internal const val MAX_MANIFEST_BYTES = 256 * 1024
 
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -76,8 +78,10 @@ object AdhanCatalog {
             .getOrElse { return AdhanCatalogResult.Malformed }
 
         // A single bad entry should not cost the user the whole list.
+        // Retired recordings are dropped even if a stale hosted manifest still lists them.
         val usable = manifest.adhans
             .filter(AdhanOption::isDownloadable)
+            .filter { it.id !in AdhanAudioStore.RETIRED_IDS }
             .distinctBy(AdhanOption::id)
 
         return AdhanCatalogResult.Available(usable)

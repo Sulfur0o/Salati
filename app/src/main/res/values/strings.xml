@@ -68,6 +68,10 @@
     <string name="monthly_weekday_friday">Friday</string>
     <string name="monthly_weekday_saturday">Saturday</string>
     <string name="monthly_weekday_sunday">Sunday</string>
+    <string name="qibla_cardinal_north">N</string>
+    <string name="qibla_cardinal_east">E</string>
+    <string name="qibla_cardinal_south">S</string>
+    <string name="qibla_cardinal_west">W</string>
     <string name="qibla_title">Qibla</string>
     <string name="qibla_open">Open Qibla compass</string>
     <string name="qibla_back">Back</string>
@@ -223,9 +227,8 @@
     <string name="onboarding_location_title">Set Your Location</string>
     <string name="onboarding_location_subtitle">Salati requires coordinates to calculate local prayer times accurately</string>
     <string name="onboarding_location_auto">Automatically detect my location</string>
-    <string name="onboarding_location_auto_desc">Use device GPS to determine your location with high precision. You can skip this and keep the default, or enter coordinates manually.</string>
+    <string name="onboarding_location_auto_desc">Use device GPS, or search for a city by name. Prayer times cannot be calculated until a location is set.</string>
     <string name="onboarding_location_detect">Detect my location</string>
-    <string name="onboarding_location_skip">Skip for now and use the default location</string>
     <string name="onboarding_location_selected">Location selected</string>
     <string name="onboarding_method_title">Calculation Method</string>
     <string name="onboarding_method_subtitle">Choose the standard calculation method for your region</string>
@@ -373,7 +376,7 @@
     <string name="settings_location_search_city_description">Find your city by name, no coordinates needed</string>
     <string name="city_search_title">Search city</string>
     <string name="city_search_subtitle">Pick your city to set prayer times and time zone</string>
-    <string name="city_search_placeholder">City name, e.g. Brussels</string>
+    <string name="city_search_placeholder">City name, e.g. Istanbul</string>
     <string name="city_search_clear">Clear search</string>
     <string name="city_search_hint">Type at least two letters to search.</string>
     <string name="city_search_searching">Searching…</string>
@@ -420,6 +423,7 @@
     <string name="notification_channel_adhan_description">Shown while a downloaded adhan is playing, with a button to stop it</string>
     <string name="adhan_playing">Adhan playing</string>
     <string name="adhan_stop">Stop</string>
+    <string name="adhan_play">Play adhan</string>
     <string name="settings_adhan_sound_title">Adhan sound</string>
     <string name="settings_adhan_sound_row">Adhan sound</string>
     <string name="settings_adhan_device_tone">Device notification tone</string>

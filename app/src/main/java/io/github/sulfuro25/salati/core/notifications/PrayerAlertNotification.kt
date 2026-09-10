@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import io.github.sulfuro25.salati.MainActivity
 import io.github.sulfuro25.salati.R
+import io.github.sulfuro25.salati.core.audio.AdhanPlaybackService
 
 /**
  * The plain "it is time for this prayer" notification.
@@ -43,7 +44,10 @@ object PrayerAlertNotification {
         val title: String,
         val text: String,
         val soundEnabled: Boolean,
-        val vibrateEnabled: Boolean
+        val vibrateEnabled: Boolean,
+        /** When set, the notification offers a Play action that starts adhan playback. */
+        val playAdhanId: String? = null,
+        val playPrayerLabel: String? = null
     ) {
         fun writeTo(intent: Intent): Intent = intent.apply {
             putExtra(EXTRA_NOTIFICATION_ID, notificationId)
@@ -78,7 +82,7 @@ object PrayerAlertNotification {
         PrayerNotificationChannels.create(context)
 
         val appIntent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -95,6 +99,33 @@ object PrayerAlertNotification {
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+
+        val playAdhanId = content.playAdhanId
+        if (!playAdhanId.isNullOrBlank()) {
+            val playIntent = Intent(context, AdhanPlaybackService::class.java).apply {
+                putExtra(AdhanPlaybackService.EXTRA_ADHAN_ID, playAdhanId)
+                putExtra(
+                    AdhanPlaybackService.EXTRA_PRAYER_LABEL,
+                    content.playPrayerLabel.orEmpty()
+                )
+            }
+            val playPending = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                PendingIntent.getForegroundService(
+                    context,
+                    content.notificationId,
+                    playIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getService(
+                    context,
+                    content.notificationId,
+                    playIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            }
+            builder.addAction(0, context.getString(R.string.adhan_play), playPending)
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // Pre-O has no channels, so sound and vibration are properties of the

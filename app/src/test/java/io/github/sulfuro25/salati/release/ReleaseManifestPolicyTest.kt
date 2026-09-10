@@ -108,6 +108,16 @@ class ReleaseManifestPolicyTest {
     }
 
     @Test
+    fun adhanPlaybackServiceKeepsPlayingAfterTheAppTaskIsRemoved() {
+        val document = parseXml(sourceFile("src/main/AndroidManifest.xml"))
+        val service = document.getElementsByTagName("service").asElements().single {
+            it.getAttributeNS(androidNamespace, "name").endsWith(".AdhanPlaybackService")
+        }
+        assertEquals("false", service.getAttributeNS(androidNamespace, "stopWithTask"))
+        assertEquals("mediaPlayback", service.getAttributeNS(androidNamespace, "foregroundServiceType"))
+    }
+
+    @Test
     fun dedicatedNotificationIconIsACompiledVectorResource() {
         val icon = parseXml(sourceFile("src/main/res/drawable/ic_notification.xml"))
         assertEquals("vector", icon.documentElement.tagName)

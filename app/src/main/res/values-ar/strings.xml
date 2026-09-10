@@ -70,6 +70,10 @@
     <string name="monthly_weekday_saturday">السبت</string>
     <string name="monthly_weekday_sunday">الأحد</string>
 
+    <string name="qibla_cardinal_north">ش</string>
+    <string name="qibla_cardinal_east">ق</string>
+    <string name="qibla_cardinal_south">ج</string>
+    <string name="qibla_cardinal_west">غ</string>
     <string name="qibla_title">القبلة</string>
     <string name="qibla_open">فتح بوصلة القبلة</string>
     <string name="qibla_back">رجوع</string>
@@ -231,9 +235,8 @@
     <string name="onboarding_location_title">تحديد موقعك</string>
     <string name="onboarding_location_subtitle">يحتاج التطبيق إلى إحداثيات موقعك لحساب مواقيت الصلاة بدقة فلكية تامة</string>
     <string name="onboarding_location_auto">تحديد موقعي تلقائياً عبر GPS</string>
-    <string name="onboarding_location_auto_desc">استخدام نظام تحديد المواقع بالجهاز للحصول على أعلى درجات الدقة. يمكنك التخطي والإبقاء على الموقع الافتراضي، أو إدخال الإحداثيات يدوياً.</string>
+    <string name="onboarding_location_auto_desc">استخدم نظام تحديد المواقع بالجهاز، أو ابحث عن مدينتك بالاسم. لا يمكن حساب مواقيت الصلاة قبل تحديد الموقع.</string>
     <string name="onboarding_location_detect">تحديد موقعي</string>
-    <string name="onboarding_location_skip">تخطي الآن واستخدام الموقع الافتراضي</string>
     <string name="onboarding_location_selected">تم تحديد الموقع</string>
     <string name="onboarding_method_title">طريقة الحساب الفلكي</string>
     <string name="onboarding_method_subtitle">اختر الهيئة أو الطريقة المعتمدة في بلدك</string>
@@ -380,7 +383,7 @@
     <string name="settings_location_search_city_description">اعثر على مدينتك بالاسم دون إدخال إحداثيات</string>
     <string name="city_search_title">البحث عن مدينة</string>
     <string name="city_search_subtitle">اختر مدينتك لضبط مواقيت الصلاة والمنطقة الزمنية</string>
-    <string name="city_search_placeholder">اسم المدينة، مثل: بروكسل</string>
+    <string name="city_search_placeholder">اسم المدينة، مثل: إسطنبول</string>
     <string name="city_search_clear">مسح البحث</string>
     <string name="city_search_hint">اكتب حرفين على الأقل للبحث.</string>
     <string name="city_search_searching">جارٍ البحث…</string>
@@ -427,6 +430,7 @@
     <string name="notification_channel_adhan_description">يظهر أثناء تشغيل أذان مُنزَّل، مع زر لإيقافه</string>
     <string name="adhan_playing">جارٍ تشغيل الأذان</string>
     <string name="adhan_stop">إيقاف</string>
+    <string name="adhan_play">تشغيل الأذان</string>
     <string name="settings_adhan_sound_title">صوت الأذان</string>
     <string name="settings_adhan_sound_row">صوت الأذان</string>
     <string name="settings_adhan_device_tone">نغمة إشعارات الجهاز</string>
