@@ -48,10 +48,6 @@ class SalatiMinimalBarWidgetProvider : AppWidgetProvider() {
                 R.id.widget_bar_time_isha
             )
 
-            val accentColor = context.getColor(R.color.salati_widget_accent)
-            val onSurfaceVariantColor = context.getColor(R.color.salati_widget_on_surface_variant)
-            val onSurfaceColor = context.getColor(R.color.salati_widget_on_surface)
-
             for (appWidgetId in appWidgetIds) {
                 val views = RemoteViews(context.packageName, R.layout.salati_widget_minimal_bar)
                 views.setOnClickPendingIntent(R.id.widget_bar_root, pendingIntent)
@@ -68,12 +64,12 @@ class SalatiMinimalBarWidgetProvider : AppWidgetProvider() {
                     val isActive = (i == snapshot.activePrayerIndex)
                     if (isActive) {
                         views.setInt(cellIds[i], "setBackgroundResource", R.drawable.salati_widget_active_pill)
-                        views.setTextColor(labelIds[i], accentColor)
-                        views.setTextColor(timeIds[i], accentColor)
+                        SalatiWidgetData.setViewTextColor(views, context, labelIds[i], R.color.salati_widget_accent)
+                        SalatiWidgetData.setViewTextColor(views, context, timeIds[i], R.color.salati_widget_accent)
                     } else {
                         views.setInt(cellIds[i], "setBackgroundResource", 0)
-                        views.setTextColor(labelIds[i], onSurfaceVariantColor)
-                        views.setTextColor(timeIds[i], onSurfaceColor)
+                        SalatiWidgetData.setViewTextColor(views, context, labelIds[i], R.color.salati_widget_on_surface_variant)
+                        SalatiWidgetData.setViewTextColor(views, context, timeIds[i], R.color.salati_widget_on_surface)
                     }
                 }
 

@@ -36,13 +36,9 @@ class MainActivity : ComponentActivity() {
     // the language sheet asks for a recreate, so the rebuilt Activity picks up the new
     // choice on its first pass.
     override fun attachBaseContext(newBase: android.content.Context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            super.attachBaseContext(
-                wrapContextForLanguage(newBase, LoadedSettingsCache.latest?.appLanguageCode)
-            )
-        } else {
-            super.attachBaseContext(newBase)
-        }
+        super.attachBaseContext(
+            wrapContextForLanguage(newBase, LoadedSettingsCache.latest?.appLanguageCode)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +93,9 @@ class MainActivity : ComponentActivity() {
                 }
             } else {
                 LaunchedEffect(loadedSettings.appLanguageCode) {
-                    applyAppLanguage(this@MainActivity, loadedSettings.appLanguageCode)
+                    if (loadedSettings.appLanguageCode != null) {
+                        applyAppLanguage(this@MainActivity, loadedSettings.appLanguageCode)
+                    }
                 }
                 SalatiTheme(darkTheme = darkTheme) {
                     Surface(

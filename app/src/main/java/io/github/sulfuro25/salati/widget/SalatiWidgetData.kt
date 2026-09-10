@@ -267,4 +267,28 @@ object SalatiWidgetData {
             pendingResult?.finish()
         }
     }
+
+    fun setViewTextColor(
+        views: android.widget.RemoteViews,
+        context: Context,
+        viewId: Int,
+        colorResId: Int
+    ) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            views.setColor(viewId, "setTextColor", colorResId)
+        } else {
+            val isSystemNight = (android.content.res.Resources.getSystem().configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            val targetUiMode = if (isSystemNight) {
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+            } else {
+                android.content.res.Configuration.UI_MODE_NIGHT_NO
+            }
+            val systemConfig = android.content.res.Configuration(context.resources.configuration).apply {
+                uiMode = (uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK.inv()) or targetUiMode
+            }
+            val themedContext = context.createConfigurationContext(systemConfig)
+            views.setTextColor(viewId, themedContext.getColor(colorResId))
+        }
+    }
 }

@@ -3,6 +3,10 @@ package io.github.sulfuro25.salati.ui.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -182,8 +186,14 @@ internal fun SettingsAppearanceCard(
             onSelect = { langCode ->
                 val codeOrNull: String? = if (langCode.isEmpty()) null else langCode
                 LoadedSettingsCache.latest = settings.copy(appLanguageCode = codeOrNull)
-                saveSettings { it.copy(appLanguageCode = codeOrNull) }
-                applyAppLanguage(context, codeOrNull)
+                val appContext = context.applicationContext
+                CoroutineScope(Dispatchers.IO).launch {
+                    val prefs = io.github.sulfuro25.salati.data.settings.SalatiPreferences(appContext)
+                    prefs.updateSettings { it.copy(appLanguageCode = codeOrNull) }
+                    withContext(Dispatchers.Main) {
+                        applyAppLanguage(context, codeOrNull)
+                    }
+                }
             },
             onDismiss = { showLanguageSheet = false }
         )

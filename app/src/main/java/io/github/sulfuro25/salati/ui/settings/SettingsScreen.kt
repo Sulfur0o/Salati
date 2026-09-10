@@ -122,24 +122,19 @@ internal fun wrapContextForLanguage(
 
 internal fun applyAppLanguage(context: android.content.Context, langCode: String?) {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-        val localeManager = context.getSystemService(android.app.LocaleManager::class.java) ?: return
-        val localeList = if (langCode.isNullOrEmpty()) {
-            android.os.LocaleList.getEmptyLocaleList()
-        } else {
-            android.os.LocaleList.forLanguageTags(langCode)
+        val localeManager = context.getSystemService(android.app.LocaleManager::class.java)
+        if (localeManager != null) {
+            val localeList = if (langCode.isNullOrEmpty()) {
+                android.os.LocaleList.getEmptyLocaleList()
+            } else {
+                android.os.LocaleList.forLanguageTags(langCode)
+            }
+            if (shouldUpdateApplicationLocales(localeManager.applicationLocales.toLanguageTags(), langCode)) {
+                localeManager.applicationLocales = localeList
+            }
         }
-        if (!shouldUpdateApplicationLocales(localeManager.applicationLocales.toLanguageTags(), langCode)) {
-            return
-        }
-        localeManager.applicationLocales = localeList
-    } else {
-        // The Activity's resources were fixed at attachBaseContext time, so switching
-        // language means rebuilding the Activity. Comparing against the tag that was
-        // actually attached (rather than re-reading Resources, whose programmatic
-        // override may or may not survive a recreate) makes this converge in one pass.
-        if (localeTagsForLanguageCode(langCode) == attachedLanguageTag) {
-            return
-        }
+    }
+    if (localeTagsForLanguageCode(langCode) != attachedLanguageTag) {
         (context as? android.app.Activity)?.recreate()
     }
 }
