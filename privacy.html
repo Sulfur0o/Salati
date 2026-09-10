@@ -4,253 +4,212 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy Policy — Salati</title>
-  <meta name="description" content="Privacy Policy for Salati, an ad-free Islamic prayer companion for Android. What stays on your device, what is sent over the network, and how Android backup works.">
-  <meta name="theme-color" content="#080e0c">
+  <meta name="description" content="Privacy Policy for Salati. What stays on your device, what is sent over the network, and how Android backup works.">
+  <meta name="theme-color" content="#F6F0E5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151E19" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/webp" href="assets/logo.webp">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <div class="bg-aura"></div>
-
-  <div class="container">
-    <header class="navbar">
-      <a href="./" class="nav-brand">
-        <img src="assets/logo.webp" alt="Salati logo" width="38" height="38">
-        <span>Salati</span>
+  <div class="wrap">
+    <header class="nav">
+      <a href="./" class="brand">
+        <img src="assets/logo.webp" alt="" width="36" height="36">
+        Salati
       </a>
       <nav>
         <ul class="nav-links">
           <li><a href="./">Home</a></li>
-          <li><a href="privacy.html" class="active">Privacy</a></li>
-          <li><a href="https://github.com/Sulfur0o/Salati" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="privacy.html" aria-current="page">Privacy</a></li>
+          <li><a href="https://github.com/Sulfur0o/Salati" rel="noopener">GitHub</a></li>
         </ul>
       </nav>
     </header>
 
-    <main class="policy-content">
-      <div class="policy-header">
+    <main class="doc">
+      <header class="doc-header">
         <h1>Privacy Policy</h1>
-        <div class="policy-meta">
-          <strong>Application:</strong> Salati (<code>com.sulfuro.salati</code>) &nbsp;·&nbsp;
-          <strong>Developer:</strong> Sulfuro &nbsp;·&nbsp;
-          <strong>Effective date:</strong> 10 September 2026
-        </div>
+        <p class="doc-meta">
+          Salati (<code>com.sulfuro.salati</code>)
+          · Sulfuro
+          · Effective 10 September 2026
+        </p>
+      </header>
+
+      <p class="doc-lede">
+        No accounts, ads, or analytics. Location is optional.
+        What leaves the device is listed below.
+      </p>
+
+      <h2>1. Who this covers</h2>
+      <p>
+        This policy describes how the Salati Android app handles information. Salati is developed by Sulfuro.
+        There is no Salati user account and no Salati backend that stores a profile about you.
+      </p>
+      <p>
+        Questions: <a href="mailto:salati@sulfuro.eu">salati@sulfuro.eu</a>.
+        Source: <a href="https://github.com/Sulfur0o/Salati" rel="noopener">github.com/Sulfur0o/Salati</a>.
+      </p>
+
+      <h2>2. What Salati does not do</h2>
+      <ul>
+        <li>No user accounts, email collection, or sign-in.</li>
+        <li>No advertisements, ad networks, or advertising ID use.</li>
+        <li>No analytics, telemetry, or third-party crash-reporting SDKs.</li>
+        <li>No sale, rental, or brokerage of personal information.</li>
+        <li>No background location tracking, and no movement history.</li>
+      </ul>
+
+      <h2>3. Information stored on your device</h2>
+      <p>
+        Salati stores the following in Android’s private app sandbox (not in a Salati cloud):
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Why it is stored</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Prayer location (city label, latitude, longitude, timezone)</td>
+              <td>To calculate prayer times and Qibla for the place you chose. There is no default city; you set this during setup.</td>
+            </tr>
+            <tr>
+              <td>Calculation method, madhab, high-latitude rule, Hijri offset, language, theme, time format</td>
+              <td>To keep prayer times and the interface consistent.</td>
+            </tr>
+            <tr>
+              <td>Notification, adhan, vibration, and silent-mode preferences</td>
+              <td>To schedule prayer alerts the way you configured them.</td>
+            </tr>
+            <tr>
+              <td>Zakat inputs (cash, balances, metals, nisab choices, hawl date)</td>
+              <td>So you do not have to re-enter an assessment. This is financial information you typed in.</td>
+            </tr>
+            <tr>
+              <td>Cached monthly prayer timetables</td>
+              <td>So a previously downloaded month still works offline.</td>
+            </tr>
+            <tr>
+              <td>Downloaded adhan audio files</td>
+              <td>Only if you choose to download a recitation. Files are stored locally and checked against a size cap, audio type, and SHA-256 digest when the catalogue provides one.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <section class="guarantees" style="margin: 0 0 2.5rem;">
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🛡️</div>
-          <div class="guarantee-title">No accounts</div>
-          <div class="guarantee-desc">No login, email, password, or registration.</div>
-        </div>
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🚫</div>
-          <div class="guarantee-title">No ads</div>
-          <div class="guarantee-desc">No banners, ad SDKs, or advertising identifiers.</div>
-        </div>
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🔕</div>
-          <div class="guarantee-title">No telemetry</div>
-          <div class="guarantee-desc">No analytics, crash reporters, or tracking SDKs.</div>
-        </div>
-        <div class="guarantee-card">
-          <div class="guarantee-icon">📱</div>
-          <div class="guarantee-title">On-device first</div>
-          <div class="guarantee-desc">Preferences live in the app sandbox. Network use is limited and listed below.</div>
-        </div>
-      </section>
+      <h2>4. Android backup</h2>
+      <p>
+        Android backup and device-to-device transfer are <strong>enabled for one file only</strong>:
+        your settings store (<code>salati_settings.preferences_pb</code>). That file includes
+        the prayer location you configured and any Zakat figures you entered.
+      </p>
+      <p>
+        Prayer caches, alarm registries, WorkManager state, and downloaded adhan files are
+        <strong>not</strong> backed up.
+      </p>
+      <p class="callout">
+        If Android Backup is turned on for your Google account, Google may store that settings
+        file as part of your own backup. Salati does not operate a separate cloud copy.
+        Turn off backup for this app, clear app storage, or uninstall to remove the local copy.
+      </p>
 
-      <div class="policy-section">
-        <h2>1. Who this covers</h2>
-        <p>
-          This policy describes how the Salati Android app handles information. Salati is developed by Sulfuro.
-          There is no Salati user account and no Salati backend that stores a profile about you.
-        </p>
-        <p>
-          Questions: <a href="mailto:salati@sulfuro.eu">salati@sulfuro.eu</a>.
-          Source code: <a href="https://github.com/Sulfur0o/Salati" target="_blank" rel="noopener">github.com/Sulfur0o/Salati</a>.
-        </p>
-      </div>
+      <h2>5. What leaves the device</h2>
+      <p>
+        Salati does not run its own server. When a feature needs the network, the app opens an
+        HTTPS connection itself. Operators of those services can see ordinary connection metadata
+        such as your public IP address. Salati does not attach an advertising ID, account, or
+        email to these requests.
+      </p>
 
-      <div class="policy-section">
-        <h2>2. What Salati does not do</h2>
-        <ul>
-          <li>No user accounts, email collection, or sign-in.</li>
-          <li>No advertisements, ad networks, or advertising ID use.</li>
-          <li>No analytics, telemetry, or third-party crash-reporting SDKs.</li>
-          <li>No sale, rental, or brokerage of personal information.</li>
-          <li>No background location tracking, and no movement history.</li>
-        </ul>
-      </div>
+      <h3>A. Prayer times (Aladhan, <code>api.aladhan.com</code>)</h3>
+      <p>
+        When a monthly timetable is downloaded, Salati sends the configured latitude and longitude,
+        plus year, month, calculation method, school, and high-latitude rule. GPS is not required:
+        you can search for a city by name. Location is never read in the background.
+      </p>
+      <p>
+        If the network is unavailable, Salati can compute times on the device instead. Those
+        on-device times are not uploaded.
+      </p>
 
-      <div class="policy-section">
-        <h2>3. Information stored on your device</h2>
-        <p>
-          Salati stores the following in Android’s private app sandbox (not in a Salati cloud):
-        </p>
-        <div class="policy-table-wrap">
-          <table class="policy-table">
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Why it is stored</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Prayer location (city label, latitude, longitude, timezone)</td>
-                <td>To calculate prayer times and Qibla for the place you chose. There is no default city; you set this during setup.</td>
-              </tr>
-              <tr>
-                <td>Calculation method, madhab, high-latitude rule, Hijri offset, language, theme, time format</td>
-                <td>To keep prayer times and the interface consistent.</td>
-              </tr>
-              <tr>
-                <td>Notification, adhan, vibration, and silent-mode preferences</td>
-                <td>To schedule prayer alerts the way you configured them.</td>
-              </tr>
-              <tr>
-                <td>Zakat inputs (cash, balances, metals, nisab choices, hawl date)</td>
-                <td>So you do not have to re-enter an assessment. This is financial information you typed in.</td>
-              </tr>
-              <tr>
-                <td>Cached monthly prayer timetables</td>
-                <td>So a previously downloaded month still works offline.</td>
-              </tr>
-              <tr>
-                <td>Downloaded adhan audio files</td>
-                <td>Only if you choose to download a recitation. Files are stored locally and checked against a size cap, audio type, and SHA-256 digest when the catalogue provides one.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <h3>B. Adhan catalogue and audio (<code>salati.sulfuro.xyz</code>)</h3>
+      <p>
+        Opening the adhan picker fetches a short JSON catalogue. Downloading a recitation fetches
+        the MP3 you selected. No tracking headers are added. Downloads are optional.
+        The recordings offered are redistributed under their stated licenses
+        (currently Creative Commons Attribution-ShareAlike 4.0). Attribution is shown in the picker.
+      </p>
 
-      <div class="policy-section">
-        <h2>4. Android backup</h2>
-        <p>
-          Android backup and device-to-device transfer are <strong>enabled for one file only</strong>:
-          your settings store (<code>salati_settings.preferences_pb</code>). That file includes
-          the prayer location you configured and any Zakat figures you entered.
-        </p>
-        <p>
-          Prayer caches, alarm registries, WorkManager state, and downloaded adhan files are
-          <strong>not</strong> backed up.
-        </p>
-        <p class="policy-note">
-          If Android Backup is turned on for your Google account, Google may store that settings
-          file as part of your own backup. Salati does not operate a separate cloud copy.
-          Turn off backup for this app, clear app storage, or uninstall to remove the local copy.
-        </p>
-      </div>
+      <h3>C. Metal prices for Zakat (<code>cdn.jsdelivr.net</code>, fallback <code>latest.currency-api.pages.dev</code>)</h3>
+      <p>
+        Tapping refresh requests a public exchange-rate file for the currency you selected.
+        Coordinates are not included. These rates are an approximation for nisab, not a certified
+        bullion quote.
+      </p>
 
-      <div class="policy-section">
-        <h2>5. What leaves the device</h2>
-        <p>
-          Salati does not run its own server. When a feature needs the network, the app opens an
-          HTTPS connection itself. Operators of those services can see ordinary connection metadata
-          such as your public IP address. Salati does not attach an advertising ID, account, or
-          email to these requests.
-        </p>
+      <h3>D. City name and GPS (on the device)</h3>
+      <p>
+        City search and reverse-geocoding use the Android platform Geocoder. That lookup is
+        performed by the operating system / Play services on the device, not by a Salati server.
+        GPS is read only after you tap to detect location, and only while the app is in the
+        foreground.
+      </p>
 
-        <h3>A. Prayer times (Aladhan, <code>api.aladhan.com</code>)</h3>
-        <p>
-          When a monthly timetable is downloaded, Salati sends the configured latitude and longitude,
-          plus year, month, calculation method, school, and high-latitude rule. GPS is not required:
-          you can search for a city by name. Location is never read in the background.
-        </p>
-        <p>
-          If the network is unavailable, Salati can compute times on the device instead. Those
-          on-device times are not uploaded.
-        </p>
+      <h2>6. Permissions</h2>
+      <ul>
+        <li><strong>Location (fine / coarse)</strong> — optional. Requested only when you tap “detect my location.” You can refuse and search for a city instead. Never used in the background.</li>
+        <li><strong>Notifications</strong> — prayer alerts, pre-reminders, and optional White Days notices on Android 13+.</li>
+        <li><strong>Exact alarms</strong> — so a prayer notice can fire at the calculated minute. If Android denies this, Salati falls back to inexact alarms, which the system may delay.</li>
+        <li><strong>Do Not Disturb / notification policy</strong> — only if you enable optional prayer silent mode. The previous ringer mode is restored after a bounded window.</li>
+        <li><strong>Foreground service (media playback)</strong> — plays a downloaded adhan through to the end, with a stop action. A notification-channel sound would be cut off by the system.</li>
+        <li><strong>Internet, vibration, boot completed, wake lock</strong> — timetable / audio download, vibration alerts, and restoring alarms after reboot.</li>
+      </ul>
 
-        <h3>B. Adhan catalogue and audio (<code>salati.sulfuro.xyz</code>)</h3>
-        <p>
-          Opening the adhan picker fetches a short JSON catalogue. Downloading a recitation fetches
-          the MP3 you selected. No tracking headers are added. Downloads are optional.
-          The recordings offered are redistributed under their stated licenses
-          (currently Creative Commons Attribution-ShareAlike 4.0). Attribution is shown in the picker.
-        </p>
+      <h2>7. Children</h2>
+      <p>
+        Salati is a general-audience utility. It is not directed at children under 13, does not
+        knowingly collect personal information from children, and does not include social features,
+        chat, or ads.
+      </p>
 
-        <h3>C. Metal prices for Zakat (<code>cdn.jsdelivr.net</code>, fallback <code>latest.currency-api.pages.dev</code>)</h3>
-        <p>
-          Tapping refresh requests a public exchange-rate file for the currency you selected.
-          Coordinates are not included. These rates are an approximation for nisab, not a certified
-          bullion quote.
-        </p>
+      <h2>8. Retention and deletion</h2>
+      <p>
+        Salati keeps data only on the device (and, if you use Android Backup, in your Google backup
+        of the settings file). Clearing Salati’s storage in Android Settings, or uninstalling the
+        app, deletes the local copy. There is no Salati account to request deletion from.
+      </p>
+      <p>
+        Third-party operators (Aladhan, the currency CDN, and your device geocoder) keep whatever
+        their own policies describe. Salati cannot delete logs on those systems.
+      </p>
 
-        <h3>D. City name and GPS (on the device)</h3>
-        <p>
-          City search and reverse-geocoding use the Android platform Geocoder. That lookup is
-          performed by the operating system / Play services on the device, not by a Salati server.
-          GPS is read only after you tap to detect location, and only while the app is in the
-          foreground.
-        </p>
-      </div>
+      <h2>9. Changes</h2>
+      <p>
+        If this policy changes, the effective date at the top of this page will be updated.
+        Material changes that affect how data is handled will also be reflected in the Play Store
+        Data safety form.
+      </p>
 
-      <div class="policy-section">
-        <h2>6. Permissions</h2>
-        <ul>
-          <li><strong>Location (fine / coarse)</strong> — optional. Requested only when you tap “detect my location.” You can refuse and search for a city instead. Never used in the background.</li>
-          <li><strong>Notifications</strong> — prayer alerts, pre-reminders, and optional White Days notices on Android 13+.</li>
-          <li><strong>Exact alarms</strong> — so a prayer notice can fire at the calculated minute. If Android denies this, Salati falls back to inexact alarms, which the system may delay.</li>
-          <li><strong>Do Not Disturb / notification policy</strong> — only if you enable optional prayer silent mode. The previous ringer mode is restored after a bounded window.</li>
-          <li><strong>Foreground service (media playback)</strong> — plays a downloaded adhan through to the end, with a stop action. A notification-channel sound would be cut off by the system.</li>
-          <li><strong>Internet, vibration, boot completed, wake lock</strong> — timetable / audio download, vibration alerts, and restoring alarms after reboot.</li>
-        </ul>
-      </div>
-
-      <div class="policy-section">
-        <h2>7. Children</h2>
-        <p>
-          Salati is a general-audience utility. It is not directed at children under 13, does not
-          knowingly collect personal information from children, and does not include social features,
-          chat, or ads.
-        </p>
-      </div>
-
-      <div class="policy-section">
-        <h2>8. Retention and deletion</h2>
-        <p>
-          Salati keeps data only on the device (and, if you use Android Backup, in your Google backup
-          of the settings file). Clearing Salati’s storage in Android Settings, or uninstalling the
-          app, deletes the local copy. There is no Salati account to request deletion from.
-        </p>
-        <p>
-          Third-party operators (Aladhan, the currency CDN, and your device geocoder) keep whatever
-          their own policies describe. Salati cannot delete logs on those systems.
-        </p>
-      </div>
-
-      <div class="policy-section">
-        <h2>9. Changes</h2>
-        <p>
-          If this policy changes, the effective date at the top of this page will be updated.
-          Material changes that affect how data is handled will also be reflected in the Play Store
-          Data safety form.
-        </p>
-      </div>
-
-      <div class="policy-section">
-        <h2>10. Contact</h2>
-        <ul>
-          <li>Privacy and support: <a href="mailto:salati@sulfuro.eu">salati@sulfuro.eu</a></li>
-          <li>This page: <a href="https://salati.sulfuro.xyz/privacy.html">https://salati.sulfuro.xyz/privacy.html</a></li>
-          <li>Source and issues: <a href="https://github.com/Sulfur0o/Salati" target="_blank" rel="noopener">https://github.com/Sulfur0o/Salati</a></li>
-        </ul>
-      </div>
+      <h2>10. Contact</h2>
+      <ul>
+        <li>Privacy and support: <a href="mailto:salati@sulfuro.eu">salati@sulfuro.eu</a></li>
+        <li>This page: <a href="https://salati.sulfuro.xyz/privacy.html">https://salati.sulfuro.xyz/privacy.html</a></li>
+        <li>Source and issues: <a href="https://github.com/Sulfur0o/Salati" rel="noopener">https://github.com/Sulfur0o/Salati</a></li>
+      </ul>
     </main>
 
     <footer class="footer">
       <ul class="footer-links">
         <li><a href="./">Home</a></li>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-        <li><a href="https://github.com/Sulfur0o/Salati" target="_blank" rel="noopener">GitHub Repository</a></li>
-        <li><a href="mailto:salati@sulfuro.eu">Support</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="https://github.com/Sulfur0o/Salati">GitHub</a></li>
+        <li><a href="mailto:salati@sulfuro.eu">salati@sulfuro.eu</a></li>
       </ul>
-      <p>
-        Salati · Application ID: <code>com.sulfuro.salati</code> · MIT License
-      </p>
+      <p>Salati · <code>com.sulfuro.salati</code> · MIT License</p>
     </footer>
   </div>
 </body>

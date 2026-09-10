@@ -3,206 +3,159 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Salati — Private Islamic Prayer Times, Qibla &amp; Zakat</title>
-  <meta name="description" content="Salati is a private, ad-free Android companion for Islamic prayer times, Qibla, Hijri calendar, and Zakat. No accounts, no ads, no analytics.">
-  <meta name="theme-color" content="#080e0c">
+  <title>Salati — Prayer times, Qibla &amp; Zakat</title>
+  <meta name="description" content="Salati is a private Android companion for Islamic prayer times, Qibla, Hijri calendar, and Zakat. No accounts, no ads, no analytics.">
+  <meta name="theme-color" content="#F6F0E5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151E19" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/webp" href="assets/logo.webp">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <div class="bg-aura"></div>
-
-  <div class="container">
-    <!-- Navbar -->
-    <header class="navbar">
-      <a href="./" class="nav-brand">
-        <img src="assets/logo.webp" alt="Salati logo" width="38" height="38">
-        <span>Salati</span>
+  <div class="wrap">
+    <header class="nav">
+      <a href="./" class="brand">
+        <img src="assets/logo.webp" alt="" width="36" height="36">
+        Salati
       </a>
       <nav>
         <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
+          <li><a href="#what-it-does">Features</a></li>
           <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="https://github.com/Sulfur0o/Salati" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/Sulfur0o/Salati" rel="noopener">GitHub</a></li>
         </ul>
       </nav>
     </header>
 
-    <!-- Hero Section -->
     <main>
       <section class="hero">
-        <div class="hero-logo-wrap">
-          <img src="assets/logo.webp" alt="Salati icon" class="hero-logo" width="96" height="96">
-        </div>
-        <br>
-        <div class="hero-badge">
-          <span>🕌 Version 1.3.0 · Open Source &amp; Private</span>
-        </div>
-        <h1>Purely Focused on Your Prayer</h1>
+        <img src="assets/logo.webp" alt="Salati" class="logo" width="72" height="72">
+        <h1>Prayer times for the city you choose</h1>
         <p>
-          An independent, ad-free Islamic prayer companion built for Android. Accurate astronomical prayer calculations, 3D tilt-compensated Qibla, an interactive 4-step Zakat calculator, and authentic downloadable Adhans.
+          Qibla, Hijri calendar, and Zakat on the same device.
+          No account, no ads, no analytics.
         </p>
-        <div class="hero-actions">
-          <a href="https://github.com/Sulfur0o/Salati/releases" class="btn btn-primary" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
-            <span>Get the App</span>
-          </a>
-          <a href="https://github.com/Sulfur0o/Salati" class="btn btn-secondary" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            <span>Source Code</span>
-          </a>
-          <a href="privacy.html" class="btn btn-secondary">
-            <span>Privacy Policy</span>
-          </a>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/Sulfur0o/Salati/releases">Download</a>
+          <a class="btn btn-ghost" href="https://github.com/Sulfur0o/Salati">Source</a>
         </div>
       </section>
 
-      <!-- Guarantees Ribbon -->
-      <section class="guarantees">
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🛡️</div>
-          <div class="guarantee-title">Zero Accounts</div>
-          <div class="guarantee-desc">No login, email, password, or signup required.</div>
-        </div>
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🚫</div>
-          <div class="guarantee-title">100% Ad-Free</div>
-          <div class="guarantee-desc">Zero advertisements, banners, or ad trackers.</div>
-        </div>
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🔕</div>
-          <div class="guarantee-title">Zero Telemetry</div>
-          <div class="guarantee-desc">No behavioral tracking, SDKs, or analytics profiling.</div>
-        </div>
-        <div class="guarantee-card">
-          <div class="guarantee-icon">🔒</div>
-          <div class="guarantee-title">Local-First Storage</div>
-          <div class="guarantee-desc">Coordinates and preferences stay sandboxed on your device.</div>
-        </div>
-      </section>
-
-      <!-- App Preview / Showcase -->
-      <section class="showcase">
-        <div class="showcase-info">
-          <h2>Precision Prayer Schedule</h2>
-          <p>
-            Whether at home or traveling, Salati calculates astronomical prayer boundaries directly on your phone with in-memory caching and offline fallback.
-          </p>
-          <div class="showcase-pills">
-            <span class="pill">7 Calculation Standards</span>
-            <span class="pill">Hanafi / Shafi'i Asr</span>
-            <span class="pill">Midnight &amp; Tahajjud</span>
-            <span class="pill">Exact Alarms</span>
-            <span class="pill">Reboot Resilience</span>
-          </div>
-        </div>
-
-        <div class="prayer-mockup">
-          <div class="prayer-mockup-header">
+      <figure class="preview">
+        <div class="daily" aria-hidden="true">
+          <div class="daily-top">
             <div>
-              <div class="prayer-city">Brussels, Belgium</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted);">19 Rabi' al-Awwal 1448 AH</div>
+              <div class="daily-kicker">
+                Today
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 10.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m2.19 12.19L6 18l3.81-8.19L18 6z"/></svg>
+              </div>
+              <div class="daily-date">Thursday, 3 September 2026</div>
             </div>
-            <div class="prayer-next-badge">Asr in 1h 42m</div>
+            <div class="daily-meta">
+              <div class="hijri">22 Rabi&rsquo; al-Awwal 1448</div>
+              <div class="place">Your city</div>
+            </div>
           </div>
-          <div class="prayer-row">
-            <span class="prayer-name">Fajr</span>
-            <span class="prayer-time">05:22</span>
+
+          <div class="hero-card">
+            <div class="countdown">00h 04m 03s</div>
+            <div class="next">Next prayer: Isha <time>22:17</time></div>
           </div>
-          <div class="prayer-row">
-            <span class="prayer-name">Sunrise</span>
-            <span class="prayer-time" style="color: var(--text-muted);">07:08</span>
+
+          <div class="prayer"><span class="name">Fajr</span><time>04:58</time></div>
+          <div class="prayer is-muted"><span class="name">Sunrise</span><time>06:59</time></div>
+          <div class="prayer"><span class="name">Dhuhr</span><time>13:42</time></div>
+          <div class="prayer"><span class="name">Asr</span><time>17:24</time></div>
+          <div class="prayer"><span class="name">Maghrib</span><time>20:24</time></div>
+          <div class="prayer is-next">
+            <span class="left">
+              <span class="mark"></span>
+              <span class="name">Isha</span>
+              <span class="badge">NEXT</span>
+            </span>
+            <time>22:17</time>
           </div>
-          <div class="prayer-row">
-            <span class="prayer-name">Dhuhr</span>
-            <span class="prayer-time">13:46</span>
-          </div>
-          <div class="prayer-row active">
-            <span class="prayer-name">Asr</span>
-            <span class="prayer-time">17:28</span>
-          </div>
-          <div class="prayer-row">
-            <span class="prayer-name">Maghrib</span>
-            <span class="prayer-time">20:21</span>
-          </div>
-          <div class="prayer-row">
-            <span class="prayer-name">Isha</span>
-            <span class="prayer-time">21:58</span>
+
+          <div class="night">
+            <div>Middle of the night<strong>01:41</strong></div>
+            <div>Last third of the night<strong>03:27</strong></div>
           </div>
         </div>
+        <figcaption>Layout of the daily screen. Times are calculated for the location you set during setup — there is no default city.</figcaption>
+      </figure>
+
+      <section class="features" id="what-it-does">
+        <h2>What it does</h2>
+
+        <article class="feature">
+          <h3>Prayer times</h3>
+          <p>
+            Astronomical times for a city you pick with GPS or search.
+            Methods include Muslim World League, Umm al-Qura, ISNA, Egypt, Karachi, and others.
+            Asr by madhab. Midnight and last third of the night for Qiyam.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Qibla</h3>
+          <p>
+            Direction to the Kaaba from the saved location.
+            Works held flat or upright, with magnetic declination.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Hijri calendar</h3>
+          <p>
+            Gregorian and Hijri side by side.
+            Islamic New Year, Ashura, Ramadan, the two Eids, Day of Arafah,
+            and optional White Days reminders.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Zakat</h3>
+          <p>
+            Cash, gold by karat, and silver.
+            Nisab from gold (85&nbsp;g) or silver (595&nbsp;g).
+            Metal prices come from a public currency feed and are approximate.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Adhan and alarms</h3>
+          <p>
+            Optional downloaded recitations, attributed in Settings.
+            Exact alarms when Android allows them; otherwise the system may delay the notice.
+            Restored after reboot. Some phones still need battery restrictions lifted.
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>Offline months</h3>
+          <p>
+            Once a month is on the device, that month still works without a network.
+            If a later month is missing, times can be computed on the phone.
+          </p>
+        </article>
       </section>
 
-      <!-- Features Grid -->
-      <section id="features">
-        <div class="features-header">
-          <h2>Engineered with Care</h2>
-          <p>Every feature is crafted strictly to serve your worship and obligations.</p>
-        </div>
-
-        <div class="feature-grid">
-          <div class="feature-card">
-            <div class="feature-icon-badge">🕌</div>
-            <h3>Accurate Astronomical Calculations</h3>
-            <p>
-              Computes solar angles with offline mathematical calculation and intelligent caching. Supports Muslim World League, Makkah, ISNA, Egypt, Karachi, Gulf, and Moon Sighting conventions.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-badge">🧭</div>
-            <h3>3D Tilt-Compensated Qibla</h3>
-            <p>
-              Orientation sensor fusion with magnetic declination correction. Accurately pinpoints the Holy Kaaba in Makkah whether your phone is held upright or flat on a table.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-badge">💰</div>
-            <h3>4-Step Zakat Walkthrough</h3>
-            <p>
-              Wizard-guided calculation for gold (85g) or silver (595g) Nisab. Dynamic multi-carat gold purity breakdown (24k, 22k, 21k, 18k, 14k), live currency valuation, and Hawl calendar reminder.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-badge">📅</div>
-            <h3>Hijri Calendar &amp; Fasting</h3>
-            <p>
-              Side-by-side Gregorian and Hijri monthly calendar with major Islamic events, plus voluntary White Days (Ayyam al-Beed) indicators and eve-of-fast reminders.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-badge">🔔</div>
-            <h3>Downloadable Adhans &amp; Exact Alarms</h3>
-            <p>
-              Curated audio adhans from Makkah, Madinah, Al-Aqsa, and Cairo with SHA-256 integrity verification. Exact Android alarms that reliably survive phone reboots and timezone shifts.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-badge">🌙</div>
-            <h3>Emerald-Night Theme</h3>
-            <p>
-              Custom-built dark palette with a subtle container ladder, emerald accents, and warm brass countdowns. Engineered for low-light mosques and optimal battery efficiency.
-            </p>
-          </div>
-        </div>
-      </section>
+      <p class="note">
+        <strong>Privacy.</strong>
+        There is no Salati account and no Salati server.
+        Configured coordinates are sent to the Aladhan prayer-times API only when a month is downloaded.
+        Settings (including location and any Zakat figures) can be included in Android Backup.
+        <a href="privacy.html">Full policy</a>.
+      </p>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
       <ul class="footer-links">
         <li><a href="./">Home</a></li>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-        <li><a href="https://github.com/Sulfur0o/Salati" target="_blank" rel="noopener">GitHub Repository</a></li>
-        <li><a href="https://github.com/Sulfur0o/Salati/issues" target="_blank" rel="noopener">Report Issue / Support</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="https://github.com/Sulfur0o/Salati">GitHub</a></li>
+        <li><a href="mailto:salati@sulfuro.eu">salati@sulfuro.eu</a></li>
       </ul>
-      <p>
-        Salati · Independent &amp; Open Source · Application ID: <code>com.sulfuro.salati</code><br>
-        Crafted with strict respect for privacy and tradition.
-      </p>
+      <p>Salati · <code>com.sulfuro.salati</code> · MIT License</p>
     </footer>
   </div>
 </body>
