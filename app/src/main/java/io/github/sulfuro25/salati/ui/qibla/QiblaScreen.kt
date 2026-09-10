@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -173,6 +174,7 @@ fun QiblaScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .sizeIn(maxWidth = 270.dp, maxHeight = 270.dp)
                 .aspectRatio(1f)
                 .semantics { contentDescription = screenDescription },
             contentAlignment = Alignment.Center

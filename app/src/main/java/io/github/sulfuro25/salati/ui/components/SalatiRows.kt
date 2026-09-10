@@ -85,7 +85,7 @@ fun PrayerTimeRow(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 48.dp)
+            .defaultMinSize(minHeight = 42.dp)
             .semantics(mergeDescendants = true) {
                 stateDescription = semanticState
             },
@@ -97,7 +97,7 @@ fun PrayerTimeRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm),
+                .padding(horizontal = SalatiSpacing.md, vertical = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -111,11 +111,11 @@ fun PrayerTimeRow(
                         Surface(
                             color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
-                                .height(20.dp)
-                                .width(4.dp),
+                                .height(16.dp)
+                                .width(3.5.dp),
                             shape = androidx.compose.foundation.shape.CircleShape
                         ) {}
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(5.dp))
                     }
                 }
                 Text(
@@ -134,7 +134,7 @@ fun PrayerTimeRow(
                             text = stringResource(R.string.badge_next),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.5.dp)
                         )
                     }
                 }
@@ -210,17 +210,24 @@ fun ValueSelectionRow(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f).padding(top = SalatiSpacing.xs, bottom = SalatiSpacing.xs, end = SalatiSpacing.sm)
+                modifier = Modifier.weight(1.2f).padding(top = SalatiSpacing.xs, bottom = SalatiSpacing.xs, end = SalatiSpacing.xs),
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             Row(
-                horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.xs),
+                modifier = Modifier.weight(0.8f, fill = false),
+                horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = value,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.End
                 )
+                Spacer(modifier = Modifier.width(SalatiSpacing.xs))
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = null,

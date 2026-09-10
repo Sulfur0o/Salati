@@ -190,8 +190,8 @@ fun DashboardScreen(
                 modifier = modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
-                    .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm),
-                verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
+                    .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs),
+                verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
             ) {
                 DailyScreenHeader(
                     title = stringResource(R.string.daily_today),
@@ -222,8 +222,8 @@ fun DashboardScreen(
                 )
 
                 Column(
-                    modifier = Modifier.padding(top = SalatiSpacing.md),
-                    verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)
                 ) {
                     val entries = listOf(
                         DailyEvent.FAJR to prayerTimes.fajr,
@@ -274,7 +274,7 @@ fun DashboardScreen(
                 androidx.compose.material3.Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = SalatiSpacing.sm),
+                        .padding(bottom = SalatiSpacing.xs),
                     shape = io.github.sulfuro25.salati.theme.SalatiShapeTokens.Card,
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -282,24 +282,27 @@ fun DashboardScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                     ) {
-                        Column(modifier = Modifier.weight(1f)) {
+                        Column(modifier = Modifier.weight(0.95f)) {
                             Text(
                                 text = stringResource(R.string.daily_middle_of_night),
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                             )
                             Text(
                                 text = timeFormat.format(prayerTimes.middleOfTheNight),
-                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(16f, androidx.compose.ui.unit.TextUnitType.Sp)),
+                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(15f, androidx.compose.ui.unit.TextUnitType.Sp)),
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
                         Column(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1.05f),
                             horizontalAlignment = androidx.compose.ui.Alignment.End
                         ) {
                             Text(
@@ -307,11 +310,13 @@ fun DashboardScreen(
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.End
+                                textAlign = TextAlign.End,
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                             )
                             Text(
                                 text = timeFormat.format(prayerTimes.lastThirdOfTheNight),
-                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(16f, androidx.compose.ui.unit.TextUnitType.Sp)),
+                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(15f, androidx.compose.ui.unit.TextUnitType.Sp)),
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.End
                             )
@@ -335,16 +340,19 @@ internal fun DailyScreenHeader(
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = androidx.compose.ui.Alignment.Bottom
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier.weight(1f, fill = false),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            modifier = Modifier.weight(1.1f),
+            verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
-            Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.semantics { heading() },
                     maxLines = 1,
@@ -352,41 +360,44 @@ internal fun DailyScreenHeader(
                 )
                 androidx.compose.material3.IconButton(
                     onClick = onOpenQibla,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(36.dp)
                 ) {
                     androidx.compose.material3.Icon(
                         imageVector = androidx.compose.material.icons.Icons.Default.Explore,
                         contentDescription = stringResource(R.string.qibla_open),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
                     )
                 }
             }
             Text(
                 text = gregorianDate,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
                 overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
         }
         Column(
-            modifier = Modifier.weight(1f, fill = false),
+            modifier = Modifier.weight(0.9f),
             horizontalAlignment = androidx.compose.ui.Alignment.End,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             Text(
                 text = hijriDate,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                textAlign = TextAlign.End
             )
             Text(
                 text = locationContext,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                textAlign = TextAlign.End
             )
         }
     }

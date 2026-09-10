@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.sulfuro25.salati.R
@@ -207,7 +208,7 @@ private fun StandardOption(
         border = if (selected) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
     ) {
         Row(
-            modifier = Modifier.padding(SalatiSpacing.md),
+            modifier = Modifier.padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm),
             horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -644,9 +645,9 @@ internal fun TotalsRow(
                 MaterialTheme.typography.bodyMedium
             },
             fontWeight = if (emphasised) FontWeight.SemiBold else FontWeight.Normal,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1.1f)
         )
-        Spacer(modifier = Modifier.size(SalatiSpacing.sm))
+        Spacer(modifier = Modifier.size(SalatiSpacing.xs))
         Text(
             text = value,
             style = if (emphasised) {
@@ -659,7 +660,9 @@ internal fun TotalsRow(
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.onSurface
-            }
+            },
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(0.9f, fill = false)
         )
     }
 }

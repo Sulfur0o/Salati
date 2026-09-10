@@ -65,7 +65,7 @@ fun SalatiHeroCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = SalatiSpacing.md, horizontal = SalatiSpacing.lg),
+                .padding(vertical = 10.dp, horizontal = SalatiSpacing.md),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
         ) {
@@ -81,7 +81,10 @@ fun SalatiHeroCard(
                 Text(
                     text = "$eventLabel: $eventName",
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.secondary,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
                 Text(
                     text = eventTime,
@@ -134,8 +137,8 @@ fun SalatiSectionCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = SalatiSpacing.md),
-            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
+                .padding(vertical = SalatiSpacing.sm, horizontal = SalatiSpacing.sm),
+            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
         ) {
             content()
         }

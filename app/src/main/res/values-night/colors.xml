@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme widget colors: emerald night surface, vibrant mint accent, soft light text -->
+    <color name="salati_widget_surface">#1A2520</color>
+    <color name="salati_widget_outline">#33463D</color>
+    <color name="salati_widget_accent">#46C08A</color>
+    <color name="salati_widget_on_surface">#DCDCD2</color>
+    <color name="salati_widget_on_surface_variant">#8C9A91</color>
+</resources>
