@@ -10,7 +10,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.computation.ZakatGoldItem
+import com.sulfuro.salati.core.zakat.ZakatGoldItem
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule

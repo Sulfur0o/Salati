@@ -19,7 +19,7 @@ import com.sulfuro.salati.R
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SettingRow
 import com.sulfuro.salati.ui.components.StatusPill
-import com.sulfuro.salati.core.notifications.AppPermissionState
+import com.sulfuro.salati.core.permissions.AppPermissionState
 
 @Composable
 internal fun SettingToggleRow(

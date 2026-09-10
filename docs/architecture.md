@@ -8,7 +8,7 @@ Changing location persists city name, coordinates, and timezone in a single sett
 
 ## Implemented structure
 
-The Compose UI contains Dashboard, Calendar, Zakat, and Settings screens with serializable Navigation 3 keys. Prayer dates use the configured prayer-location `LocalDate`; exact moments use `Instant` and explicit formatting in that same zone.
+The Compose UI contains Dashboard, Calendar, Zakat, and Settings screens with serializable Navigation 3 keys. Prayer dates use the configured prayer-location `LocalDate`; exact moments use `Instant` and explicit formatting in that same zone. Domain code sits under `core/computation` (prayer times, Hijri, Qibla), `core/zakat`, `core/alarms`, `core/work`, `core/alerts`, `core/permissions`, `core/location`, `core/audio`, and `core/device`.
 
 `PrayerRepository` orchestrates:
 

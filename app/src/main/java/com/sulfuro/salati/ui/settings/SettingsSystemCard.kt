@@ -19,12 +19,13 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.notifications.AppPermissionState
+import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SalatiLogo
 import com.sulfuro.salati.ui.components.SettingRow
 import com.sulfuro.salati.ui.components.SettingSection
+import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
 
 /**
  * What the operating system is currently allowing, and who to talk to about it.

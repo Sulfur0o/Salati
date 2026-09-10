@@ -1,9 +1,8 @@
 package com.sulfuro.salati.core.computation
 
 import com.sulfuro.salati.R
+import com.sulfuro.salati.core.zakat.zakatHawlDueDate
 import java.time.LocalDate
-
-const val ZAKAT_HAWL_DAYS = 354L
 
 enum class IslamicEventType {
     ISLAMIC_NEW_YEAR,
@@ -46,8 +45,6 @@ fun eventsForHijriDate(date: HijriCalendarHelper.HijriDateComponents): List<Isla
     
     return events
 }
-
-fun zakatHawlDueDate(startDate: LocalDate): LocalDate = startDate.plusDays(ZAKAT_HAWL_DAYS)
 
 fun eventsForCalendarDate(
     gregorianDate: LocalDate,

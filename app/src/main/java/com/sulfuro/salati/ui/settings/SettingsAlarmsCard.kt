@@ -15,14 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.audio.AdhanAudioStore
-import com.sulfuro.salati.core.notifications.PrayerSilentModeController
-import com.sulfuro.salati.core.notifications.PrayerSilentModeScheduler
+import com.sulfuro.salati.core.alarms.PrayerSilentModeController
+import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SettingSection
 import com.sulfuro.salati.ui.components.ValueSelectionRow
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.sulfuro.salati.core.notifications.AppPermissionState
+import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.ui.components.ExpandableSettingSection
 import com.sulfuro.salati.ui.components.SegmentedTabRow
 import kotlinx.coroutines.launch

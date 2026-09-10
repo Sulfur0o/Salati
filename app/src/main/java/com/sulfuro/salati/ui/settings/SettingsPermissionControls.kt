@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.notifications.AppPermissionState
+import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.ui.components.PermissionStatusRow
 
 @Composable

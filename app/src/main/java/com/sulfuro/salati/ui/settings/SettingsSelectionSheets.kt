@@ -38,7 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.computation.zakatCurrencyOptions
+import com.sulfuro.salati.core.zakat.zakatCurrencyOptions
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 

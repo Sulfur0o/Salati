@@ -44,7 +44,7 @@ fun MainNavigation(
             onComplete = { updated ->
                 scope.launch {
                     preferences.updateSettings { updated.copy(hasCompletedOnboarding = true) }
-                    com.sulfuro.salati.core.notifications.AlarmWorkScheduler.enqueueSettingsRefreshDebounced(appContext)
+                    com.sulfuro.salati.core.work.AlarmWorkScheduler.enqueueSettingsRefreshDebounced(appContext)
                     com.sulfuro.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(appContext)
                 }
             }

@@ -116,7 +116,7 @@ class PrePrayerReminderLabelTest {
      */
     @Test
     fun theScreenAndTheSchedulerAgreeThatZeroMeansNoReminder() {
-        val scheduler = source("core/notifications/AlarmScheduler.kt")
+        val scheduler = source("core/alarms/AlarmScheduler.kt")
         val alarmsCard = source("ui/settings/SettingsAlarmsCard.kt")
 
         assertTrue(scheduler.contains("settings.prePrayerMinutes > 0"))

@@ -76,14 +76,14 @@ import com.sulfuro.salati.core.location.DeviceLocationProvider
 import com.sulfuro.salati.core.location.DeviceLocationResult
 import com.sulfuro.salati.core.location.PrayerLocationResolver
 import com.sulfuro.salati.ui.settings.CitySearchSheet
-import com.sulfuro.salati.core.notifications.readAppPermissionState
+import com.sulfuro.salati.core.permissions.readAppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SalatiLogo
 import com.sulfuro.salati.ui.components.PermissionStatusRow
 import com.sulfuro.salati.ui.components.SalatiSectionCard
-import com.sulfuro.salati.ui.settings.BatteryOptimizationHelpDialog
+import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
 import kotlinx.coroutines.launch
 
 import androidx.compose.foundation.layout.safeDrawingPadding

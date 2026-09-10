@@ -6,7 +6,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.notifications.AppPermissionState
+import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.TimeFormatPreference
 import org.junit.Assert.assertEquals

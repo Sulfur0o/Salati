@@ -16,8 +16,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.sulfuro.salati.MainActivity
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.notifications.PrayerAlertNotification
-import com.sulfuro.salati.core.notifications.PrayerNotificationChannels
+import com.sulfuro.salati.core.alerts.PrayerAlertNotification
+import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * a Stop button - important, because an adhan runs for minutes and someone in a meeting
  * needs to be able to end it in one tap.
  *
- * The service is started from [com.sulfuro.salati.core.notifications.AlarmReceiver]
+ * The service is started from [com.sulfuro.salati.core.alarms.AlarmReceiver]
  * while it is handling an exact alarm, which is one of the situations Android still allows
  * a background app to start a foreground service in.
  */

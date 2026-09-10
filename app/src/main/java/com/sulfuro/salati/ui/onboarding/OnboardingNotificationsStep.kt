@@ -38,13 +38,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.notifications.readAppPermissionState
+import com.sulfuro.salati.core.permissions.readAppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.PermissionStatusRow
 import com.sulfuro.salati.ui.components.SalatiSectionCard
-import com.sulfuro.salati.ui.settings.BatteryOptimizationHelpDialog
+import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
 import kotlinx.coroutines.launch
 
 /** The permissions the alarms need, asked for with the reason attached. */

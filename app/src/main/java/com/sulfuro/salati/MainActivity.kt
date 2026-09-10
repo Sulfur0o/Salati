@@ -15,11 +15,11 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
-import com.sulfuro.salati.core.notifications.AlarmWorkScheduler
-import com.sulfuro.salati.core.notifications.PermissionStateRefreshController
-import com.sulfuro.salati.core.notifications.PrayerNotificationChannels
-import com.sulfuro.salati.core.notifications.PrayerSilentModeScheduler
-import com.sulfuro.salati.core.notifications.readAppPermissionState
+import com.sulfuro.salati.core.work.AlarmWorkScheduler
+import com.sulfuro.salati.core.permissions.PermissionStateRefreshController
+import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
+import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
+import com.sulfuro.salati.core.permissions.readAppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiTheme

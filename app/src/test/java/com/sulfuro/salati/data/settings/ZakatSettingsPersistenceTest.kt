@@ -3,8 +3,8 @@ package com.sulfuro.salati.data.settings
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import android.content.Context
-import com.sulfuro.salati.core.computation.ZakatGoldItem
-import com.sulfuro.salati.core.computation.ZakatSilverItem
+import com.sulfuro.salati.core.zakat.ZakatGoldItem
+import com.sulfuro.salati.core.zakat.ZakatSilverItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json

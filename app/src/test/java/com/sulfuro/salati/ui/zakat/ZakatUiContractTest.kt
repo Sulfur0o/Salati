@@ -29,7 +29,7 @@ class ZakatUiContractTest {
         // the user's own jewellery happens to be.
         val settings = CalculationSettings(zakatGoldPrice = 70.0)
         val nisab = settings.zakatNisabGram * settings.zakatGoldPrice
-        val calculator = com.sulfuro.salati.core.computation.ZakatCalculator
+        val calculator = com.sulfuro.salati.core.zakat.ZakatCalculator
         val pureWeight = calculator.normalizePureGoldWeight(weightGrams = 100.0, karat = 18)
         val jewelryValue = calculator.valueForPureWeight(pureWeight, settings.zakatGoldPrice)
 

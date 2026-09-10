@@ -45,11 +45,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.computation.GoldPurity
-import com.sulfuro.salati.core.computation.SilverPurity
-import com.sulfuro.salati.core.computation.ZakatCalculator
-import com.sulfuro.salati.core.computation.ZakatGoldItem
-import com.sulfuro.salati.core.computation.ZakatSilverItem
+import com.sulfuro.salati.core.zakat.GoldPurity
+import com.sulfuro.salati.core.zakat.SilverPurity
+import com.sulfuro.salati.core.zakat.ZakatCalculator
+import com.sulfuro.salati.core.zakat.ZakatGoldItem
+import com.sulfuro.salati.core.zakat.ZakatSilverItem
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.ValueSelectionRow
