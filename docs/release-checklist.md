@@ -41,7 +41,7 @@ Before every later release, increase `versionCode`. Keep the application ID `com
 
 Confirm Play Console reports 16 KB page-size compatibility for the native libraries in the bundle. Local ELF check of the current AndroidX `.so` files (`libandroidx.graphics.path.so`, `libdatastore_shared_counter.so`) shows `p_align >= 16384` on every ABI.
 
-After pushing, deploy `adhans.json` and `audio/aaqib_azeez.mp3` to `https://salati.sulfuro.xyz/` and remove the old unlicensed MP3s from that host.
+After pushing, deploy `adhans.json`, `audio/fajr/`, and `audio/regular/` to `https://salati.sulfuro.xyz/`. Remove any old recordings that are no longer in the catalogue.
 
 ## 3. Complete Play Console declarations
 
@@ -50,7 +50,7 @@ After pushing, deploy `adhans.json` and `audio/aaqib_azeez.mp3` to `https://sala
 - Ads: no.
 - Target audience: 13+ only. Selecting children invokes the Families policy.
 - Complete the IARC content-rating questionnaire; do not enter a rating manually.
-- Complete the Data safety form using `PLAY_STORE_METADATA.md`. Location is sent to Aladhan. Android Backup is **on** for the settings store (location + preferences + Zakat inputs). Do not declare that backup is disabled.
+- Complete the Data safety form using `docs/play-store.md`. Location is sent to Aladhan. Android Backup is **on** for the settings store (location + preferences + Zakat inputs). Do not declare that backup is disabled.
 - Privacy policy URL: `https://salati.sulfuro.xyz/privacy.html`. Confirm that this public URL matches the current policy before submission.
 - Support email: `salati@sulfuro.eu`.
 - Declare exact alarms, foreground-only location, notifications, optional DND access, and the `mediaPlayback` foreground service used for adhan playback. The app does not request background location or `USE_EXACT_ALARM`.
@@ -61,7 +61,8 @@ After pushing, deploy `adhans.json` and `audio/aaqib_azeez.mp3` to `https://sala
 - 512 x 512, 32-bit PNG Play icon, no more than 1 MB.
 - 1024 x 500 JPEG or 24-bit PNG feature graphic.
 - At least two phone screenshots; four portrait screenshots at 1080 x 1920 or higher are recommended.
-- Verify the app name, short description, and full description in `PLAY_STORE_METADATA.md` against the final build.
+- Verify the app name, short description, and full description in `docs/play-store.md` against the final build.
+- Play icon, feature graphic, and screenshots: `docs/play-listing/`. Recapture screenshots on the current build before upload.
 
 ## 5. Manual device checks
 

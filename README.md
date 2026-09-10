@@ -23,18 +23,18 @@
 
 ---
 
-## 🔒 Permissions and Privacy
+## Permissions and privacy
 
 - **Location (`ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`)**: Optional; used only when you tap to detect GPS. You can refuse GPS and search for a city by name instead. There is no default city.
 - **Notifications (`POST_NOTIFICATIONS`)**: Used to post prayer alerts and reminders on Android 13+.
 - **Exact Alarms (`SCHEDULE_EXACT_ALARM`)**: Used solely to ensure prayer reminders trigger at the exact calculated prayer time. Falls back to inexact alarms if denied.
 - **Notification policy (`ACCESS_NOTIFICATION_POLICY`)**: Optional prayer silent mode; previous ringer mode is always restored.
 
-Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.sulfuro.xyz/privacy.html). See also [PRIVACY_POLICY.md](PRIVACY_POLICY.md).
+Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.sulfuro.xyz/privacy.html). In-repo copy: [docs/privacy.md](docs/privacy.md).
 
 ---
 
-## 🛠️ Build & Testing
+## Build and testing
 
 ### Fast Development Test (< 30 seconds):
 ```powershell
@@ -51,9 +51,18 @@ Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.
 .\gradlew.bat assembleDebug
 ```
 
-## 📱 Release Specifications
+## Release specifications
 
 - **Package ID:** `com.sulfuro.salati`
 - **Min SDK:** Android 7.0 (API 24)
 - **Target SDK:** Android 16 (API 36)
 - **Architecture:** Jetpack Compose, Material 3, Navigation 3, Coroutines & Flow, WorkManager, DataStore.
+
+## Repository layout
+
+| Path | What it is |
+| --- | --- |
+| `app/` | Android application |
+| `index.html`, `privacy.html`, `assets/` | Public site (GitHub Pages) |
+| `audio/`, `adhans.json` | Hosted adhan catalogue (`https://salati.sulfuro.xyz/`) |
+| `docs/` | Architecture, Play listing copy, screenshots, release checklist |

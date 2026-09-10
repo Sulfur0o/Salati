@@ -6,7 +6,7 @@
 
 **Salati** is an independent, privacy-first Islamic prayer companion developed by **Sulfuro** (Application ID: `com.sulfuro.salati`).
 
-This markdown file is the in-repo copy of the public policy. If the two ever differ, the public page at the URL above is the one linked from the app and from Google Play.
+This markdown file is the in-repo copy of the public policy (`privacy.html`). If the two ever differ, the public page at the URL above is the one linked from the app and from Google Play.
 
 ---
 
