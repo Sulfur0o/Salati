@@ -19,8 +19,14 @@ class AlarmReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         Log.d(TAG, "onReceive: action=$action")
 
-        if (action == AlarmScheduler.ACTION_PRAYER_ALARM) {
-            val prayerName = intent.getStringExtra(AlarmScheduler.EXTRA_PRAYER_NAME) ?: ""
+        if (action != AlarmScheduler.ACTION_PRAYER_ALARM ||
+            action == Intent.ACTION_BOOT_COMPLETED ||
+            action == "android.intent.action.LOCKED_BOOT_COMPLETED"
+        ) {
+            return
+        }
+
+        val prayerName = intent.getStringExtra(AlarmScheduler.EXTRA_PRAYER_NAME) ?: ""
             val kind = intent.getStringExtra(AlarmScheduler.EXTRA_NOTIFICATION_KIND)
             val isPreReminder = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_PRE_REMINDER, false)
             val vibrateEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_VIBRATE_ENABLED, true)
@@ -69,12 +75,11 @@ class AlarmReceiver : BroadcastReceiver() {
                     soundEnabled = soundEnabled,
                     adhanSoundId = adhanSoundId
                 )
-                val widgetPendingResult = goAsync()
-                runCatching {
-                    io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context, widgetPendingResult)
-                }.onFailure {
-                    widgetPendingResult.finish()
-                }
+            val widgetPendingResult = goAsync()
+            runCatching {
+                io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context, widgetPendingResult)
+            }.onFailure {
+                widgetPendingResult.finish()
             }
         }
     }

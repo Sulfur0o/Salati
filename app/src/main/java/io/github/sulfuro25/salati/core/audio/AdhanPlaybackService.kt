@@ -65,7 +65,9 @@ class AdhanPlaybackService : Service() {
 
         // The notification has to go up before anything else can fail, or the system
         // kills the service for starting foreground too slowly.
-        startForegroundCompat(buildNotification(prayerLabel))
+        if (!startForegroundCompat(buildNotification(prayerLabel))) {
+            return START_NOT_STICKY
+        }
 
         val file = AdhanAudioStore.fileFor(this, adhanId)
         if (adhanId.isBlank() || !file.isFile) {
@@ -241,15 +243,26 @@ class AdhanPlaybackService : Service() {
             .build()
     }
 
-    private fun startForegroundCompat(notification: Notification) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(
-                NOTIFICATION_ID,
-                notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-            )
-        } else {
-            startForeground(NOTIFICATION_ID, notification)
+    private fun startForegroundCompat(notification: Notification): Boolean {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(
+                    NOTIFICATION_ID,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                )
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+            true
+        } catch (e: Exception) {
+            Log.w(TAG, "startForeground failed; falling back to alert notification", e)
+            fallbackAlert?.let { alert ->
+                fallbackAlert = null
+                PrayerAlertNotification.post(this, alert)
+            }
+            stopSelfCleanly()
+            false
         }
     }
 

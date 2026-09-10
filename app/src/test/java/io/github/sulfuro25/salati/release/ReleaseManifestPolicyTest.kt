@@ -131,8 +131,8 @@ class ReleaseManifestPolicyTest {
 
         assertTrue(buildScript.contains("namespace = \"io.github.sulfuro25.salati\""))
         assertTrue(buildScript.contains("applicationId = \"com.sulfuro.salati\""))
-        assertTrue(buildScript.contains("versionCode = 4"))
-        assertTrue(buildScript.contains("versionName = \"1.2.0\""))
+        assertTrue(buildScript.contains("versionCode = 5"))
+        assertTrue(buildScript.contains("versionName = \"1.3.0\""))
         assertTrue(buildScript.contains("isMinifyEnabled = true"))
         assertTrue(buildScript.contains("isShrinkResources = true"))
     }
@@ -144,8 +144,8 @@ class ReleaseManifestPolicyTest {
         val application = document.getElementsByTagName("application").item(0) as Element
 
         assertEquals("com.sulfuro.salati", manifest.getAttribute("package"))
-        assertEquals("4", manifest.getAttributeNS(androidNamespace, "versionCode"))
-        assertEquals("1.2.0", manifest.getAttributeNS(androidNamespace, "versionName"))
+        assertEquals("5", manifest.getAttributeNS(androidNamespace, "versionCode"))
+        assertEquals("1.3.0", manifest.getAttributeNS(androidNamespace, "versionName"))
         assertFalse(application.getAttributeNS(androidNamespace, "debuggable").toBoolean())
         assertEquals("true", application.getAttributeNS(androidNamespace, "allowBackup"))
         assertEquals("false", application.getAttributeNS(androidNamespace, "usesCleartextTraffic"))

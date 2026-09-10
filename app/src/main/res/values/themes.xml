@@ -7,8 +7,6 @@
         windowLightNavigationBar is API 27+ and is simply ignored on 24-26.
     -->
     <style name="Theme.Salati" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>

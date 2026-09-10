@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
-import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -69,18 +69,9 @@ class MainActivity : ComponentActivity() {
             val darkTheme = loadedSettings?.isDarkMode ?: isSystemInDarkTheme()
 
             DisposableEffect(darkTheme) {
-                enableEdgeToEdge(
-                    statusBarStyle = if (darkTheme) {
-                        SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
-                    } else {
-                        SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
-                    },
-                    navigationBarStyle = if (darkTheme) {
-                        SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
-                    } else {
-                        SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
-                    }
-                )
+                val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+                insetsController.isAppearanceLightStatusBars = !darkTheme
+                insetsController.isAppearanceLightNavigationBars = !darkTheme
                 onDispose {}
             }
 

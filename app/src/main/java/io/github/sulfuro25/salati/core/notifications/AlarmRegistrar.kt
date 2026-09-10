@@ -2,10 +2,17 @@ package io.github.sulfuro25.salati.core.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+
+private const val ALARM_RECEIVER_CLASS_NAME =
+    "io.github.sulfuro25.salati.core.notifications.AlarmReceiver"
+
+private fun alarmReceiverIntent(context: Context): Intent =
+    Intent().setComponent(ComponentName(context.packageName, ALARM_RECEIVER_CLASS_NAME))
 
 sealed interface ScheduleResult {
     data class Success(val alarm: RegisteredAlarm) : ScheduleResult
@@ -71,7 +78,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                 ?: throw IllegalStateException("AlarmManager not available")
 
-            val intent = Intent(context, AlarmReceiver::class.java).apply {
+            val intent = alarmReceiverIntent(context).apply {
                 action = AlarmScheduler.ACTION_PRAYER_ALARM
                 data = android.net.Uri.parse(alarm.uri)
                 putExtra(AlarmScheduler.EXTRA_PRAYER_NAME, alarm.prayerKey)
@@ -136,7 +143,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                 ?: throw IllegalStateException("AlarmManager not available")
 
-            val intent = Intent(context, AlarmReceiver::class.java).apply {
+            val intent = alarmReceiverIntent(context).apply {
                 action = AlarmScheduler.ACTION_PRAYER_ALARM
                 data = android.net.Uri.parse(alarm.uri)
                 putExtra(AlarmScheduler.EXTRA_PRAYER_NAME, alarm.prayerKey)
@@ -202,7 +209,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
 
     override fun cancelAlarm(context: Context, alarm: RegisteredAlarm) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
+        val intent = alarmReceiverIntent(context).apply {
             action = AlarmScheduler.ACTION_PRAYER_ALARM
             data = android.net.Uri.parse(alarm.uri)
         }
@@ -218,7 +225,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
 
     override fun cancelLegacyAlarm(context: Context, requestCode: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
+        val intent = alarmReceiverIntent(context).apply {
             action = AlarmScheduler.ACTION_PRAYER_ALARM
         }
         val pendingIntent = PendingIntent.getBroadcast(
