@@ -258,10 +258,18 @@
     <string name="battery_opt_state_unrestricted_desc">Battery saver does not restrict prayer alarms</string>
     <string name="battery_opt_state_restricted_desc">Restricted: system battery saver may delay prayer alarms</string>
 
+    <string name="widget_brand_name">Salati</string>
     <string name="widget_next_prayer">Next prayer</string>
     <string name="widget_placeholder_time">--:--</string>
     <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">Location</string>
+    <string name="widget_timetable_name">Salati: Complete Schedule</string>
+    <string name="widget_minimal_bar_name">Salati: Prayer Strip</string>
+    <string name="widget_minimal_bar_description">Single-row horizontal bar showing all 5 daily prayers</string>
+    <string name="widget_compact_card_name">Salati: Next Prayer Card</string>
+    <string name="widget_compact_card_description">Compact square card showing upcoming prayer, location, and date</string>
+    <string name="widget_glance_pill_name">Salati: Glance Pill</string>
+    <string name="widget_glance_pill_description">Ultra-compact horizontal pill for upcoming prayer</string>
 
     <!-- Language Settings -->
     <string name="settings_language_title">Language</string>

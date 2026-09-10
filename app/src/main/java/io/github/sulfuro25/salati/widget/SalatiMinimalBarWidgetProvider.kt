@@ -3,12 +3,11 @@ package io.github.sulfuro25.salati.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.widget.RemoteViews
 import io.github.sulfuro25.salati.R
 
-class SalatiAppWidgetProvider : AppWidgetProvider() {
+class SalatiMinimalBarWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(
         context: Context,
@@ -20,10 +19,6 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
-        fun updateAllWidgets(context: Context, pendingResult: BroadcastReceiver.PendingResult? = null) {
-            SalatiWidgetData.updateAllWidgets(context, pendingResult)
-        }
-
         fun applySnapshot(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -32,25 +27,25 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
             pendingIntent: PendingIntent
         ) {
             val cellIds = intArrayOf(
-                R.id.widget_cell_fajr,
-                R.id.widget_cell_dhuhr,
-                R.id.widget_cell_asr,
-                R.id.widget_cell_maghrib,
-                R.id.widget_cell_isha
+                R.id.widget_bar_cell_fajr,
+                R.id.widget_bar_cell_dhuhr,
+                R.id.widget_bar_cell_asr,
+                R.id.widget_bar_cell_maghrib,
+                R.id.widget_bar_cell_isha
             )
             val labelIds = intArrayOf(
-                R.id.widget_label_fajr,
-                R.id.widget_label_dhuhr,
-                R.id.widget_label_asr,
-                R.id.widget_label_maghrib,
-                R.id.widget_label_isha
+                R.id.widget_bar_label_fajr,
+                R.id.widget_bar_label_dhuhr,
+                R.id.widget_bar_label_asr,
+                R.id.widget_bar_label_maghrib,
+                R.id.widget_bar_label_isha
             )
             val timeIds = intArrayOf(
-                R.id.widget_time_fajr,
-                R.id.widget_time_dhuhr,
-                R.id.widget_time_asr,
-                R.id.widget_time_maghrib,
-                R.id.widget_time_isha
+                R.id.widget_bar_time_fajr,
+                R.id.widget_bar_time_dhuhr,
+                R.id.widget_bar_time_asr,
+                R.id.widget_bar_time_maghrib,
+                R.id.widget_bar_time_isha
             )
 
             val accentColor = context.getColor(R.color.salati_widget_accent)
@@ -58,20 +53,15 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
             val onSurfaceColor = context.getColor(R.color.salati_widget_on_surface)
 
             for (appWidgetId in appWidgetIds) {
-                val views = RemoteViews(context.packageName, R.layout.salati_widget_layout)
-                views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
-
-                views.setTextViewText(R.id.widget_location, snapshot.city)
-                views.setTextViewText(R.id.widget_hijri_date, snapshot.hijriDate)
-                views.setTextViewText(R.id.widget_next_prayer_name, snapshot.nextPrayerName)
-                views.setTextViewText(R.id.widget_next_prayer_time, snapshot.nextPrayerTime)
+                val views = RemoteViews(context.packageName, R.layout.salati_widget_minimal_bar)
+                views.setOnClickPendingIntent(R.id.widget_bar_root, pendingIntent)
 
                 snapshot.times?.let { t ->
-                    views.setTextViewText(R.id.widget_time_fajr, t.fajr)
-                    views.setTextViewText(R.id.widget_time_dhuhr, t.dhuhr)
-                    views.setTextViewText(R.id.widget_time_asr, t.asr)
-                    views.setTextViewText(R.id.widget_time_maghrib, t.maghrib)
-                    views.setTextViewText(R.id.widget_time_isha, t.isha)
+                    views.setTextViewText(R.id.widget_bar_time_fajr, t.fajr)
+                    views.setTextViewText(R.id.widget_bar_time_dhuhr, t.dhuhr)
+                    views.setTextViewText(R.id.widget_bar_time_asr, t.asr)
+                    views.setTextViewText(R.id.widget_bar_time_maghrib, t.maghrib)
+                    views.setTextViewText(R.id.widget_bar_time_isha, t.isha)
                 }
 
                 for (i in cellIds.indices) {

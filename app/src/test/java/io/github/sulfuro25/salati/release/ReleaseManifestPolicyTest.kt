@@ -168,7 +168,10 @@ class ReleaseManifestPolicyTest {
                 "service:androidx.work.impl.background.systemjob.SystemJobService",
                 "receiver:androidx.work.impl.diagnostics.DiagnosticsReceiver",
                 "receiver:androidx.profileinstaller.ProfileInstallReceiver",
-                "receiver:io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider"
+                "receiver:io.github.sulfuro25.salati.widget.SalatiAppWidgetProvider",
+                "receiver:io.github.sulfuro25.salati.widget.SalatiMinimalBarWidgetProvider",
+                "receiver:io.github.sulfuro25.salati.widget.SalatiCompactWidgetProvider",
+                "receiver:io.github.sulfuro25.salati.widget.SalatiGlanceWidgetProvider"
             ),
             exported
         )

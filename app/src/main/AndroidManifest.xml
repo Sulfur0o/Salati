@@ -70,7 +70,7 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
-        <!-- Salati Home Screen App Widget -->
+        <!-- Salati Home Screen App Widget (4x2 Timetable) -->
         <receiver
             android:name=".widget.SalatiAppWidgetProvider"
             android:exported="true">
@@ -80,6 +80,42 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/salati_appwidget_info" />
+        </receiver>
+
+        <!-- Salati Minimalist 5-Prayer Bar Widget (4x1) -->
+        <receiver
+            android:name=".widget.SalatiMinimalBarWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/salati_appwidget_minimal_bar_info" />
+        </receiver>
+
+        <!-- Salati Compact Next Prayer Card Widget (2x2) -->
+        <receiver
+            android:name=".widget.SalatiCompactWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/salati_appwidget_compact_info" />
+        </receiver>
+
+        <!-- Salati Glance Pill Widget (2x1) -->
+        <receiver
+            android:name=".widget.SalatiGlanceWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/salati_appwidget_glance_info" />
         </receiver>
     </application>
 

@@ -265,10 +265,18 @@
     <string name="battery_opt_state_restricted">مقيّد</string>
     <string name="battery_opt_state_unrestricted_desc">موفّر البطارية لا يقيّد تنبيهات الصلاة</string>
     <string name="battery_opt_state_restricted_desc">مقيّد: قد يؤخر موفّر البطارية تنبيهات الصلاة</string>
+    <string name="widget_brand_name">صلاتي</string>
     <string name="widget_next_prayer">الصلاة التالية</string>
     <string name="widget_placeholder_time">--:--</string>
     <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">الموقع</string>
+    <string name="widget_timetable_name">صلاتي: الجدول الكامل</string>
+    <string name="widget_minimal_bar_name">صلاتي: شريط الصلوات</string>
+    <string name="widget_minimal_bar_description">شريط أفقي من سطر واحد يعرض الصلوات الخمس</string>
+    <string name="widget_compact_card_name">صلاتي: بطاقة الصلاة القادمة</string>
+    <string name="widget_compact_card_description">بطاقة مدمجة تعرض الصلاة القادمة والوقت والموقع</string>
+    <string name="widget_glance_pill_name">صلاتي: لمحة سريعة</string>
+    <string name="widget_glance_pill_description">شريط مصغر يعرض الصلاة القادمة ووقتها</string>
 
     <!-- Language Settings -->
     <string name="settings_language_title">اللغة</string>

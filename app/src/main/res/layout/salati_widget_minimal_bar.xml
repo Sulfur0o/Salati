@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_bar_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@drawable/salati_widget_background"
+    android:gravity="center_vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:baselineAligned="false"
+    android:weightSum="5">
+
+    <!-- Fajr -->
+    <LinearLayout
+        android:id="@+id/widget_bar_cell_fajr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+        <TextView
+            android:id="@+id/widget_bar_label_fajr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prayer_fajr"
+            android:textColor="@color/salati_widget_on_surface_variant"
+            android:textSize="10.5sp"
+            android:maxLines="1" />
+        <TextView
+            android:id="@+id/widget_bar_time_fajr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_placeholder_time"
+            android:textColor="@color/salati_widget_on_surface"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <!-- Dhuhr -->
+    <LinearLayout
+        android:id="@+id/widget_bar_cell_dhuhr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+        <TextView
+            android:id="@+id/widget_bar_label_dhuhr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prayer_dhuhr"
+            android:textColor="@color/salati_widget_on_surface_variant"
+            android:textSize="10.5sp"
+            android:maxLines="1" />
+        <TextView
+            android:id="@+id/widget_bar_time_dhuhr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_placeholder_time"
+            android:textColor="@color/salati_widget_on_surface"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <!-- Asr -->
+    <LinearLayout
+        android:id="@+id/widget_bar_cell_asr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+        <TextView
+            android:id="@+id/widget_bar_label_asr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prayer_asr"
+            android:textColor="@color/salati_widget_on_surface_variant"
+            android:textSize="10.5sp"
+            android:maxLines="1" />
+        <TextView
+            android:id="@+id/widget_bar_time_asr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_placeholder_time"
+            android:textColor="@color/salati_widget_on_surface"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <!-- Maghrib -->
+    <LinearLayout
+        android:id="@+id/widget_bar_cell_maghrib"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+        <TextView
+            android:id="@+id/widget_bar_label_maghrib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prayer_maghrib"
+            android:textColor="@color/salati_widget_on_surface_variant"
+            android:textSize="10.5sp"
+            android:maxLines="1" />
+        <TextView
+            android:id="@+id/widget_bar_time_maghrib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_placeholder_time"
+            android:textColor="@color/salati_widget_on_surface"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <!-- Isha -->
+    <LinearLayout
+        android:id="@+id/widget_bar_cell_isha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+        <TextView
+            android:id="@+id/widget_bar_label_isha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prayer_isha"
+            android:textColor="@color/salati_widget_on_surface_variant"
+            android:textSize="10.5sp"
+            android:maxLines="1" />
+        <TextView
+            android:id="@+id/widget_bar_time_isha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_placeholder_time"
+            android:textColor="@color/salati_widget_on_surface"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1" />
+    </LinearLayout>
+
+</LinearLayout>
