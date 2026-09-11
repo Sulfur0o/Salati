@@ -648,16 +648,8 @@ private fun EligibilityCard(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = SalatiShapeTokens.Card,
-        color = if (isEligible) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant
-        },
-        contentColor = if (isEligible) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        }
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier = Modifier.padding(SalatiSpacing.md),
@@ -672,13 +664,15 @@ private fun EligibilityCard(
                 Text(
                     text = zakatDueText,
                     style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Black
+                    fontWeight = FontWeight.Black,
+                    color = MaterialTheme.colorScheme.primary
                 )
             } else {
                 Text(
                     text = belowNisabText,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

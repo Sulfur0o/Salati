@@ -167,8 +167,8 @@ internal fun ZakatStandardStep(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = SalatiShapeTokens.Card,
-            color = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(
                 modifier = Modifier.padding(SalatiSpacing.md),
@@ -176,12 +176,14 @@ internal fun ZakatStandardStep(
             ) {
                 Text(
                     text = stringResource(R.string.zakat_standard_threshold),
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = nisabThresholdText,
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Black
+                    fontWeight = FontWeight.Black,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
