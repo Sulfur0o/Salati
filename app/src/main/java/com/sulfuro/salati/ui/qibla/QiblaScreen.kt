@@ -67,10 +67,10 @@ fun QiblaScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val qiblaBearing = remember(settings.latitude, settings.longitude) {
-        QiblaCalculator.bearingToKaaba(settings.latitude, settings.longitude)
+    val qiblaBearing = remember(settings.location.latitude, settings.location.longitude) {
+        QiblaCalculator.bearingToKaaba(settings.location.latitude, settings.location.longitude)
     }
-    val compass by rememberCompassReading(settings.latitude, settings.longitude)
+    val compass by rememberCompassReading(settings.location.latitude, settings.location.longitude)
     val heading = compass.trueHeadingDegrees
 
     val isAligned = heading != null && QiblaCalculator.isAligned(heading, qiblaBearing)
@@ -105,7 +105,7 @@ fun QiblaScreen(
         R.string.qibla_accessibility,
         bearingText,
         compassPoint,
-        settings.cityName
+        settings.location.cityName
     )
 
     Column(
@@ -136,7 +136,7 @@ fun QiblaScreen(
         }
 
         Text(
-            text = settings.cityName,
+            text = settings.location.cityName,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

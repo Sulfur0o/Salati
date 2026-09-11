@@ -46,7 +46,7 @@ internal fun SettingsSystemCard(
     SettingSection(title = stringResource(R.string.settings_card_system_title)) {
         PermissionStatusChips(
             permissionState = permissionState,
-            showDndChip = settings.silentModeAutomationEnabled,
+            showDndChip = settings.alarms.silentModeAutomationEnabled,
             onNotificationsClick = {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                     !permissionState.notificationPermission

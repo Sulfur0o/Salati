@@ -27,6 +27,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.YearMonth
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
+import com.sulfuro.salati.data.settings.AlarmPreferences
 
 @RunWith(RobolectricTestRunner::class)
 @org.robolectric.annotation.Config(sdk = [33], instrumentedPackages = ["androidx.loader.content"])
@@ -112,7 +114,7 @@ class WhiteDaysReminderTest {
     @Test
     fun `scheduling suppresses white days for dhu al-hijjah`() {
         val date12th = LocalDate.of(2024, 6, 18)
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = mapOf(date12th to createTimes(date12th))
         val hijriMetadata = mapOf(date12th to HijriDateParts(12, 12, 1445))
         val nowMillis = Instant.parse("2024-06-18T10:00:00Z").toEpochMilli()
@@ -124,7 +126,7 @@ class WhiteDaysReminderTest {
     @Test
     fun `scheduling successfully adds reminder for ordinary month`() {
         val date12th = LocalDate.of(2024, 8, 16)
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = mapOf(date12th to createTimes(date12th))
         val hijriMetadata = mapOf(date12th to HijriDateParts(12, 2, 1445))
         val nowMillis = Instant.parse("2024-08-16T10:00:00Z").toEpochMilli()
@@ -137,7 +139,7 @@ class WhiteDaysReminderTest {
     fun `scheduling honors hijri offset`() {
         val date11th = LocalDate.of(2024, 8, 15)
         val date12th = LocalDate.of(2024, 8, 16)
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 1)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 1), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = mapOf(date11th to createTimes(date11th))
         val hijriMetadata = mapOf(date12th to HijriDateParts(12, 2, 1445)) // Target date is date11th + 1 = date12th
         val nowMillis = Instant.parse("2024-08-15T10:00:00Z").toEpochMilli()
@@ -191,7 +193,7 @@ class WhiteDaysReminderTest {
     @Test
     fun `scheduling disabled schedules none`() {
         val date12th = LocalDate.of(2024, 8, 16)
-        val settings = CalculationSettings(whiteDaysReminder = false, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = false))
         val timesByDate = mapOf(date12th to createTimes(date12th))
         val hijriMetadata = mapOf(date12th to HijriDateParts(12, 2, 1445))
         val nowMillis = Instant.parse("2024-08-16T10:00:00Z").toEpochMilli()
@@ -203,7 +205,7 @@ class WhiteDaysReminderTest {
     @Test
     fun `scheduling day 11 schedules none`() {
         val date = LocalDate.of(2024, 8, 15)
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = mapOf(date to createTimes(date))
         val hijriMetadata = mapOf(date to HijriDateParts(11, 2, 1445))
         val nowMillis = Instant.parse("2024-08-15T10:00:00Z").toEpochMilli()
@@ -215,7 +217,7 @@ class WhiteDaysReminderTest {
     @Test
     fun `scheduling day 13 schedules none`() {
         val date = LocalDate.of(2024, 8, 17)
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = mapOf(date to createTimes(date))
         val hijriMetadata = mapOf(date to HijriDateParts(13, 2, 1445))
         val nowMillis = Instant.parse("2024-08-17T10:00:00Z").toEpochMilli()
@@ -227,7 +229,7 @@ class WhiteDaysReminderTest {
     @Test
     fun `scheduling past Maghrib does not schedule`() {
         val date = LocalDate.of(2024, 8, 16)
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = mapOf(date to createTimes(date))
         val hijriMetadata = mapOf(date to HijriDateParts(12, 2, 1445))
         val nowMillis = Instant.parse("2024-08-16T21:00:00Z").toEpochMilli() // After Maghrib
@@ -242,7 +244,7 @@ class WhiteDaysReminderTest {
             LocalDate.of(2024, 8, 16), // 12th
             LocalDate.of(2024, 8, 17)  // 13th
         )
-        val settings = CalculationSettings(whiteDaysReminder = true, hijriOffset = 0)
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(hijriOffset = 0), alarms = AlarmPreferences(whiteDaysReminder = true))
         val timesByDate = dates.associateWith { createTimes(it) }
         val hijriMetadata = mapOf(
             dates[0] to HijriDateParts(12, 2, 1445),

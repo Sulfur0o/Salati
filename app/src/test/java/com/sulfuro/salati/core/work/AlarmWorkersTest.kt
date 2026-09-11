@@ -21,6 +21,7 @@ import org.robolectric.annotation.Config
 import java.util.concurrent.TimeUnit
 import com.sulfuro.salati.core.alarms.AlarmRefreshResult
 import com.sulfuro.salati.core.alarms.AlarmSettingsRefreshTrigger
+import com.sulfuro.salati.data.settings.AlarmPreferences
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33], manifest = Config.NONE)
@@ -103,7 +104,7 @@ class AlarmWorkersTest {
         val trigger = enqueueAlarmSettingsRefreshIfNeeded(
             context = context,
             previous = CalculationSettings(),
-            updated = CalculationSettings(notificationsMuted = true)
+            updated = CalculationSettings(alarms = AlarmPreferences(notificationsMuted = true))
         )
 
         assertEquals(AlarmSettingsRefreshTrigger.IMMEDIATE, trigger)

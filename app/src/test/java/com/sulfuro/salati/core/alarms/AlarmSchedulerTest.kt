@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.Instant
+import com.sulfuro.salati.data.settings.AlarmPreferences
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [24], manifest = Config.NONE)
@@ -104,7 +105,7 @@ class AlarmSchedulerTest {
         val result = AlarmScheduler.buildPreparedAlarms(
             timesByDate = times,
             hijriMetadata = emptyMap(),
-            settings = CalculationSettings(prePrayerMinutes = 10),
+            settings = CalculationSettings(alarms = AlarmPreferences(prePrayerMinutes = 10)),
             nowMillis = at(today, 0, 0).toEpochMilli()
         )
 
@@ -120,12 +121,7 @@ class AlarmSchedulerTest {
         val result = AlarmScheduler.buildPreparedAlarms(
             timesByDate = mapOf(date to prayerTimes(date)),
             hijriMetadata = emptyMap(),
-            settings = CalculationSettings(
-                prePrayerMinutes = 10,
-                silentModeAutomationEnabled = true,
-                silentModeMinutesAfterAdhan = 5,
-                silentModeDurationMinutes = 30
-            ),
+            settings = CalculationSettings(alarms = AlarmPreferences(prePrayerMinutes = 10, silentModeAutomationEnabled = true, silentModeMinutesAfterAdhan = 5, silentModeDurationMinutes = 30)),
             nowMillis = at(date, 0, 0).toEpochMilli()
         )
 
@@ -148,7 +144,7 @@ class AlarmSchedulerTest {
         val result = AlarmScheduler.buildPreparedAlarms(
             timesByDate = times,
             hijriMetadata = emptyMap(),
-            settings = CalculationSettings(prePrayerMinutes = 10),
+            settings = CalculationSettings(alarms = AlarmPreferences(prePrayerMinutes = 10)),
             nowMillis = at(today, 13, 0).toEpochMilli()
         )
 
@@ -243,7 +239,7 @@ class AlarmSchedulerTest {
                 today to prayerTimes(today)
             ),
             hijriMetadata = emptyMap(),
-            settings = CalculationSettings(prePrayerMinutes = 0),
+            settings = CalculationSettings(alarms = AlarmPreferences(prePrayerMinutes = 0)),
             nowMillis = at(today, 0, 20).toEpochMilli()
         )
 

@@ -6,13 +6,14 @@ import org.junit.Test
 import java.time.Instant
 import java.time.ZoneId
 import java.util.TimeZone
+import com.sulfuro.salati.data.settings.LocationSettings
 
 class PrayerTimeMapperTest {
     @Test
     fun deviceDefaultTimezoneCannotAffectMappedTimestamps() {
         val original = TimeZone.getDefault()
         try {
-            val settings = CalculationSettings(timezoneId = "Europe/Brussels")
+            val settings = CalculationSettings(location = LocationSettings(timezoneId = "Europe/Brussels"))
 
             TimeZone.setDefault(TimeZone.getTimeZone("Pacific/Honolulu"))
             val honoluluDevice = PrayerRepository.parsePrayerTimes(sampleDayData(), settings)

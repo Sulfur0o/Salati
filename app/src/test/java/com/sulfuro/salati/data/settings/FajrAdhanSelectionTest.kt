@@ -17,10 +17,7 @@ import org.junit.Test
  */
 class FajrAdhanSelectionTest {
 
-    private val settings = CalculationSettings(
-        adhanSoundId = "makkah_mullah",
-        fajrAdhanSoundId = "fajr_makkah"
-    )
+    private val settings = CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "makkah_mullah", fajrAdhanSoundId = "fajr_makkah"))
 
     @Test
     fun fajrTakesTheFajrRecordingAndEveryOtherPrayerTakesTheGeneralOne() {
@@ -48,7 +45,7 @@ class FajrAdhanSelectionTest {
     /** An install that predates this setting has to behave exactly as it did before. */
     @Test
     fun withoutAFajrChoiceEveryPrayerKeepsTheGeneralAdhan() {
-        val unset = CalculationSettings(adhanSoundId = "madinah")
+        val unset = CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "madinah"))
 
         assertEquals("madinah", unset.adhanSoundIdFor("fajr"))
         assertEquals("madinah", unset.adhanSoundIdFor("isha"))
@@ -69,7 +66,7 @@ class FajrAdhanSelectionTest {
     @Test
     fun changingTheFajrAdhanIsAnAlarmRelevantChange() {
         val before = settings.alarmRelevantFingerprint()
-        val after = settings.copy(fajrAdhanSoundId = "fajr_madinah").alarmRelevantFingerprint()
+        val after = settings.copy(alarms = settings.alarms.copy(fajrAdhanSoundId = "fajr_madinah")).alarmRelevantFingerprint()
 
         assertNotEquals(before, after)
     }
@@ -78,7 +75,7 @@ class FajrAdhanSelectionTest {
     @Test
     fun renamingTheStoredLabelIsNotAnAlarmRelevantChange() {
         val before = settings.alarmRelevantFingerprint()
-        val after = settings.copy(fajrAdhanSoundName = "Something else").alarmRelevantFingerprint()
+        val after = settings.copy(alarms = settings.alarms.copy(fajrAdhanSoundName = "Something else")).alarmRelevantFingerprint()
 
         assertEquals(before, after)
     }

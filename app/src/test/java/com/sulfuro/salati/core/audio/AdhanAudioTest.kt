@@ -18,6 +18,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.security.MessageDigest
+import com.sulfuro.salati.data.settings.AlarmPreferences
 
 /**
  * Downloaded audio is several megabytes of opaque bytes from the network that later gets
@@ -234,17 +235,12 @@ class AdhanAudioTest {
         AdhanAudioStore.deleteRetired(context)
         assertFalse(AdhanAudioStore.isDownloaded(context, "makkah_mullah"))
 
-        val settings = com.sulfuro.salati.data.settings.CalculationSettings(
-            adhanSoundId = "makkah_mullah",
-            adhanSoundName = "Ali Mullah",
-            fajrAdhanSoundId = "fajr_makkah",
-            fajrAdhanSoundName = "Fajr Makkah"
-        )
+        val settings = com.sulfuro.salati.data.settings.CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "makkah_mullah", adhanSoundName = "Ali Mullah", fajrAdhanSoundId = "fajr_makkah", fajrAdhanSoundName = "Fajr Makkah"))
         val cleaned = settings.withoutRetiredAdhanChoices()
-        assertNull(cleaned.adhanSoundId)
-        assertNull(cleaned.adhanSoundName)
-        assertNull(cleaned.fajrAdhanSoundId)
-        assertNull(cleaned.fajrAdhanSoundName)
+        assertNull(cleaned.alarms.adhanSoundId)
+        assertNull(cleaned.alarms.adhanSoundName)
+        assertNull(cleaned.alarms.fajrAdhanSoundId)
+        assertNull(cleaned.alarms.fajrAdhanSoundName)
     }
 
     @Test

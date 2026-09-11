@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
     // choice on its first pass.
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(
-            wrapContextForLanguage(newBase, LoadedSettingsCache.latest?.appLanguageCode)
+            wrapContextForLanguage(newBase, LoadedSettingsCache.latest?.appearance?.appLanguageCode)
         )
     }
 
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             val loadedSettings = settings
-            val darkTheme = loadedSettings?.isDarkMode ?: isSystemInDarkTheme()
+            val darkTheme = loadedSettings?.appearance?.isDarkMode ?: isSystemInDarkTheme()
 
             DisposableEffect(darkTheme) {
                 val insetsController = WindowCompat.getInsetsController(window, window.decorView)
@@ -84,16 +84,16 @@ class MainActivity : ComponentActivity() {
                     ) {}
                 }
             } else {
-                LaunchedEffect(loadedSettings.adhanSoundId, loadedSettings.fajrAdhanSoundId) {
+                LaunchedEffect(loadedSettings.alarms.adhanSoundId, loadedSettings.alarms.fajrAdhanSoundId) {
                     com.sulfuro.salati.core.audio.AdhanAudioStore.deleteRetired(applicationContext)
                     val cleaned = loadedSettings.withoutRetiredAdhanChoices()
                     if (cleaned != loadedSettings) {
                         preferences.updateSettings { cleaned }
                     }
                 }
-                LaunchedEffect(loadedSettings.appLanguageCode) {
-                    if (loadedSettings.appLanguageCode != null) {
-                        applyAppLanguage(this@MainActivity, loadedSettings.appLanguageCode)
+                LaunchedEffect(loadedSettings.appearance.appLanguageCode) {
+                    if (loadedSettings.appearance.appLanguageCode != null) {
+                        applyAppLanguage(this@MainActivity, loadedSettings.appearance.appLanguageCode)
                     }
                 }
                 SalatiTheme(darkTheme = darkTheme) {

@@ -211,7 +211,7 @@ internal fun LocationStep(
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = detectedLocation!!.cityName,
+                            text = detectedLocation!!.location.cityName,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,

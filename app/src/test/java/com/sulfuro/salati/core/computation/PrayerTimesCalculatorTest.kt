@@ -5,20 +5,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import com.sulfuro.salati.data.settings.LocationSettings
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
 
 class PrayerTimesCalculatorTest {
 
     @Test
     fun testParsePrayerTimes() {
-        val settings = CalculationSettings(
-            latitude = 50.8503,
-            longitude = 4.3517,
-            cityName = "Brussels",
-            timezoneId = "Europe/Brussels",
-            calculationMethod = "MUSLIM_WORLD_LEAGUE",
-            madhab = "SHAFI",
-            highLatitudeRule = "MIDDLE_OF_THE_NIGHT"
-        )
+        val settings = CalculationSettings(location = LocationSettings(latitude = 50.8503, longitude = 4.3517, cityName = "Brussels", timezoneId = "Europe/Brussels"), prayer = PrayerMethodSettings(calculationMethod = "MUSLIM_WORLD_LEAGUE", madhab = "SHAFI", highLatitudeRule = "MIDDLE_OF_THE_NIGHT"))
 
         // Mock day data from Aladhan API response
         val timings = AladhanTimings(
@@ -67,7 +61,7 @@ class PrayerTimesCalculatorTest {
         assertTrue("Isha is before Midnight", parsedTimes.isha.isBefore(parsedTimes.middleOfTheNight))
         assertTrue("Midnight is before Last Third", parsedTimes.middleOfTheNight.isBefore(parsedTimes.lastThirdOfTheNight))
 
-        val zone = java.time.ZoneId.of(settings.timezoneId)
+        val zone = java.time.ZoneId.of(settings.location.timezoneId)
         val nextDay = parsedTimes.date.plusDays(1)
         assertEquals(nextDay, parsedTimes.isha.atZone(zone).toLocalDate())
         assertEquals(nextDay, parsedTimes.middleOfTheNight.atZone(zone).toLocalDate())

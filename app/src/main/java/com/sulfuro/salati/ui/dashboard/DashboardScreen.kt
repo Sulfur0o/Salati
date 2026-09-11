@@ -64,7 +64,7 @@ fun DashboardScreen(
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val zoneId = remember(settings.timezoneId) { settings.safeZoneId() }
+    val zoneId = remember(settings.location.timezoneId) { settings.safeZoneId() }
     val today = rememberCurrentDashboardDate(zoneId)
     val currentYearMonth = YearMonth.from(today)
 
@@ -74,7 +74,7 @@ fun DashboardScreen(
     var retryTrigger by remember { mutableIntStateOf(0) }
     var timesWereComputedLocally by remember { mutableStateOf(false) }
 
-    LaunchedEffect(currentYearMonth, today, settings.hijriOffset, settings.calculationMethod, settings.highLatitudeRule, settings.madhab, settings.latitude, settings.longitude, retryTrigger) {
+    LaunchedEffect(currentYearMonth, today, settings.prayer.hijriOffset, settings.prayer.calculationMethod, settings.prayer.highLatitudeRule, settings.prayer.madhab, settings.location.latitude, settings.location.longitude, retryTrigger) {
         isLoading = true
         val result = PrayerRepository.getMonthlyPrayers(
             context,
@@ -132,15 +132,15 @@ fun DashboardScreen(
 
     val displayLocale = LocalConfiguration.current.locales[0]
     val is24Hour = com.sulfuro.salati.data.settings.resolveUses24HourClock(
-        settings.timeFormat,
+        settings.appearance.timeFormat,
         android.text.format.DateFormat.is24HourFormat(context)
     )
     val timeFormat = remember(displayLocale, zoneId, is24Hour) { dashboardTimeFormatter(displayLocale, zoneId, is24Hour) }
     val dateFormat = remember(displayLocale) { dashboardDateFormatter(displayLocale) }
 
     val isAfterMaghrib = rememberIsAfterMaghrib(prayerTimes?.maghrib, zoneId)
-    val hijriDate = remember(today, settings.hijriOffset, isAfterMaghrib, hijriMetadata) {
-        HijriCalendarHelper.resolveHijriDate(today, settings.hijriOffset, isAfterMaghrib) { date ->
+    val hijriDate = remember(today, settings.prayer.hijriOffset, isAfterMaghrib, hijriMetadata) {
+        HijriCalendarHelper.resolveHijriDate(today, settings.prayer.hijriOffset, isAfterMaghrib) { date ->
             hijriMetadata[date]
         }
     }
@@ -197,7 +197,7 @@ fun DashboardScreen(
                     title = stringResource(R.string.daily_today),
                     gregorianDate = dateFormat.format(today),
                     hijriDate = hijriDate.format(),
-                    locationContext = stringResource(R.string.daily_location_context, settings.cityName),
+                    locationContext = stringResource(R.string.daily_location_context, settings.location.cityName),
                     onOpenQibla = onOpenQibla
                 )
 

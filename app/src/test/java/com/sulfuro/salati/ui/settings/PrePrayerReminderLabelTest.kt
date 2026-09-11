@@ -119,7 +119,7 @@ class PrePrayerReminderLabelTest {
         val scheduler = source("core/alarms/AlarmScheduler.kt")
         val alarmsCard = source("ui/settings/SettingsAlarmsCard.kt")
 
-        assertTrue(scheduler.contains("settings.prePrayerMinutes > 0"))
+        assertTrue(scheduler.contains("settings.alarms.prePrayerMinutes > 0"))
         assertTrue(alarmsCard.contains("prePrayerMinutes == 0"))
         assertTrue(alarmsCard.contains("settings_reminders_pre_prayer_off"))
     }

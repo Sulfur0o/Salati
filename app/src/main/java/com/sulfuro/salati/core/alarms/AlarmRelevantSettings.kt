@@ -30,23 +30,23 @@ enum class AlarmSettingsRefreshTrigger {
 
 fun CalculationSettings.alarmRelevantFingerprint(): AlarmRelevantSettingsFingerprint {
     return AlarmRelevantSettingsFingerprint(
-        calculationMethod = calculationMethod,
-        madhab = madhab,
-        highLatitudeRule = highLatitudeRule,
-        notificationsMuted = notificationsMuted,
-        prePrayerMinutes = prePrayerMinutes,
-        vibrateEnabled = vibrateEnabled,
-        soundEnabled = soundEnabled,
-        adhanSoundId = adhanSoundId,
-        fajrAdhanSoundId = fajrAdhanSoundId,
-        whiteDaysReminder = whiteDaysReminder,
-        silentModeAutomationEnabled = silentModeAutomationEnabled,
-        silentModeMinutesAfterAdhan = silentModeMinutesAfterAdhan,
-        silentModeDurationMinutes = silentModeDurationMinutes,
-        hijriOffset = hijriOffset,
-        latitude = latitude,
-        longitude = longitude,
-        timezoneId = timezoneId
+        calculationMethod = prayer.calculationMethod,
+        madhab = prayer.madhab,
+        highLatitudeRule = prayer.highLatitudeRule,
+        notificationsMuted = alarms.notificationsMuted,
+        prePrayerMinutes = alarms.prePrayerMinutes,
+        vibrateEnabled = alarms.vibrateEnabled,
+        soundEnabled = alarms.soundEnabled,
+        adhanSoundId = alarms.adhanSoundId,
+        fajrAdhanSoundId = alarms.fajrAdhanSoundId,
+        whiteDaysReminder = alarms.whiteDaysReminder,
+        silentModeAutomationEnabled = alarms.silentModeAutomationEnabled,
+        silentModeMinutesAfterAdhan = alarms.silentModeMinutesAfterAdhan,
+        silentModeDurationMinutes = alarms.silentModeDurationMinutes,
+        hijriOffset = prayer.hijriOffset,
+        latitude = location.latitude,
+        longitude = location.longitude,
+        timezoneId = location.timezoneId
     )
 }
 
@@ -57,9 +57,9 @@ fun getAlarmSettingsRefreshTrigger(
     if (previous.alarmRelevantFingerprint() == updated.alarmRelevantFingerprint()) {
         return AlarmSettingsRefreshTrigger.NONE
     }
-    return if (previous.notificationsMuted != updated.notificationsMuted ||
-        previous.whiteDaysReminder != updated.whiteDaysReminder ||
-        previous.silentModeAutomationEnabled != updated.silentModeAutomationEnabled
+    return if (previous.alarms.notificationsMuted != updated.alarms.notificationsMuted ||
+        previous.alarms.whiteDaysReminder != updated.alarms.whiteDaysReminder ||
+        previous.alarms.silentModeAutomationEnabled != updated.alarms.silentModeAutomationEnabled
     ) {
         AlarmSettingsRefreshTrigger.IMMEDIATE
     } else {

@@ -200,8 +200,8 @@ internal fun NotificationsStep(
                             )
                         }
                         Switch(
-                            checked = draftSettings.vibrateEnabled,
-                            onCheckedChange = { onSettingsChanged(draftSettings.copy(vibrateEnabled = it)) }
+                            checked = draftSettings.alarms.vibrateEnabled,
+                            onCheckedChange = { onSettingsChanged(draftSettings.copy(alarms = draftSettings.alarms.copy(vibrateEnabled = it))) }
                         )
                     }
 
@@ -225,8 +225,8 @@ internal fun NotificationsStep(
                             )
                         }
                         Switch(
-                            checked = draftSettings.whiteDaysReminder,
-                            onCheckedChange = { onSettingsChanged(draftSettings.copy(whiteDaysReminder = it)) }
+                            checked = draftSettings.alarms.whiteDaysReminder,
+                            onCheckedChange = { onSettingsChanged(draftSettings.copy(alarms = draftSettings.alarms.copy(whiteDaysReminder = it))) }
                         )
                     }
                 }

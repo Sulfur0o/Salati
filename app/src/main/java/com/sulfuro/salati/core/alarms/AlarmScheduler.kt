@@ -91,7 +91,7 @@ object AlarmScheduler {
     ): AlarmPreparationResult = withContext(Dispatchers.IO) {
         if (!settings.hasCompletedOnboarding ||
             !settings.hasConfiguredLocation() ||
-            settings.notificationsMuted
+            settings.alarms.notificationsMuted
         ) {
             return@withContext AlarmPreparationResult.Disabled
         }
@@ -180,13 +180,13 @@ object AlarmScheduler {
                 prayerKey = prayerKey,
                 isPreReminder = false,
                 triggerAtMillis = timeMillis,
-                silentModeAutomationEnabled = settings.silentModeAutomationEnabled,
-                silentModeMinutesAfterAdhan = settings.silentModeMinutesAfterAdhan,
-                silentModeDurationMinutes = settings.silentModeDurationMinutes
+                silentModeAutomationEnabled = settings.alarms.silentModeAutomationEnabled,
+                silentModeMinutesAfterAdhan = settings.alarms.silentModeMinutesAfterAdhan,
+                silentModeDurationMinutes = settings.alarms.silentModeDurationMinutes
             )
 
-            if (settings.prePrayerMinutes > 0) {
-                val preTimeMillis = timeMillis - settings.prePrayerMinutes * 60_000L
+            if (settings.alarms.prePrayerMinutes > 0) {
+                val preTimeMillis = timeMillis - settings.alarms.prePrayerMinutes * 60_000L
                 if (preTimeMillis > nowMillis) {
                     preparedAlarms += PreparedAlarm(
                         requestCode = createAlarmRequestCode(prayerDate, prayerId, isPreReminder = true),
@@ -207,14 +207,14 @@ object AlarmScheduler {
             addAlarm("Isha", times.isha, date)
         }
 
-        if (settings.whiteDaysReminder) {
+        if (settings.alarms.whiteDaysReminder) {
             val apiLookup: (LocalDate) -> com.sulfuro.salati.core.computation.HijriDateParts? = { lookupDate ->
                 hijriMetadata[lookupDate]
             }
 
             for ((date, times) in timesByDate) {
                 val hijri = com.sulfuro.salati.core.computation.HijriCalendarHelper.resolveHijriDate(
-                    date, settings.hijriOffset, isAfterMaghrib = false, apiLookup
+                    date, settings.prayer.hijriOffset, isAfterMaghrib = false, apiLookup
                 )
                 if (hijri.day == 12 && hijri.monthNumber != 12 && hijri.monthNumber != 9) {
                     val timeMillis = times.maghrib.toEpochMilli()

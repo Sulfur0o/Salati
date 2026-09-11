@@ -23,6 +23,9 @@ import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
+import com.sulfuro.salati.data.settings.AlarmPreferences
+import com.sulfuro.salati.data.settings.ZakatPreferences
 
 class ReleaseSerializationCompatibilityTest {
     private val json = Json { encodeDefaults = true }
@@ -36,22 +39,7 @@ class ReleaseSerializationCompatibilityTest {
 
     @Test
     fun calculationSettingsRoundTripKeepsPersistedFieldNamesAndValues() {
-        val settings = CalculationSettings(
-            calculationMethod = "EGYPT",
-            madhab = "HANAFI",
-            highLatitudeRule = "TWILIGHT_ANGLE",
-            hijriOffset = -1,
-            prePrayerMinutes = 17,
-            vibrateEnabled = false,
-            soundEnabled = true,
-            notificationsMuted = true,
-            silentModeAutomationEnabled = true,
-            silentModeMinutesAfterAdhan = 10,
-            silentModeDurationMinutes = 30,
-            zakatGoldPrice = 72.5,
-            zakatCurrencyCode = "USD",
-            zakatHawlStartEpochDay = 20_000L
-        )
+        val settings = CalculationSettings(prayer = PrayerMethodSettings(calculationMethod = "EGYPT", madhab = "HANAFI", highLatitudeRule = "TWILIGHT_ANGLE", hijriOffset = -1), alarms = AlarmPreferences(prePrayerMinutes = 17, vibrateEnabled = false, soundEnabled = true, notificationsMuted = true, silentModeAutomationEnabled = true, silentModeMinutesAfterAdhan = 10, silentModeDurationMinutes = 30), zakat = ZakatPreferences(goldPrice = 72.5, currencyCode = "USD", hawlStartEpochDay = 20_000L))
 
         val encoded = json.encodeToString(CalculationSettings.serializer(), settings)
         assertEquals(settings, json.decodeFromString(CalculationSettings.serializer(), encoded))
@@ -87,7 +75,7 @@ class ReleaseSerializationCompatibilityTest {
         )
 
         assertEquals(true, decoded.hasCompletedOnboarding)
-        assertEquals("USD", decoded.zakatCurrencyCode)
+        assertEquals("USD", decoded.zakat.currencyCode)
     }
 
     @Test
@@ -96,10 +84,10 @@ class ReleaseSerializationCompatibilityTest {
 
         val decoded = json.decodeFromString(CalculationSettings.serializer(), legacyJson)
 
-        assertEquals(false, decoded.silentModeAutomationEnabled)
-        assertEquals(0, decoded.silentModeMinutesAfterAdhan)
-        assertEquals(20, decoded.silentModeDurationMinutes)
-        assertEquals(null, decoded.zakatHawlStartEpochDay)
+        assertEquals(false, decoded.alarms.silentModeAutomationEnabled)
+        assertEquals(0, decoded.alarms.silentModeMinutesAfterAdhan)
+        assertEquals(20, decoded.alarms.silentModeDurationMinutes)
+        assertEquals(null, decoded.zakat.hawlStartEpochDay)
     }
 
     @Test

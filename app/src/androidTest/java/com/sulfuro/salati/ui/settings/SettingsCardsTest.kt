@@ -15,6 +15,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import com.sulfuro.salati.data.settings.AlarmPreferences
+import com.sulfuro.salati.data.settings.AppearanceSettings
+import com.sulfuro.salati.data.settings.LocationSettings
 
 /**
  * The settings cards, which were split out of one 1093-line screen and had no coverage of
@@ -54,10 +57,12 @@ class SettingsCardsTest {
     fun mutingRemindersChangesOnlyThatSetting() {
         val saves = RecordedSaves()
         val start = CalculationSettings(
-            notificationsMuted = false,
-            vibrateEnabled = true,
-            soundEnabled = true,
-            cityName = "Dubai, United Arab Emirates"
+            location = LocationSettings(cityName = "Dubai, United Arab Emirates"),
+            alarms = AlarmPreferences(
+                notificationsMuted = false,
+                vibrateEnabled = true,
+                soundEnabled = true
+            )
         )
 
         composeTestRule.setContent {
@@ -71,15 +76,15 @@ class SettingsCardsTest {
         composeTestRule.onNodeWithText(string(R.string.settings_reminders_mute)).performClick()
 
         val updated = saves.applyTo(start)
-        assertTrue("the mute toggle must mute", updated.notificationsMuted)
-        assertEquals(start.copy(notificationsMuted = true), updated)
+        assertTrue("the mute toggle must mute", updated.alarms.notificationsMuted)
+        assertEquals(start.copy(alarms = start.alarms.copy(notificationsMuted = true)), updated)
     }
 
     /** Vibration and sound are separate switches and must stay separate. */
     @Test
     fun turningOffVibrationLeavesTheNotificationToneAlone() {
         val saves = RecordedSaves()
-        val start = CalculationSettings(vibrateEnabled = true, soundEnabled = true)
+        val start = CalculationSettings(alarms = AlarmPreferences(vibrateEnabled = true, soundEnabled = true))
 
         composeTestRule.setContent {
             SettingsAlarmsCard(
@@ -92,8 +97,8 @@ class SettingsCardsTest {
         composeTestRule.onNodeWithText(string(R.string.settings_reminders_vibration)).performClick()
 
         val updated = saves.applyTo(start)
-        assertFalse(updated.vibrateEnabled)
-        assertTrue("sound is a different switch", updated.soundEnabled)
+        assertFalse(updated.alarms.vibrateEnabled)
+        assertTrue("sound is a different switch", updated.alarms.soundEnabled)
     }
 
     /**
@@ -103,17 +108,17 @@ class SettingsCardsTest {
     @Test
     fun theClockFormatSegmentsPickTheirOwnValues() {
         val saves = RecordedSaves()
-        val start = CalculationSettings(timeFormat = TimeFormatPreference.SYSTEM)
+        val start = CalculationSettings(appearance = AppearanceSettings(timeFormat = TimeFormatPreference.SYSTEM))
 
         composeTestRule.setContent {
             SettingsAppearanceCard(settings = start, saveSettings = saves.save)
         }
 
         composeTestRule.onNodeWithText(string(R.string.settings_time_format_24h)).performClick()
-        assertEquals(TimeFormatPreference.TWENTY_FOUR_HOUR, saves.applyTo(start).timeFormat)
+        assertEquals(TimeFormatPreference.TWENTY_FOUR_HOUR, saves.applyTo(start).appearance.timeFormat)
 
         composeTestRule.onNodeWithText(string(R.string.settings_time_format_12h)).performClick()
-        assertEquals(TimeFormatPreference.TWELVE_HOUR, saves.applyTo(start).timeFormat)
+        assertEquals(TimeFormatPreference.TWELVE_HOUR, saves.applyTo(start).appearance.timeFormat)
     }
 
     /**
@@ -123,16 +128,16 @@ class SettingsCardsTest {
     @Test
     fun theThemeSegmentsDistinguishSystemFromLight() {
         val saves = RecordedSaves()
-        val start = CalculationSettings(isDarkMode = true)
+        val start = CalculationSettings(appearance = AppearanceSettings(isDarkMode = true))
 
         composeTestRule.setContent {
             SettingsAppearanceCard(settings = start, saveSettings = saves.save)
         }
 
         composeTestRule.onNodeWithText(string(R.string.settings_theme_option_light)).performClick()
-        assertEquals(false, saves.applyTo(start).isDarkMode)
+        assertEquals(false, saves.applyTo(start).appearance.isDarkMode)
 
         composeTestRule.onNodeWithText(string(R.string.settings_theme_option_system)).performClick()
-        assertEquals(null, saves.applyTo(start).isDarkMode)
+        assertEquals(null, saves.applyTo(start).appearance.isDarkMode)
     }
 }

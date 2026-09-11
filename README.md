@@ -30,7 +30,7 @@
 - **Exact Alarms (`SCHEDULE_EXACT_ALARM`)**: Used solely to ensure prayer reminders trigger at the exact calculated prayer time. Falls back to inexact alarms if denied.
 - **Notification policy (`ACCESS_NOTIFICATION_POLICY`)**: Optional prayer silent mode; previous ringer mode is always restored.
 
-Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.sulfuro.xyz/privacy.html). In-repo copy: [docs/privacy.md](docs/privacy.md).
+Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.sulfuro.xyz/privacy.html) (`privacy.html` in this repo).
 
 ---
 

@@ -29,30 +29,20 @@ class ZakatSettingsPersistenceTest {
 
     @Test
     fun walkthroughAnswersSurviveASerializationRoundTrip() {
-        val settings = CalculationSettings(
-            zakatStandard = 1,
-            zakatCashOnHand = 1200.50,
-            zakatBankBalance = 8400.0,
-            zakatInvestments = 250.0,
-            zakatReceivables = 75.25,
-            zakatLiabilities = 900.0,
-            zakatGoldItems = listOf(
+        val settings = CalculationSettings(zakat = ZakatPreferences(standard = 1, cashOnHand = 1200.50, bankBalance = 8400.0, investments = 250.0, receivables = 75.25, liabilities = 900.0, goldItems = listOf(
                 ZakatGoldItem(id = "g1", label = "Necklace", karat = 18, weightGrams = 42.5),
                 ZakatGoldItem(id = "g2", label = "Coins", karat = 24, weightGrams = 10.0)
-            ),
-            zakatSilverItems = listOf(
+            ), silverItems = listOf(
                 ZakatSilverItem(id = "s1", label = "Cutlery", millesimal = 925, weightGrams = 300.0)
-            ),
-            timeFormat = TimeFormatPreference.TWELVE_HOUR
-        )
+            )), appearance = AppearanceSettings(timeFormat = TimeFormatPreference.TWELVE_HOUR))
 
         val encoded = json.encodeToString(CalculationSettings.serializer(), settings)
         val decoded = json.decodeFromString(CalculationSettings.serializer(), encoded)
 
         assertEquals(settings, decoded)
-        assertEquals(2, decoded.zakatGoldItems.size)
-        assertEquals(18, decoded.zakatGoldItems.first().karat)
-        assertEquals("Cutlery", decoded.zakatSilverItems.single().label)
+        assertEquals(2, decoded.zakat.goldItems.size)
+        assertEquals(18, decoded.zakat.goldItems.first().karat)
+        assertEquals("Cutlery", decoded.zakat.silverItems.single().label)
 
         listOf(
             "zakatStandard",
@@ -73,13 +63,13 @@ class ZakatSettingsPersistenceTest {
 
         val decoded = json.decodeFromString(CalculationSettings.serializer(), legacyJson)
 
-        assertEquals(0, decoded.zakatStandard)
-        assertEquals(0.0, decoded.zakatCashOnHand, 0.0001)
-        assertEquals(0.0, decoded.zakatLiabilities, 0.0001)
-        assertTrue(decoded.zakatGoldItems.isEmpty())
-        assertTrue(decoded.zakatSilverItems.isEmpty())
-        assertEquals(TimeFormatPreference.SYSTEM, decoded.timeFormat)
-        assertEquals("USD", decoded.zakatCurrencyCode)
+        assertEquals(0, decoded.zakat.standard)
+        assertEquals(0.0, decoded.zakat.cashOnHand, 0.0001)
+        assertEquals(0.0, decoded.zakat.liabilities, 0.0001)
+        assertTrue(decoded.zakat.goldItems.isEmpty())
+        assertTrue(decoded.zakat.silverItems.isEmpty())
+        assertEquals(TimeFormatPreference.SYSTEM, decoded.appearance.timeFormat)
+        assertEquals("USD", decoded.zakat.currencyCode)
     }
 
     @Test
@@ -87,42 +77,36 @@ class ZakatSettingsPersistenceTest {
         val preferences = SalatiPreferences(context)
 
         preferences.updateSettings {
-            it.copy(
-                zakatGoldItems = listOf(
+            it.copy(zakat = it.zakat.copy(goldItems = listOf(
                     ZakatGoldItem(id = "ring", label = "Ring", karat = 21, weightGrams = 6.0)
-                ),
-                zakatCashOnHand = 500.0,
-                zakatStandard = 1
-            )
+                ), cashOnHand = 500.0, standard = 1))
         }
 
         val reloaded = SalatiPreferences(context).settings.first()
 
-        assertEquals(1, reloaded.zakatStandard)
-        assertEquals(500.0, reloaded.zakatCashOnHand, 0.0001)
-        assertEquals("Ring", reloaded.zakatGoldItems.single().label)
-        assertEquals(21, reloaded.zakatGoldItems.single().karat)
-        assertEquals(6.0, reloaded.zakatGoldItems.single().weightGrams, 0.0001)
+        assertEquals(1, reloaded.zakat.standard)
+        assertEquals(500.0, reloaded.zakat.cashOnHand, 0.0001)
+        assertEquals("Ring", reloaded.zakat.goldItems.single().label)
+        assertEquals(21, reloaded.zakat.goldItems.single().karat)
+        assertEquals(6.0, reloaded.zakat.goldItems.single().weightGrams, 0.0001)
     }
 
     @Test
     fun removingAnItemIsPersistedRatherThanLeftBehind() = runBlocking {
         val preferences = SalatiPreferences(context)
         preferences.updateSettings {
-            it.copy(
-                zakatGoldItems = listOf(
+            it.copy(zakat = it.zakat.copy(goldItems = listOf(
                     ZakatGoldItem(id = "a", karat = 24, weightGrams = 1.0),
                     ZakatGoldItem(id = "b", karat = 18, weightGrams = 2.0)
-                )
-            )
+                )))
         }
 
         preferences.updateSettings { current ->
-            current.copy(zakatGoldItems = current.zakatGoldItems.filterNot { it.id == "a" })
+            current.copy(zakat = current.zakat.copy(goldItems = current.zakat.goldItems.filterNot { it.id == "a" }))
         }
 
         val reloaded = preferences.settings.first()
-        assertEquals(listOf("b"), reloaded.zakatGoldItems.map { it.id })
+        assertEquals(listOf("b"), reloaded.zakat.goldItems.map { it.id })
     }
 
     @Test
@@ -132,20 +116,22 @@ class ZakatSettingsPersistenceTest {
         // What CitySearchSheet hands the settings screen after a suggestion is picked.
         preferences.updateSettings {
             it.copy(
-                cityName = "Casablanca, Morocco",
-                countryName = "Morocco",
-                latitude = 33.5731,
-                longitude = -7.5898,
-                timezoneId = "Africa/Casablanca"
+                location = it.location.copy(
+                    cityName = "Casablanca, Morocco",
+                    countryName = "Morocco",
+                    latitude = 33.5731,
+                    longitude = -7.5898,
+                    timezoneId = "Africa/Casablanca"
+                )
             )
         }
 
         val reloaded = preferences.settings.first()
-        assertEquals("Casablanca, Morocco", reloaded.cityName)
-        assertEquals("Morocco", reloaded.countryName)
-        assertEquals("Africa/Casablanca", reloaded.timezoneId)
-        assertEquals(33.5731, reloaded.latitude, 0.0001)
-        assertEquals(-7.5898, reloaded.longitude, 0.0001)
+        assertEquals("Casablanca, Morocco", reloaded.location.cityName)
+        assertEquals("Morocco", reloaded.location.countryName)
+        assertEquals("Africa/Casablanca", reloaded.location.timezoneId)
+        assertEquals(33.5731, reloaded.location.latitude, 0.0001)
+        assertEquals(-7.5898, reloaded.location.longitude, 0.0001)
     }
 
     @Test

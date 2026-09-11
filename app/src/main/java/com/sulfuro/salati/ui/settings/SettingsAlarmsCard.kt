@@ -50,16 +50,16 @@ internal fun SettingsAlarmsCard(
         SettingToggleRow(
             title = stringResource(R.string.settings_reminders_mute),
             supportingText = stringResource(R.string.settings_reminders_mute_description),
-            checked = settings.notificationsMuted,
-            onCheckedChange = { isChecked -> saveSettings { it.copy(notificationsMuted = isChecked) } }
+            checked = settings.alarms.notificationsMuted,
+            onCheckedChange = { isChecked -> saveSettings { it.copy(alarms = it.alarms.copy(notificationsMuted = isChecked)) } }
         )
         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
         SettingToggleRow(
             title = stringResource(R.string.settings_reminders_sound),
             supportingText = stringResource(R.string.settings_reminders_sound_description),
-            checked = settings.soundEnabled,
-            onCheckedChange = { isChecked -> saveSettings { it.copy(soundEnabled = isChecked) } }
+            checked = settings.alarms.soundEnabled,
+            onCheckedChange = { isChecked -> saveSettings { it.copy(alarms = it.alarms.copy(soundEnabled = isChecked)) } }
         )
         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -67,13 +67,13 @@ internal fun SettingsAlarmsCard(
         // on a new device the recording can be named yet absent. The alarm already
         // falls back to the notification tone in that case; this stops the row from
         // claiming otherwise.
-        val chosenAdhanId = settings.adhanSoundId
+        val chosenAdhanId = settings.alarms.adhanSoundId
         val chosenAdhanIsOnDisk by produceState(initialValue = false, chosenAdhanId) {
             value = !chosenAdhanId.isNullOrBlank() &&
                 withContext(Dispatchers.IO) { AdhanAudioStore.isDownloaded(appContext, chosenAdhanId) }
         }
         val selectedAdhanLabel = if (chosenAdhanIsOnDisk) {
-            settings.adhanSoundName ?: chosenAdhanId.orEmpty()
+            settings.alarms.adhanSoundName ?: chosenAdhanId.orEmpty()
         } else {
             stringResource(R.string.settings_adhan_device_tone)
         }
@@ -87,7 +87,7 @@ internal fun SettingsAlarmsCard(
 
         // Fajr is offered separately because its call is different, not because someone
         // might prefer variety: the dawn adhan adds "prayer is better than sleep".
-        val chosenFajrAdhanId = settings.fajrAdhanSoundId
+        val chosenFajrAdhanId = settings.alarms.fajrAdhanSoundId
         val chosenFajrAdhanIsOnDisk by produceState(initialValue = false, chosenFajrAdhanId) {
             value = !chosenFajrAdhanId.isNullOrBlank() &&
                 withContext(Dispatchers.IO) { AdhanAudioStore.isDownloaded(appContext, chosenFajrAdhanId) }
@@ -95,7 +95,7 @@ internal fun SettingsAlarmsCard(
         ValueSelectionRow(
             title = stringResource(R.string.settings_adhan_fajr_row),
             value = if (chosenFajrAdhanIsOnDisk) {
-                settings.fajrAdhanSoundName ?: chosenFajrAdhanId.orEmpty()
+                settings.alarms.fajrAdhanSoundName ?: chosenFajrAdhanId.orEmpty()
             } else {
                 stringResource(R.string.settings_adhan_fajr_same)
             },
@@ -107,18 +107,18 @@ internal fun SettingsAlarmsCard(
         SettingToggleRow(
             title = stringResource(R.string.settings_reminders_vibration),
             supportingText = stringResource(R.string.settings_reminders_vibration_description),
-            checked = settings.vibrateEnabled,
-            onCheckedChange = { isChecked -> saveSettings { it.copy(vibrateEnabled = isChecked) } }
+            checked = settings.alarms.vibrateEnabled,
+            onCheckedChange = { isChecked -> saveSettings { it.copy(alarms = it.alarms.copy(vibrateEnabled = isChecked)) } }
         )
         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
         SettingToggleRow(
             title = stringResource(R.string.settings_silent_mode_title),
             supportingText = stringResource(R.string.settings_silent_mode_description),
-            checked = settings.silentModeAutomationEnabled,
+            checked = settings.alarms.silentModeAutomationEnabled,
             onCheckedChange = { isChecked ->
                 PrayerSilentModeScheduler.setAutomationEnabled(appContext, isChecked)
-                saveSettings { it.copy(silentModeAutomationEnabled = isChecked) }
+                saveSettings { it.copy(alarms = it.alarms.copy(silentModeAutomationEnabled = isChecked)) }
                 if (isChecked && !permissionState.notificationPolicyAccess) {
                     runCatching {
                         context.startActivity(
@@ -135,7 +135,7 @@ internal fun SettingsAlarmsCard(
             }
         )
 
-        if (settings.silentModeAutomationEnabled) {
+        if (settings.alarms.silentModeAutomationEnabled) {
             val offsetOptions = listOf(0, 5, 10, 15)
             val offsetLabels = listOf(
                 stringResource(R.string.settings_silent_mode_offset_now),
@@ -143,7 +143,7 @@ internal fun SettingsAlarmsCard(
                 stringResource(R.string.settings_silent_mode_offset_10),
                 stringResource(R.string.settings_silent_mode_offset_15)
             )
-            val selectedOffset = offsetOptions.indexOf(settings.silentModeMinutesAfterAdhan)
+            val selectedOffset = offsetOptions.indexOf(settings.alarms.silentModeMinutesAfterAdhan)
                 .coerceAtLeast(0)
             Column(
                 modifier = Modifier
@@ -159,7 +159,7 @@ internal fun SettingsAlarmsCard(
                     tabs = offsetLabels,
                     selectedTabIndex = selectedOffset,
                     onTabSelected = { index ->
-                        saveSettings { it.copy(silentModeMinutesAfterAdhan = offsetOptions[index]) }
+                        saveSettings { it.copy(alarms = it.alarms.copy(silentModeMinutesAfterAdhan = offsetOptions[index])) }
                     }
                 )
 
@@ -171,7 +171,7 @@ internal fun SettingsAlarmsCard(
                     stringResource(R.string.settings_silent_mode_duration_20),
                     stringResource(R.string.settings_silent_mode_duration_30)
                 )
-                val selectedDuration = durationOptions.indexOf(settings.silentModeDurationMinutes)
+                val selectedDuration = durationOptions.indexOf(settings.alarms.silentModeDurationMinutes)
                     .coerceAtLeast(0)
                 Text(
                     text = stringResource(R.string.settings_silent_mode_duration_title),
@@ -181,7 +181,7 @@ internal fun SettingsAlarmsCard(
                     tabs = durationLabels,
                     selectedTabIndex = selectedDuration,
                     onTabSelected = { index ->
-                        saveSettings { it.copy(silentModeDurationMinutes = durationOptions[index]) }
+                        saveSettings { it.copy(alarms = it.alarms.copy(silentModeDurationMinutes = durationOptions[index])) }
                     }
                 )
             }
@@ -195,8 +195,8 @@ internal fun SettingsAlarmsCard(
             SettingToggleRow(
                 title = stringResource(R.string.settings_reminders_white_days_title),
                 supportingText = stringResource(R.string.settings_reminders_white_days_description),
-                checked = settings.whiteDaysReminder,
-                onCheckedChange = { isChecked -> saveSettings { it.copy(whiteDaysReminder = isChecked) } }
+                checked = settings.alarms.whiteDaysReminder,
+                onCheckedChange = { isChecked -> saveSettings { it.copy(alarms = it.alarms.copy(whiteDaysReminder = isChecked)) } }
             )
             HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -205,8 +205,8 @@ internal fun SettingsAlarmsCard(
                     .fillMaxWidth()
                     .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
             ) {
-                var prePrayerDraft by remember(settings.prePrayerMinutes) {
-                    mutableFloatStateOf(settings.prePrayerMinutes.toFloat())
+                var prePrayerDraft by remember(settings.alarms.prePrayerMinutes) {
+                    mutableFloatStateOf(settings.alarms.prePrayerMinutes.toFloat())
                 }
                 val prePrayerMinutes = prePrayerDraft.toInt()
                 Row(
@@ -248,7 +248,7 @@ internal fun SettingsAlarmsCard(
                     value = prePrayerDraft,
                     onValueChange = { prePrayerDraft = it },
                     onValueChangeFinished = {
-                        saveSettings { it.copy(prePrayerMinutes = prePrayerDraft.toInt()) }
+                        saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerDraft.toInt())) }
                     },
                     valueRange = 0f..30f,
                     steps = 5,
@@ -260,9 +260,9 @@ internal fun SettingsAlarmsCard(
 
     if (showAdhanSheet) {
         AdhanSoundSheet(
-            selectedId = settings.adhanSoundId,
+            selectedId = settings.alarms.adhanSoundId,
             onSelect = { option ->
-                saveSettings { it.copy(adhanSoundId = option?.id, adhanSoundName = option?.name) }
+                saveSettings { it.copy(alarms = it.alarms.copy(adhanSoundId = option?.id, adhanSoundName = option?.name)) }
             },
             onDismiss = { showAdhanSheet = false }
         )
@@ -270,10 +270,10 @@ internal fun SettingsAlarmsCard(
 
     if (showFajrAdhanSheet) {
         AdhanSoundSheet(
-            selectedId = settings.fajrAdhanSoundId,
+            selectedId = settings.alarms.fajrAdhanSoundId,
             onSelect = { option ->
                 saveSettings {
-                    it.copy(fajrAdhanSoundId = option?.id, fajrAdhanSoundName = option?.name)
+                    it.copy(alarms = it.alarms.copy(fajrAdhanSoundId = option?.id, fajrAdhanSoundName = option?.name))
                 }
             },
             onDismiss = { showFajrAdhanSheet = false },

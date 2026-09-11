@@ -7,6 +7,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Test
 import java.time.Instant
 import java.time.LocalDate
+import com.sulfuro.salati.data.settings.AlarmPreferences
 
 class AlarmDateTimeCompatibilityTest {
     @Test
@@ -28,7 +29,7 @@ class AlarmDateTimeCompatibilityTest {
         val result = AlarmScheduler.buildPreparedAlarms(
             timesByDate = mapOf(date to times),
             hijriMetadata = emptyMap(),
-            settings = CalculationSettings(prePrayerMinutes = 10),
+            settings = CalculationSettings(alarms = AlarmPreferences(prePrayerMinutes = 10)),
             nowMillis = 1_784_000_000_000L
         )
         val main = result.alarms.single { it.prayerKey == "fajr" && !it.isPreReminder }

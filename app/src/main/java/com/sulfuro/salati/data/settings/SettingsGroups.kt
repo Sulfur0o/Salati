@@ -3,6 +3,7 @@ package com.sulfuro.salati.data.settings
 import androidx.compose.runtime.Immutable
 import com.sulfuro.salati.core.zakat.ZakatGoldItem
 import com.sulfuro.salati.core.zakat.ZakatSilverItem
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Immutable
@@ -44,22 +45,22 @@ data class AlarmPreferences(
 @Immutable
 @Serializable
 data class ZakatPreferences(
-    val zakatGoldPrice: Double = 70.0,
-    val zakatNisabGram: Double = 85.0,
-    val zakatSilverPrice: Double = 0.8,
-    val zakatNisabSilverGram: Double = 595.0,
-    val zakatCurrencyCode: String = "EUR",
-    val zakatPricesUpdatedAt: Long = 0L,
-    val zakatPricesCurrencyCode: String = "",
-    val zakatHawlStartEpochDay: Long? = null,
-    val zakatStandard: Int = 0,
-    val zakatCashOnHand: Double = 0.0,
-    val zakatBankBalance: Double = 0.0,
-    val zakatInvestments: Double = 0.0,
-    val zakatReceivables: Double = 0.0,
-    val zakatLiabilities: Double = 0.0,
-    val zakatGoldItems: List<ZakatGoldItem> = emptyList(),
-    val zakatSilverItems: List<ZakatSilverItem> = emptyList()
+    @SerialName("zakatGoldPrice") val goldPrice: Double = 70.0,
+    @SerialName("zakatNisabGram") val nisabGram: Double = 85.0,
+    @SerialName("zakatSilverPrice") val silverPrice: Double = 0.8,
+    @SerialName("zakatNisabSilverGram") val nisabSilverGram: Double = 595.0,
+    @SerialName("zakatCurrencyCode") val currencyCode: String = "EUR",
+    @SerialName("zakatPricesUpdatedAt") val pricesUpdatedAt: Long = 0L,
+    @SerialName("zakatPricesCurrencyCode") val pricesCurrencyCode: String = "",
+    @SerialName("zakatHawlStartEpochDay") val hawlStartEpochDay: Long? = null,
+    @SerialName("zakatStandard") val standard: Int = 0,
+    @SerialName("zakatCashOnHand") val cashOnHand: Double = 0.0,
+    @SerialName("zakatBankBalance") val bankBalance: Double = 0.0,
+    @SerialName("zakatInvestments") val investments: Double = 0.0,
+    @SerialName("zakatReceivables") val receivables: Double = 0.0,
+    @SerialName("zakatLiabilities") val liabilities: Double = 0.0,
+    @SerialName("zakatGoldItems") val goldItems: List<ZakatGoldItem> = emptyList(),
+    @SerialName("zakatSilverItems") val silverItems: List<ZakatSilverItem> = emptyList()
 )
 
 @Immutable

@@ -20,6 +20,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 import java.util.concurrent.atomic.AtomicInteger
+import com.sulfuro.salati.data.settings.AlarmPreferences
 
 private class FakeAlarmRegistry(
     var readResult: AlarmRegistryReadResult,
@@ -369,10 +370,7 @@ class ReminderCoordinatorTest {
             preparationSource = FixedPreparationSource(AlarmPreparationResult.Success(alarms)),
             registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
             settingsSource = FixedSettingsSource(
-                CalculationSettings(
-                    adhanSoundId = "makkah_mullah",
-                    fajrAdhanSoundId = "fajr_makkah"
-                )
+                CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "makkah_mullah", fajrAdhanSoundId = "fajr_makkah"))
             )
         )
 
@@ -399,7 +397,7 @@ class ReminderCoordinatorTest {
             ),
             registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
             settingsSource = FixedSettingsSource(
-                CalculationSettings(adhanSoundId = "madinah", fajrAdhanSoundId = null)
+                CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "madinah", fajrAdhanSoundId = null))
             )
         )
 

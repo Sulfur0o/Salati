@@ -63,7 +63,7 @@ internal fun SettingsAppearanceCard(
                 stringResource(R.string.settings_theme_option_light),
                 stringResource(R.string.settings_theme_option_dark)
             )
-            val selectedThemeIndex = when (settings.isDarkMode) {
+            val selectedThemeIndex = when (settings.appearance.isDarkMode) {
                 null -> 0
                 false -> 1
                 true -> 2
@@ -77,14 +77,14 @@ internal fun SettingsAppearanceCard(
                         2 -> true
                         else -> null
                     }
-                    saveSettings { it.copy(isDarkMode = newValue) }
+                    saveSettings { it.copy(appearance = it.appearance.copy(isDarkMode = newValue)) }
                 }
             )
         }
 
         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-        val currentLangCode = settings.appLanguageCode ?: ""
+        val currentLangCode = settings.appearance.appLanguageCode ?: ""
         val currentLangName = languageOptions.firstOrNull { it.first == currentLangCode }?.second
             ?: stringResource(R.string.settings_language_system)
         ValueSelectionRow(
@@ -116,13 +116,13 @@ internal fun SettingsAppearanceCard(
                 stringResource(R.string.settings_time_format_12h),
                 stringResource(R.string.settings_time_format_24h)
             )
-            val selectedTimeFormat = timeFormatOptions.indexOf(settings.timeFormat)
+            val selectedTimeFormat = timeFormatOptions.indexOf(settings.appearance.timeFormat)
                 .coerceAtLeast(0)
             SegmentedTabRow(
                 tabs = timeFormatLabels,
                 selectedTabIndex = selectedTimeFormat,
                 onTabSelected = { index ->
-                    saveSettings { it.copy(timeFormat = timeFormatOptions[index]) }
+                    saveSettings { it.copy(appearance = it.appearance.copy(timeFormat = timeFormatOptions[index])) }
                 }
             )
         }
@@ -134,8 +134,8 @@ internal fun SettingsAppearanceCard(
                 .fillMaxWidth()
                 .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
         ) {
-            var hijriDraft by remember(settings.hijriOffset) {
-                mutableFloatStateOf(settings.hijriOffset.toFloat())
+            var hijriDraft by remember(settings.prayer.hijriOffset) {
+                mutableFloatStateOf(settings.prayer.hijriOffset.toFloat())
             }
             val currentOffset = hijriDraft.toInt()
             val offsetText = when {
@@ -169,7 +169,7 @@ internal fun SettingsAppearanceCard(
                 value = hijriDraft,
                 onValueChange = { hijriDraft = it },
                 onValueChangeFinished = {
-                    saveSettings { it.copy(hijriOffset = hijriDraft.toInt()) }
+                    saveSettings { it.copy(prayer = it.prayer.copy(hijriOffset = hijriDraft.toInt())) }
                 },
                 valueRange = -2f..2f,
                 steps = 3,
@@ -181,15 +181,15 @@ internal fun SettingsAppearanceCard(
     if (showLanguageSheet) {
         OptionSelectionSheet(
             title = stringResource(R.string.settings_language_title),
-            selectedId = settings.appLanguageCode ?: "",
+            selectedId = settings.appearance.appLanguageCode ?: "",
             options = languageOptions,
             onSelect = { langCode ->
                 val codeOrNull: String? = if (langCode.isEmpty()) null else langCode
-                LoadedSettingsCache.latest = settings.copy(appLanguageCode = codeOrNull)
+                LoadedSettingsCache.latest = settings.copy(appearance = settings.appearance.copy(appLanguageCode = codeOrNull))
                 val appContext = context.applicationContext
                 CoroutineScope(Dispatchers.IO).launch {
                     val prefs = com.sulfuro.salati.data.settings.SalatiPreferences(appContext)
-                    prefs.updateSettings { it.copy(appLanguageCode = codeOrNull) }
+                    prefs.updateSettings { it.copy(appearance = it.appearance.copy(appLanguageCode = codeOrNull)) }
                     withContext(Dispatchers.Main) {
                         applyAppLanguage(context, codeOrNull)
                     }

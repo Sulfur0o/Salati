@@ -12,6 +12,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import java.io.IOException
+import com.sulfuro.salati.data.settings.LocationSettings
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33], manifest = Config.NONE)
@@ -130,7 +132,7 @@ class PrayerRepositoryTest {
         // one the next successful fetch brings back.
         val cacheFile = PrayerRepository.getCacheFile(
             context, 2095, 9, 3, 0, "3",
-            CalculationSettings().latitude, CalculationSettings().longitude
+            CalculationSettings().location.latitude, CalculationSettings().location.longitude
         )
         assertTrue("computed months must not be cached", !cacheFile.exists())
     }
@@ -187,7 +189,7 @@ class PrayerRepositoryTest {
         var networkCalls = 0
         val result = PrayerRepository.getMonthlyPrayers(
             context,
-            CalculationSettings(calculationMethod = "UNSUPPORTED"),
+            CalculationSettings(prayer = PrayerMethodSettings(calculationMethod = "UNSUPPORTED")),
             2026,
             7,
             apiClient = PrayerApiClient {
@@ -205,11 +207,11 @@ class PrayerRepositoryTest {
         val dayData = sampleDayData()
         val brussels = PrayerRepository.parsePrayerTimes(
             dayData,
-            CalculationSettings(timezoneId = "Europe/Brussels")
+            CalculationSettings(location = LocationSettings(timezoneId = "Europe/Brussels"))
         )
         val newYork = PrayerRepository.parsePrayerTimes(
             dayData,
-            CalculationSettings(timezoneId = "America/New_York")
+            CalculationSettings(location = LocationSettings(timezoneId = "America/New_York"))
         )
 
         assertNotEquals(brussels, newYork)
@@ -220,7 +222,7 @@ class PrayerRepositoryTest {
         val dayData = sampleDayData().copy(meta = AladhanMeta(timezone = "Africa/Casablanca"))
         val viaMeta = PrayerRepository.parsePrayerTimes(
             dayData,
-            CalculationSettings(timezoneId = "Europe/Brussels")
+            CalculationSettings(location = LocationSettings(timezoneId = "Europe/Brussels"))
         )
         val viaExplicitZone = SalatiPrayerTimeMapper.map(dayData, java.time.ZoneId.of("Europe/Brussels"))
 

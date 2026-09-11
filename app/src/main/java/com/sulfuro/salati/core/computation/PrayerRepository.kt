@@ -153,8 +153,8 @@ object PrayerRepository {
         endDate: LocalDate,
         requireCacheOnly: Boolean = false
     ): Map<LocalDate, HijriDateParts> {
-        val actualStart = startDate.plusDays(settings.hijriOffset.toLong())
-        val actualEnd = endDate.plusDays(settings.hijriOffset.toLong())
+        val actualStart = startDate.plusDays(settings.prayer.hijriOffset.toLong())
+        val actualEnd = endDate.plusDays(settings.prayer.hijriOffset.toLong())
 
         var currentMonth = YearMonth.from(actualStart)
         val endMonth = YearMonth.from(actualEnd)
@@ -324,25 +324,25 @@ object PrayerRepository {
         month: Int
     ): PrayerMonthRequest {
         require(year in 1..9999 && month in 1..12) { "Invalid year/month: $year/$month" }
-        val methodId = requireNotNull(getAladhanMethodId(settings.calculationMethod)) {
-            "Unsupported calculation method: ${settings.calculationMethod}"
+        val methodId = requireNotNull(getAladhanMethodId(settings.prayer.calculationMethod)) {
+            "Unsupported calculation method: ${settings.prayer.calculationMethod}"
         }
-        val latitudeAdjustmentId = when (settings.highLatitudeRule) {
+        val latitudeAdjustmentId = when (settings.prayer.highLatitudeRule) {
             "MIDDLE_OF_THE_NIGHT" -> "1"
             "SEVENTH_OF_THE_NIGHT" -> "2"
             "TWILIGHT_ANGLE" -> "3"
             else -> throw IllegalArgumentException(
-                "Unsupported high-latitude rule: ${settings.highLatitudeRule}"
+                "Unsupported high-latitude rule: ${settings.prayer.highLatitudeRule}"
             )
         }
-        val schoolId = when (settings.madhab) {
+        val schoolId = when (settings.prayer.madhab) {
             "SHAFI" -> 0
             "HANAFI" -> 1
-            else -> throw IllegalArgumentException("Unsupported Madhab: ${settings.madhab}")
+            else -> throw IllegalArgumentException("Unsupported Madhab: ${settings.prayer.madhab}")
         }
         return PrayerMonthRequest(
             year, month, methodId, schoolId, latitudeAdjustmentId,
-            settings.latitude, settings.longitude
+            settings.location.latitude, settings.location.longitude
         )
     }
 

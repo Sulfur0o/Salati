@@ -45,9 +45,9 @@ fun CalendarScreen(
 ) {
     val context = LocalContext.current
     val displayLocale = LocalConfiguration.current.locales[0]
-    val zoneId = remember(settings.timezoneId) { settings.safeZoneId() }
+    val zoneId = remember(settings.location.timezoneId) { settings.safeZoneId() }
     val is24Hour = com.sulfuro.salati.data.settings.resolveUses24HourClock(
-        settings.timeFormat,
+        settings.appearance.timeFormat,
         android.text.format.DateFormat.is24HourFormat(context)
     )
     val today = remember(zoneId) { calendarDateAt(System.currentTimeMillis(), zoneId) }
@@ -57,11 +57,11 @@ fun CalendarScreen(
     var isLoading by remember { mutableStateOf(true) }
     var retryTrigger by remember { mutableIntStateOf(0) }
     var timesWereComputedLocally by remember { mutableStateOf(false) }
-    val hawlStartDate = remember(settings.zakatHawlStartEpochDay) {
-        settings.zakatHawlStartEpochDay?.let(LocalDate::ofEpochDay)
+    val hawlStartDate = remember(settings.zakat.hawlStartEpochDay) {
+        settings.zakat.hawlStartEpochDay?.let(LocalDate::ofEpochDay)
     }
 
-    LaunchedEffect(currentYearMonth, settings.hijriOffset, settings.calculationMethod, settings.highLatitudeRule, settings.madhab, settings.latitude, settings.longitude, retryTrigger) {
+    LaunchedEffect(currentYearMonth, settings.prayer.hijriOffset, settings.prayer.calculationMethod, settings.prayer.highLatitudeRule, settings.prayer.madhab, settings.location.latitude, settings.location.longitude, retryTrigger) {
         isLoading = true
         val result = PrayerRepository.getMonthlyPrayers(
             context, settings, currentYearMonth.year, currentYearMonth.monthValue
@@ -101,15 +101,15 @@ fun CalendarScreen(
         val now = Instant.ofEpochMilli(System.currentTimeMillis())
         val afterMaghrib = selectedDate == today && selectedDayTimes != null &&
             !now.isBefore(selectedDayTimes.maghrib)
-        HijriCalendarHelper.resolveHijriDate(selectedDate, settings.hijriOffset, afterMaghrib, apiLookup)
+        HijriCalendarHelper.resolveHijriDate(selectedDate, settings.prayer.hijriOffset, afterMaghrib, apiLookup)
     }
 
-    val dayEvents = remember(currentYearMonth, settings.hijriOffset, apiLookup, hawlStartDate) {
+    val dayEvents = remember(currentYearMonth, settings.prayer.hijriOffset, apiLookup, hawlStartDate) {
         val map = mutableMapOf<Int, List<IslamicCalendarEvent>>()
         val daysInMonth = currentYearMonth.lengthOfMonth()
         for (day in 1..daysInMonth) {
             val date = currentYearMonth.atDay(day)
-            val hijri = HijriCalendarHelper.resolveHijriDate(date, settings.hijriOffset, false, apiLookup)
+            val hijri = HijriCalendarHelper.resolveHijriDate(date, settings.prayer.hijriOffset, false, apiLookup)
             val events = eventsForCalendarDate(date, hijri, hawlStartDate)
             if (events.isNotEmpty()) {
                 map[day] = events
@@ -160,7 +160,7 @@ fun CalendarScreen(
                         today = today,
                         events = dayEvents,
                         apiLookup = apiLookup,
-                        hijriOffset = settings.hijriOffset,
+                        hijriOffset = settings.prayer.hijriOffset,
                         onDaySelected = { selectedDayIndex = it },
                         modifier = Modifier.padding(start = SalatiSpacing.sm, end = SalatiSpacing.sm, top = SalatiSpacing.sm, bottom = 4.dp)
                     )
@@ -177,7 +177,7 @@ fun CalendarScreen(
                         gregorianDate = calendarSelectedDateHeading(selectedDate, displayLocale),
                         hijriDate = selectedDayHijri.format(),
                         events = dayEvents[selectedDayIndex] ?: emptyList(),
-                        locationContext = stringResource(R.string.daily_location_context, settings.cityName),
+                        locationContext = stringResource(R.string.daily_location_context, settings.location.cityName),
                         prayerTimes = times,
                         timeFormatter = remember(displayLocale, zoneId, is24Hour) {
                             calendarTimeFormatter(displayLocale, zoneId, is24Hour)

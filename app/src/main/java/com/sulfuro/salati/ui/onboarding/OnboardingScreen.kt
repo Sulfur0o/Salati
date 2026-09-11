@@ -149,9 +149,9 @@ fun OnboardingScreen(
                     onBack = { step = 1 }
                 )
                 3 -> CalculationMethodStep(
-                    currentMethod = draftSettings.calculationMethod,
+                    currentMethod = draftSettings.prayer.calculationMethod,
                     onMethodSelected = { method ->
-                        draftSettings = draftSettings.copy(calculationMethod = method)
+                        draftSettings = draftSettings.copy(prayer = draftSettings.prayer.copy(calculationMethod = method))
                         step = 4
                     },
                     onBack = { step = 2 }

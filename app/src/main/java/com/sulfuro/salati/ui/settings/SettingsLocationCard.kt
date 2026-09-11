@@ -102,7 +102,7 @@ internal fun SettingsLocationCard(
                 saveSettings { updated }
                 Toast.makeText(
                     appContext,
-                    appContext.getString(R.string.settings_location_updated, updated.cityName),
+                    appContext.getString(R.string.settings_location_updated, updated.location.cityName),
                     Toast.LENGTH_SHORT
                 ).show()
             } finally {
@@ -131,7 +131,7 @@ internal fun SettingsLocationCard(
                         saveSettings { updated }
                         Toast.makeText(
                             appContext,
-                            appContext.getString(R.string.settings_location_updated, updated.cityName),
+                            appContext.getString(R.string.settings_location_updated, updated.location.cityName),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -213,7 +213,7 @@ internal fun SettingsLocationCard(
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = settings.cityName,
+                    text = settings.location.cityName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -264,8 +264,8 @@ internal fun SettingsLocationCard(
 
         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-        val selectedMethodName = methods.firstOrNull { it.first == settings.calculationMethod }?.second
-            ?: settings.calculationMethod
+        val selectedMethodName = methods.firstOrNull { it.first == settings.prayer.calculationMethod }?.second
+            ?: settings.prayer.calculationMethod
         ValueSelectionRow(
             title = stringResource(R.string.settings_method_label),
             value = selectedMethodName,
@@ -275,8 +275,8 @@ internal fun SettingsLocationCard(
 
         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-        val selectedMadhabName = madhabs.firstOrNull { it.first == settings.madhab }?.second
-            ?: settings.madhab
+        val selectedMadhabName = madhabs.firstOrNull { it.first == settings.prayer.madhab }?.second
+            ?: settings.prayer.madhab
         ValueSelectionRow(
             title = stringResource(R.string.settings_madhab_label),
             value = selectedMadhabName,
@@ -289,8 +289,8 @@ internal fun SettingsLocationCard(
             expanded = showLocationAdvanced,
             onExpandedChange = { showLocationAdvanced = it }
         ) {
-            val selectedRuleName = highLatRules.firstOrNull { it.first == settings.highLatitudeRule }?.second
-                ?: settings.highLatitudeRule
+            val selectedRuleName = highLatRules.firstOrNull { it.first == settings.prayer.highLatitudeRule }?.second
+                ?: settings.prayer.highLatitudeRule
             ValueSelectionRow(
                 title = stringResource(R.string.settings_high_latitudes_label),
                 value = selectedRuleName,
@@ -302,9 +302,9 @@ internal fun SettingsLocationCard(
 
     if (showMethodSheet) {
         MethodSelectionSheet(
-            selectedMethodId = settings.calculationMethod,
+            selectedMethodId = settings.prayer.calculationMethod,
             methods = methods,
-            onSelect = { methodId -> saveSettings { it.copy(calculationMethod = methodId) } },
+            onSelect = { methodId -> saveSettings { it.copy(prayer = it.prayer.copy(calculationMethod = methodId)) } },
             onDismiss = { showMethodSheet = false }
         )
     }
@@ -312,9 +312,9 @@ internal fun SettingsLocationCard(
     if (showHighLatSheet) {
         OptionSelectionSheet(
             title = stringResource(R.string.settings_high_latitudes_label),
-            selectedId = settings.highLatitudeRule,
+            selectedId = settings.prayer.highLatitudeRule,
             options = highLatRules,
-            onSelect = { ruleId -> saveSettings { it.copy(highLatitudeRule = ruleId) } },
+            onSelect = { ruleId -> saveSettings { it.copy(prayer = it.prayer.copy(highLatitudeRule = ruleId)) } },
             onDismiss = { showHighLatSheet = false }
         )
     }
@@ -322,9 +322,9 @@ internal fun SettingsLocationCard(
     if (showMadhabSheet) {
         OptionSelectionSheet(
             title = stringResource(R.string.settings_madhab_label),
-            selectedId = settings.madhab,
+            selectedId = settings.prayer.madhab,
             options = madhabs,
-            onSelect = { madhabId -> saveSettings { it.copy(madhab = madhabId) } },
+            onSelect = { madhabId -> saveSettings { it.copy(prayer = it.prayer.copy(madhab = madhabId)) } },
             onDismiss = { showMadhabSheet = false }
         )
     }

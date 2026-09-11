@@ -30,10 +30,12 @@ internal object PrayerLocationResolver {
         val prayerResult = PrayerRepository.getMonthlyPrayers(
             context = context,
             settings = current.copy(
-                cityName = cityName,
-                latitude = latitude,
-                longitude = longitude,
-                timezoneId = estimatedZone.id
+                location = current.location.copy(
+                    cityName = cityName,
+                    latitude = latitude,
+                    longitude = longitude,
+                    timezoneId = estimatedZone.id
+                )
             ),
             year = calendarMonth.year,
             month = calendarMonth.monthValue
@@ -42,16 +44,18 @@ internal object PrayerLocationResolver {
             ?.takeIf { it.origin == PrayerDataOrigin.NETWORK }
             ?.data?.firstOrNull()?.meta?.timezone
         return current.copy(
-            cityName = cityName,
-            countryName = countryName?.takeIf { it.isNotBlank() } ?: current.countryName,
-            latitude = latitude,
-            longitude = longitude,
-            timezoneId = resolveTimezoneId(
+            location = current.location.copy(
+                cityName = cityName,
+                countryName = countryName?.takeIf { it.isNotBlank() } ?: current.location.countryName,
                 latitude = latitude,
                 longitude = longitude,
-                networkTimezoneId = networkTimezoneId,
-                deviceZoneId = deviceZoneId,
-                at = now
+                timezoneId = resolveTimezoneId(
+                    latitude = latitude,
+                    longitude = longitude,
+                    networkTimezoneId = networkTimezoneId,
+                    deviceZoneId = deviceZoneId,
+                    at = now
+                )
             )
         )
     }

@@ -140,8 +140,8 @@ object ReminderCoordinator {
             when (val result = registrar.scheduleAlarm(
                 context,
                 preparedAlarm,
-                settings.vibrateEnabled,
-                settings.soundEnabled,
+                settings.alarms.vibrateEnabled,
+                settings.alarms.soundEnabled,
                 // Resolved per alarm, not once for the batch: Fajr gets its own recording.
                 // The choice is stored on the registered alarm, so a restore after a
                 // reboot replays the same one without having to work it out again.

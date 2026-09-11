@@ -225,11 +225,11 @@ object AdhanAudioStore {
 
 fun CalculationSettings.withoutRetiredAdhanChoices(): CalculationSettings {
     var next = this
-    if (adhanSoundId in AdhanAudioStore.RETIRED_IDS) {
-        next = next.copy(adhanSoundId = null, adhanSoundName = null)
+    if (alarms.adhanSoundId in AdhanAudioStore.RETIRED_IDS) {
+        next = next.copy(alarms = next.alarms.copy(adhanSoundId = null, adhanSoundName = null))
     }
-    if (fajrAdhanSoundId in AdhanAudioStore.RETIRED_IDS) {
-        next = next.copy(fajrAdhanSoundId = null, fajrAdhanSoundName = null)
+    if (alarms.fajrAdhanSoundId in AdhanAudioStore.RETIRED_IDS) {
+        next = next.copy(alarms = next.alarms.copy(fajrAdhanSoundId = null, fajrAdhanSoundName = null))
     }
     return next
 }

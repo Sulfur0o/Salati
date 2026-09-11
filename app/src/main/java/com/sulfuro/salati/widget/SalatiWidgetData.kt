@@ -92,7 +92,7 @@ object SalatiWidgetData {
         return try {
             val preferences = SalatiPreferences(context)
             val settings = preferences.settings.first()
-            val zoneId = com.sulfuro.salati.data.settings.safeZoneId(settings.timezoneId)
+            val zoneId = com.sulfuro.salati.data.settings.safeZoneId(settings.location.timezoneId)
             val now = YearMonth.now(zoneId)
             val today = LocalDate.now(zoneId)
             val currentTime = LocalTime.now(zoneId)
@@ -120,7 +120,7 @@ object SalatiWidgetData {
 
             val resolvedHijriDate = HijriCalendarHelper.resolveHijriDate(
                 gregorianDate = today,
-                offsetDays = settings.hijriOffset,
+                offsetDays = settings.prayer.hijriOffset,
                 isAfterMaghrib = isAfterMaghrib
             ) { targetDate ->
                 daysByDate[targetDate]
@@ -134,7 +134,7 @@ object SalatiWidgetData {
             }
 
             val hijriStr = resolvedHijriDate.format()
-            val shortCity = settings.cityName.substringBefore(",")
+            val shortCity = settings.location.cityName.substringBefore(",")
 
             if (timings == null) {
                 return WidgetDataSnapshot(
@@ -154,11 +154,11 @@ object SalatiWidgetData {
             val ishaRaw = cleanTime(timings.Isha)
 
             val times = WidgetPrayerTimes(
-                fajr = displayTime(context, fajrRaw, settings.timeFormat),
-                dhuhr = displayTime(context, dhuhrRaw, settings.timeFormat),
-                asr = displayTime(context, asrRaw, settings.timeFormat),
-                maghrib = displayTime(context, maghribRaw, settings.timeFormat),
-                isha = displayTime(context, ishaRaw, settings.timeFormat)
+                fajr = displayTime(context, fajrRaw, settings.appearance.timeFormat),
+                dhuhr = displayTime(context, dhuhrRaw, settings.appearance.timeFormat),
+                asr = displayTime(context, asrRaw, settings.appearance.timeFormat),
+                maghrib = displayTime(context, maghribRaw, settings.appearance.timeFormat),
+                isha = displayTime(context, ishaRaw, settings.appearance.timeFormat)
             )
 
             val prayerEntries = listOf(
@@ -178,7 +178,7 @@ object SalatiWidgetData {
             val (nextName, nextTime, activeIdx) = if (nextUpcoming != null) {
                 Triple(
                     nextUpcoming.displayName,
-                    displayTime(context, nextUpcoming.rawTime, settings.timeFormat),
+                    displayTime(context, nextUpcoming.rawTime, settings.appearance.timeFormat),
                     nextUpcoming.index
                 )
             } else {
@@ -203,7 +203,7 @@ object SalatiWidgetData {
                 val tomorrowFajr = tomorrowSchedule?.timings?.Fajr?.let(::cleanTime) ?: fajrRaw
                 Triple(
                     context.getString(R.string.prayer_fajr),
-                    displayTime(context, tomorrowFajr, settings.timeFormat),
+                    displayTime(context, tomorrowFajr, settings.appearance.timeFormat),
                     0 // Fajr
                 )
             }
