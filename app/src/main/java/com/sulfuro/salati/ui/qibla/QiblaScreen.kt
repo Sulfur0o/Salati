@@ -2,10 +2,13 @@ package com.sulfuro.salati.ui.qibla
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -111,7 +114,6 @@ fun QiblaScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .padding(horizontal = SalatiSpacing.md),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -134,6 +136,15 @@ fun QiblaScreen(
                 modifier = Modifier.semantics { heading() }
             )
         }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
         Text(
             text = settings.location.cityName,
@@ -179,8 +190,12 @@ fun QiblaScreen(
 
         Box(
             modifier = Modifier
+                // widthIn before fillMaxWidth, not after: fillMaxWidth pins the minimum to
+                // the maximum, so a sizeIn behind it had nothing left to constrain and the
+                // dial was drawing at the full 361dp of the screen rather than the 270 it
+                // asked for.
+                .widthIn(max = 300.dp)
                 .fillMaxWidth()
-                .sizeIn(maxWidth = 270.dp, maxHeight = 270.dp)
                 .aspectRatio(1f)
                 .semantics { contentDescription = screenDescription },
             contentAlignment = Alignment.Center
@@ -214,22 +229,31 @@ fun QiblaScreen(
                 )
             }
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = bearingText,
-                    fontSize = 44.sp,
-                    fontWeight = FontWeight.Black,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = compassPoint,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
         }
 
-        Spacer(modifier = Modifier.height(SalatiSpacing.lg))
+        // The reading used to sit in the middle of the dial, which is the one place on a
+        // compass that cannot hold text: the needle starts there. The line ran through the
+        // digits and the centre dot sat inside the "4". Below the dial it has room, and the
+        // dial is left to be a dial.
+        Spacer(modifier = Modifier.height(SalatiSpacing.md))
+
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(
+                text = bearingText,
+                fontSize = 44.sp,
+                fontWeight = FontWeight.Black,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.width(SalatiSpacing.sm))
+            Text(
+                text = compassPoint,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = SalatiSpacing.sm)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(SalatiSpacing.md))
 
         when {
             !compass.isAvailable -> {
@@ -281,7 +305,7 @@ fun QiblaScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(SalatiSpacing.xl))
+        }
     }
 }
 
@@ -295,7 +319,7 @@ private fun DrawScope.drawCompassRose(
     labelCounterRotationDegrees: Float
 ) {
     val center = Offset(size.width / 2f, size.height / 2f)
-    val radius = min(size.width, size.height) / 2f * 0.86f
+    val radius = min(size.width, size.height) / 2f * 0.80f
 
     for (tick in 0 until 72) {
         val angle = Math.toRadians((tick * 5).toDouble())
@@ -361,16 +385,18 @@ private fun DrawScope.drawFixedCompassOverlay(
     pointerPath: Path
 ) {
     val center = Offset(size.width / 2f, size.height / 2f)
-    val radius = min(size.width, size.height) / 2f * 0.86f
+    // Room for the pointer, which is drawn outside the ring: at 0.86 its tip reached past
+    // the top of the canvas and landed in the city name above.
+    val radius = min(size.width, size.height) / 2f * 0.80f
 
     drawCircle(color = roseColor.copy(alpha = 0.35f), radius = radius, center = center, style = Stroke(width = 2.dp.toPx()))
     drawCircle(color = roseColor.copy(alpha = 0.18f), radius = radius * 0.72f, center = center, style = Stroke(width = 1.dp.toPx()))
 
     // Fixed pointer at the top: the direction the device is currently facing.
     pointerPath.reset()
-    pointerPath.moveTo(center.x, center.y - radius - 10.dp.toPx())
-    pointerPath.lineTo(center.x - 9.dp.toPx(), center.y - radius + 10.dp.toPx())
-    pointerPath.lineTo(center.x + 9.dp.toPx(), center.y - radius + 10.dp.toPx())
+    pointerPath.moveTo(center.x, center.y - radius + 4.dp.toPx())
+    pointerPath.lineTo(center.x - 10.dp.toPx(), center.y - radius - 16.dp.toPx())
+    pointerPath.lineTo(center.x + 10.dp.toPx(), center.y - radius - 16.dp.toPx())
     pointerPath.close()
     drawPath(pointerPath, color = pointerColor)
 

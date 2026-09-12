@@ -24,6 +24,8 @@ import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SalatiLogo
 import com.sulfuro.salati.ui.components.SettingRow
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.sulfuro.salati.ui.components.ValueSelectionRow
 import com.sulfuro.salati.ui.components.SettingSection
 import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
 
@@ -42,18 +44,34 @@ internal fun SettingsSystemCard(
 ) {
     val context = LocalContext.current
     var showBatteryHelpDialog by remember { mutableStateOf(false) }
+    var permissionsOpened by rememberSaveable { mutableStateOf(false) }
 
-    SettingSection(title = stringResource(R.string.settings_card_system_title)) {
+    // Four rows held the top of this card permanently to report, almost always, that
+    // everything was fine. They are one row now - and they open themselves whenever
+    // something actually needs doing, so the case that matters is never behind a tap.
+    val allGranted = permissionState.notificationPermission &&
+        (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || permissionState.exactAlarmAccess) &&
+        permissionState.batteryOptimizationIgnored &&
+        (!settings.alarms.silentModeAutomationEnabled || permissionState.notificationPolicyAccess)
+    val permissionsVisible = permissionsOpened || !allGranted
+
+    SettingSection(title = stringResource(R.string.settings_card_about_title)) {
+        ValueSelectionRow(
+            title = stringResource(R.string.settings_permissions_label),
+            value = if (allGranted) {
+                stringResource(R.string.settings_permissions_all_granted)
+            } else {
+                stringResource(R.string.settings_permissions_attention)
+            },
+            expanded = permissionsVisible,
+            onExpandedChange = { permissionsOpened = it }
+        )
+
+        if (permissionsVisible) {
         PermissionStatusChips(
             permissionState = permissionState,
             showDndChip = settings.alarms.silentModeAutomationEnabled,
-            onNotificationsClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    !permissionState.notificationPermission
-                ) {
-                    onRequestNotificationPermission()
-                }
-            },
+            onNotificationsClick = onRequestNotificationPermission,
             onExactAlarmsClick = {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     runCatching {
@@ -72,8 +90,9 @@ internal fun SettingsSystemCard(
                 }
             }
         )
+        }
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        SettingsDivider()
 
         Row(
             modifier = Modifier
@@ -99,7 +118,7 @@ internal fun SettingsSystemCard(
             }
         }
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        SettingsDivider()
 
         val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
         SettingRow(
@@ -117,7 +136,7 @@ internal fun SettingsSystemCard(
             )
         }
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        SettingsDivider()
 
         val supportEmail = stringResource(R.string.settings_support_email_address)
         SettingRow(

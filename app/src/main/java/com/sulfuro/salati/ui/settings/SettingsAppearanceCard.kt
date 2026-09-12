@@ -1,29 +1,32 @@
 package com.sulfuro.salati.ui.settings
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.compose.ui.Modifier
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
 import com.sulfuro.salati.data.settings.CalculationSettings
-import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SettingSection
+import com.sulfuro.salati.ui.components.SettingStepperRow
 import com.sulfuro.salati.ui.components.ValueSelectionRow
 import com.sulfuro.salati.data.settings.TimeFormatPreference
-import com.sulfuro.salati.ui.components.SegmentedTabRow
 
 /**
- * How the app presents itself: theme, language, clock format and the Hijri offset.
+ * How the app presents itself: theme, language, clock and the Hijri offset.
+ *
+ * Every one of these used to wear a different control. Theme and clock were segmented
+ * rows with their titles stacked above them, the Hijri offset was a slider with its value
+ * on the right, and language was a value row - so in a single card the eye had to read
+ * left-to-right, then top-to-bottom, then left-to-right again. They are all value rows
+ * now: title on the left, the current answer on the right, a sheet to change it. One shape
+ * costs a tap on the two that used to be inline and buys a card you can scan.
  */
 @Composable
 internal fun SettingsAppearanceCard(
@@ -32,6 +35,11 @@ internal fun SettingsAppearanceCard(
 ) {
     val context = LocalContext.current
 
+    val themeOptions = listOf(
+        "system" to stringResource(R.string.settings_theme_option_system),
+        "light" to stringResource(R.string.settings_theme_option_light),
+        "dark" to stringResource(R.string.settings_theme_option_dark)
+    )
     val languageOptions = listOf(
         "" to stringResource(R.string.settings_language_system),
         "en" to stringResource(R.string.settings_language_en),
@@ -39,149 +47,105 @@ internal fun SettingsAppearanceCard(
         "fr" to stringResource(R.string.settings_language_fr),
         "nl" to stringResource(R.string.settings_language_nl)
     )
+    val clockOptions = listOf(
+        TimeFormatPreference.SYSTEM to stringResource(R.string.settings_time_format_system),
+        TimeFormatPreference.TWELVE_HOUR to stringResource(R.string.settings_time_format_12h),
+        TimeFormatPreference.TWENTY_FOUR_HOUR to stringResource(R.string.settings_time_format_24h)
+    )
+    // -2..2, the range the slider offered.
+    val hijriStops = (-2..2).toList()
+    val hijriIndex = hijriStops.indexOf(settings.prayer.hijriOffset).coerceAtLeast(0)
 
+    var showThemeSheet by remember { mutableStateOf(false) }
     var showLanguageSheet by remember { mutableStateOf(false) }
+    var showClockSheet by remember { mutableStateOf(false) }
 
-    SettingSection(title = stringResource(R.string.settings_card_appearance_title)) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = SalatiSpacing.sm, horizontal = SalatiSpacing.md)
-        ) {
-            Text(
-                text = stringResource(R.string.settings_theme_dark_mode),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(R.string.settings_theme_dark_mode_desc),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(SalatiSpacing.sm))
-            val themeOptionLabels = listOf(
-                stringResource(R.string.settings_theme_option_system),
-                stringResource(R.string.settings_theme_option_light),
-                stringResource(R.string.settings_theme_option_dark)
-            )
-            val selectedThemeIndex = when (settings.appearance.isDarkMode) {
-                null -> 0
-                false -> 1
-                true -> 2
-            }
-            SegmentedTabRow(
-                tabs = themeOptionLabels,
-                selectedTabIndex = selectedThemeIndex,
-                onTabSelected = { index ->
-                    val newValue = when (index) {
-                        1 -> false
-                        2 -> true
-                        else -> null
-                    }
-                    saveSettings { it.copy(appearance = it.appearance.copy(isDarkMode = newValue)) }
-                }
-            )
-        }
+    // "Follow the system" is an absence of choice, not a third value, so it has to survive
+    // as null rather than being flattened into light.
+    val selectedTheme = when (settings.appearance.isDarkMode) {
+        null -> "system"
+        false -> "light"
+        true -> "dark"
+    }
+    val currentLangCode = settings.appearance.appLanguageCode ?: ""
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+    SettingSection(title = stringResource(R.string.settings_card_display_title)) {
+        ValueSelectionRow(
+            title = stringResource(R.string.settings_theme_label),
+            value = themeOptions.first { it.first == selectedTheme }.second,
+            expanded = showThemeSheet,
+            onExpandedChange = { showThemeSheet = it }
+        )
+        SettingsDivider()
 
-        val currentLangCode = settings.appearance.appLanguageCode ?: ""
-        val currentLangName = languageOptions.firstOrNull { it.first == currentLangCode }?.second
-            ?: stringResource(R.string.settings_language_system)
         ValueSelectionRow(
             title = stringResource(R.string.settings_language_label),
-            value = currentLangName,
+            value = languageOptions.firstOrNull { it.first == currentLangCode }?.second
+                ?: stringResource(R.string.settings_language_system),
             expanded = showLanguageSheet,
             onExpandedChange = { showLanguageSheet = it }
         )
+        SettingsDivider()
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        ValueSelectionRow(
+            title = stringResource(R.string.settings_time_format_title),
+            value = clockOptions.firstOrNull { it.first == settings.appearance.timeFormat }?.second
+                ?: stringResource(R.string.settings_time_format_system),
+            expanded = showClockSheet,
+            onExpandedChange = { showClockSheet = it }
+        )
+        SettingsDivider()
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = SalatiSpacing.sm, horizontal = SalatiSpacing.md)
-        ) {
-            Text(
-                text = stringResource(R.string.settings_time_format_title),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.height(SalatiSpacing.sm))
-            val timeFormatOptions = listOf(
-                TimeFormatPreference.SYSTEM,
-                TimeFormatPreference.TWELVE_HOUR,
-                TimeFormatPreference.TWENTY_FOUR_HOUR
-            )
-            val timeFormatLabels = listOf(
-                stringResource(R.string.settings_time_format_system),
-                stringResource(R.string.settings_time_format_12h),
-                stringResource(R.string.settings_time_format_24h)
-            )
-            val selectedTimeFormat = timeFormatOptions.indexOf(settings.appearance.timeFormat)
-                .coerceAtLeast(0)
-            SegmentedTabRow(
-                tabs = timeFormatLabels,
-                selectedTabIndex = selectedTimeFormat,
-                onTabSelected = { index ->
-                    saveSettings { it.copy(appearance = it.appearance.copy(timeFormat = timeFormatOptions[index])) }
+        SettingStepperRow(
+            title = stringResource(R.string.settings_calendar_hijri_offset),
+            value = hijriOffsetLabel(settings.prayer.hijriOffset),
+            canDecrease = hijriIndex > 0,
+            canIncrease = hijriIndex < hijriStops.lastIndex,
+            onDecrease = {
+                saveSettings { it.copy(prayer = it.prayer.copy(hijriOffset = hijriStops[hijriIndex - 1])) }
+            },
+            onIncrease = {
+                saveSettings { it.copy(prayer = it.prayer.copy(hijriOffset = hijriStops[hijriIndex + 1])) }
+            }
+        )
+    }
+
+    if (showThemeSheet) {
+        OptionSelectionSheet(
+            title = stringResource(R.string.settings_theme_label),
+            subtitle = stringResource(R.string.settings_theme_dark_mode_desc),
+            selectedId = selectedTheme,
+            options = themeOptions,
+            onSelect = { id ->
+                val isDark: Boolean? = when (id) {
+                    "light" -> false
+                    "dark" -> true
+                    else -> null
                 }
-            )
-        }
+                saveSettings { it.copy(appearance = it.appearance.copy(isDarkMode = isDark)) }
+            },
+            onDismiss = { showThemeSheet = false }
+        )
+    }
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = SalatiSpacing.xs, horizontal = SalatiSpacing.md)
-        ) {
-            var hijriDraft by remember(settings.prayer.hijriOffset) {
-                mutableFloatStateOf(settings.prayer.hijriOffset.toFloat())
-            }
-            val currentOffset = hijriDraft.toInt()
-            val offsetText = when {
-                currentOffset == 0 -> stringResource(R.string.settings_calendar_hijri_offset_zero)
-                currentOffset > 0 -> pluralStringResource(
-                    R.plurals.settings_calendar_hijri_offset_plus, currentOffset, currentOffset
-                )
-                else -> pluralStringResource(
-                    R.plurals.settings_calendar_hijri_offset_minus, -currentOffset, -currentOffset
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_calendar_hijri_offset),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = offsetText,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            val hijriDesc = stringResource(
-                R.string.settings_calendar_hijri_offset_accessibility, offsetText
-            )
-            SalatiSlider(
-                value = hijriDraft,
-                onValueChange = { hijriDraft = it },
-                onValueChangeFinished = {
-                    saveSettings { it.copy(prayer = it.prayer.copy(hijriOffset = hijriDraft.toInt())) }
-                },
-                valueRange = -2f..2f,
-                steps = 3,
-                contentDescription = hijriDesc
-            )
-        }
+    if (showClockSheet) {
+        OptionSelectionSheet(
+            title = stringResource(R.string.settings_time_format_title),
+            selectedId = settings.appearance.timeFormat,
+            options = clockOptions,
+            onSelect = { id ->
+                saveSettings {
+                    it.copy(appearance = it.appearance.copy(timeFormat = id))
+                }
+            },
+            onDismiss = { showClockSheet = false }
+        )
     }
 
     if (showLanguageSheet) {
         OptionSelectionSheet(
             title = stringResource(R.string.settings_language_title),
-            selectedId = settings.appearance.appLanguageCode ?: "",
+            selectedId = currentLangCode,
             options = languageOptions,
             onSelect = { langCode ->
                 val codeOrNull: String? = if (langCode.isEmpty()) null else langCode
@@ -198,4 +162,21 @@ internal fun SettingsAppearanceCard(
             onDismiss = { showLanguageSheet = false }
         )
     }
+}
+
+/** "0 days", "+1 day", "-2 days" - the same wording the slider used to show. */
+@Composable
+private fun hijriOffsetLabel(offset: Int): String = when {
+    offset == 0 -> stringResource(R.string.settings_calendar_hijri_offset_zero)
+    offset > 0 -> pluralStringResource(R.plurals.settings_calendar_hijri_offset_plus, offset, offset)
+    else -> pluralStringResource(R.plurals.settings_calendar_hijri_offset_minus, -offset, -offset)
+}
+
+/**
+ * The rule between rows. It was written out at every call site, which is how one of them
+ * came to be missing.
+ */
+@Composable
+internal fun SettingsDivider() {
+    HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 }

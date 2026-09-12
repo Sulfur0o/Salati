@@ -10,6 +10,16 @@ const val ZAKAT_HAWL_DAYS = 354L
 fun zakatHawlDueDate(startDate: LocalDate): LocalDate = startDate.plusDays(ZAKAT_HAWL_DAYS)
 
 /**
+ * The inverse: the day the Hawl must have started for it to fall due on [dueDate].
+ *
+ * What gets stored is the start - the day wealth first reached Nisab - because that is
+ * what the calendar badge and the milestone are derived from. But it is not what someone
+ * setting a reminder is thinking of: they know when their Zakat is next due, so that is
+ * the date they are asked for, and this turns it back into the one on file.
+ */
+fun zakatHawlStartDate(dueDate: LocalDate): LocalDate = dueDate.minusDays(ZAKAT_HAWL_DAYS)
+
+/**
  * Hands the Hawl review off to whatever calendar app the user already uses.
  *
  * [Intent.ACTION_INSERT] opens the calendar's own "new event" editor pre-filled, so

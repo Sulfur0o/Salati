@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Prayer Strip (4x1).
+
+  Five equal columns and nothing else: the widget is a ruler of the day, and the
+  next prayer is the filled cell on it. Cells are match_parent tall so that fill
+  reaches the full height of the strip rather than floating inside it.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_bar_root"
     android:layout_width="match_parent"
@@ -13,25 +20,22 @@
     android:baselineAligned="false"
     android:weightSum="5">
 
-    <!-- Fajr -->
     <LinearLayout
         android:id="@+id/widget_bar_cell_fajr"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp">
+        android:padding="1dp">
         <TextView
             android:id="@+id/widget_bar_label_fajr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prayer_fajr"
+            android:textAllCaps="true"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="10.5sp"
+            android:textSize="11sp"
             android:maxLines="1" />
         <TextView
             android:id="@+id/widget_bar_time_fajr"
@@ -44,25 +48,22 @@
             android:maxLines="1" />
     </LinearLayout>
 
-    <!-- Dhuhr -->
     <LinearLayout
         android:id="@+id/widget_bar_cell_dhuhr"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp">
+        android:padding="1dp">
         <TextView
             android:id="@+id/widget_bar_label_dhuhr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prayer_dhuhr"
+            android:textAllCaps="true"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="10.5sp"
+            android:textSize="11sp"
             android:maxLines="1" />
         <TextView
             android:id="@+id/widget_bar_time_dhuhr"
@@ -75,25 +76,22 @@
             android:maxLines="1" />
     </LinearLayout>
 
-    <!-- Asr -->
     <LinearLayout
         android:id="@+id/widget_bar_cell_asr"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp">
+        android:padding="1dp">
         <TextView
             android:id="@+id/widget_bar_label_asr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prayer_asr"
+            android:textAllCaps="true"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="10.5sp"
+            android:textSize="11sp"
             android:maxLines="1" />
         <TextView
             android:id="@+id/widget_bar_time_asr"
@@ -106,25 +104,22 @@
             android:maxLines="1" />
     </LinearLayout>
 
-    <!-- Maghrib -->
     <LinearLayout
         android:id="@+id/widget_bar_cell_maghrib"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp">
+        android:padding="1dp">
         <TextView
             android:id="@+id/widget_bar_label_maghrib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prayer_maghrib"
+            android:textAllCaps="true"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="10.5sp"
+            android:textSize="11sp"
             android:maxLines="1" />
         <TextView
             android:id="@+id/widget_bar_time_maghrib"
@@ -137,25 +132,22 @@
             android:maxLines="1" />
     </LinearLayout>
 
-    <!-- Isha -->
     <LinearLayout
         android:id="@+id/widget_bar_cell_isha"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp">
+        android:padding="1dp">
         <TextView
             android:id="@+id/widget_bar_label_isha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prayer_isha"
+            android:textAllCaps="true"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="10.5sp"
+            android:textSize="11sp"
             android:maxLines="1" />
         <TextView
             android:id="@+id/widget_bar_time_isha"
@@ -167,5 +159,4 @@
             android:textStyle="bold"
             android:maxLines="1" />
     </LinearLayout>
-
 </LinearLayout>

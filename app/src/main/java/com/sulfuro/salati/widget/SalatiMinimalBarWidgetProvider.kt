@@ -15,7 +15,11 @@ class SalatiMinimalBarWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         val pendingResult = goAsync()
-        SalatiWidgetData.updateAllWidgets(context, pendingResult)
+        // Only this provider's own widgets: the broadcast reaches all four providers, and
+        // each redrawing everything meant the same work four times over.
+        SalatiWidgetData.updateWidgets(context, pendingResult, appWidgetIds) { snapshot, intent ->
+            applySnapshot(context, appWidgetManager, appWidgetIds, snapshot, intent)
+        }
     }
 
     companion object {
@@ -64,8 +68,8 @@ class SalatiMinimalBarWidgetProvider : AppWidgetProvider() {
                     val isActive = (i == snapshot.activePrayerIndex)
                     if (isActive) {
                         views.setInt(cellIds[i], "setBackgroundResource", R.drawable.salati_widget_active_pill)
-                        SalatiWidgetData.setViewTextColor(views, context, labelIds[i], R.color.salati_widget_accent)
-                        SalatiWidgetData.setViewTextColor(views, context, timeIds[i], R.color.salati_widget_accent)
+                        SalatiWidgetData.setViewTextColor(views, context, labelIds[i], R.color.salati_widget_on_pill)
+                        SalatiWidgetData.setViewTextColor(views, context, timeIds[i], R.color.salati_widget_on_pill)
                     } else {
                         views.setInt(cellIds[i], "setBackgroundResource", 0)
                         SalatiWidgetData.setViewTextColor(views, context, labelIds[i], R.color.salati_widget_on_surface_variant)

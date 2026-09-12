@@ -42,10 +42,6 @@
     <string name="event_eid_al_adha">Eid al-Adha</string>
     <string name="event_white_day">Witte Dag</string>
     <string name="event_zakat_hawl">Zakat Hawl vervaldag</string>
-    <string name="hawl_milestone_title">Zakat Hawl</string>
-    <string name="hawl_milestone_not_set">Stel de datum in waarop uw vermogen de Nisab bereikte</string>
-    <string name="hawl_milestone_summary">Vervalt op %1$s · Nisab bereikt op %2$s</string>
-    <string name="hawl_set_date">Datum instellen</string>
     <string name="hawl_clear_date">Wissen</string>
     <string name="hawl_date_confirm">Opslaan</string>
     <string name="hawl_date_cancel">Annuleren</string>
@@ -96,8 +92,6 @@
     <string name="settings_high_latitudes_label">Regel voor hoge breedtegraden</string>
     <string name="settings_madhab_label">Madhab</string>
 
-    <string name="settings_reminders_mute">Meldingen dempen</string>
-    <string name="settings_reminders_mute_description">Schakel alle gebedswaarschuwingen uit</string>
     <string name="settings_reminders_vibration">Trilwaarschuwingen</string>
     <string name="settings_reminders_vibration_description">Laat het apparaat trillen bij gebedstijden</string>
     <string name="settings_silent_mode_title">Stille modus tijdens gebed</string>
@@ -123,7 +117,7 @@
     <string name="notification_pre_prayer_title">Herinnering: tijd voor %1$s nadert</string>
     <string name="notification_pre_prayer_message">Het gebed begint binnen enkele minuten.</string>
 
-    <string name="settings_reminders_pre_prayer">Duur voorafgaande waarschuwing</string>
+    <string name="settings_reminders_pre_prayer">Vroege herinnering</string>
 
     <string name="settings_calendar_hijri_offset">Hijri-datumcorrectie</string>
     <string name="settings_calendar_hijri_offset_zero">0 dagen</string>
@@ -135,7 +129,6 @@
         <item quantity="one">−%d dag</item>
         <item quantity="other">−%d dagen</item>
     </plurals>
-    <string name="settings_calendar_hijri_offset_accessibility">%1$s verschuiving</string>
 
     <string name="settings_permission_notifications_title">Meldingen</string>
     <string name="settings_permission_notifications_description">Gebedsherinneringen ontvangen</string>
@@ -149,11 +142,6 @@
     <string name="settings_permission_exact_alarms_allow">Exacte alarmen toestaan</string>
     <string name="settings_permission_exact_alarms_state_allowed">Toegestaan</string>
     <string name="settings_permission_exact_alarms_state_not_allowed">Niet toegestaan</string>
-    <string name="settings_permission_silent_mode_title">Toegang Niet storen</string>
-    <string name="settings_permission_silent_mode_description">Vereist om het belvolume tijdens gebed aan te passen en te herstellen</string>
-    <string name="settings_permission_silent_mode_allow">Instellingen openen</string>
-    <string name="settings_permission_silent_mode_state_allowed">Toegestaan</string>
-    <string name="settings_permission_silent_mode_state_not_allowed">Niet toegestaan</string>
 
     <string name="settings_method_mwl">Moslim Wereld Liga</string>
     <string name="settings_method_isna">Noord-Amerika (ISNA)</string>
@@ -174,7 +162,6 @@
     <string name="settings_high_lat_twilight_angle">Schemeringshoek</string>
 
     <!-- Theme Settings -->
-    <string name="settings_theme_dark_mode">Weergave</string>
     <string name="settings_theme_dark_mode_desc">Kies tussen het systeemthema, licht of donker</string>
     <string name="settings_theme_option_system">Systeem</string>
     <string name="settings_theme_option_light">Licht</string>
@@ -198,7 +185,6 @@
 
 
     <!-- Zakat Screen -->
-    <string name="zakat_title">Zakat</string>
     <string name="zakat_refresh_price">Actuele koers vernieuwen</string>
     <string name="zakat_price_updating">Laatste koers ophalen…</string>
     <string name="zakat_price_updated_at">Bijgewerkt op %1$s</string>
@@ -260,20 +246,16 @@
     <string name="battery_opt_state_restricted">Beperkt</string>
     <string name="battery_opt_state_unrestricted_desc">Batterijbesparing beperkt gebedsalarmen niet</string>
     <string name="battery_opt_state_restricted_desc">Beperkt: batterijbesparing kan gebedsalarmen vertragen</string>
-    <string name="widget_brand_name">Salati</string>
     <string name="widget_next_prayer">Volgend gebed</string>
     <string name="widget_placeholder_time">--:--</string>
-    <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">Locatie</string>
     <string name="widget_timetable_name">Salati: Volledig schema</string>
     <string name="widget_minimal_bar_name">Salati: Gebedsbalk</string>
     <string name="widget_minimal_bar_description">Horizontale balk van één rij met alle 5 dagelijkse gebeden</string>
     <string name="widget_compact_card_name">Salati: Volgend gebed kaart</string>
     <string name="widget_compact_card_description">Compacte kaart met volgend gebed, locatie en datum</string>
-    <string name="widget_glance_pill_name">Salati: Overzichtspil</string>
-    <string name="widget_glance_pill_description">Ultra-compacte pil die het volgende gebed toont</string>
     <string name="badge_next">VOLGENDE</string>
-    <string name="currency_sheet_title">Selecteer Zakat-valuta</string>
+    <string name="currency_sheet_title">Zakat-valuta</string>
     <string name="currency_sheet_subtitle">Gebruikt voor Nisab-drempel en waardering van bezittingen</string>
     <string name="currency_search_placeholder">Zoek valuta of code…</string>
     <string name="currency_clear">Wissen</string>
@@ -282,57 +264,42 @@
     <string name="onboarding_required_permissions">Vereiste toestemmingen</string>
     <string name="onboarding_action_optimize">Optimaliseren</string>
     <string name="zakat_currency_mismatch_warning">Opgeslagen metaalprijzen waren in %1$s. Tik op \'Vernieuwen\' om nauwkeurig in %2$s te berekenen.</string>
-    <string name="widget_description">Dagelijkse gebedstijden en afteltimer voor het startscherm</string>
+    <string name="widget_description">Alle vijf gebedstijden van de dag, met het volgende gebed gemarkeerd</string>
 
     <!-- ============ Zakat-wizard ============ -->
-    <string name="zakat_step_indicator">Stap %1$d van %2$d</string>
     <string name="zakat_step_back">Terug</string>
-    <string name="zakat_step_next">Volgende</string>
-    <string name="zakat_step_finish">Overzicht bekijken</string>
-    <string name="zakat_step_1_title">Nisab-norm</string>
-    <string name="zakat_step_2_title">Contanten &amp; liquide middelen</string>
+    <string name="zakat_step_1_title">Basis</string>
+    <string name="zakat_step_2_title">Contanten &amp; bezit</string>
     <string name="zakat_step_3_title">Goud &amp; zilver</string>
     <string name="zakat_step_4_title">Overzicht</string>
     <string name="zakat_step_accessibility">Stap %1$d van %2$d: %3$s</string>
 
-    <string name="zakat_standard_heading">Kies uw Nisab-norm</string>
-    <string name="zakat_standard_explainer">De Nisab is het minimale vermogen waarbij Zakat verschuldigd wordt. De meeste geleerden aanvaarden beide normen; die van zilver ligt lager, waardoor Zakat vaker verplicht is.</string>
-    <string name="zakat_standard_gold">Goudnorm</string>
+    <string name="zakat_standard_gold">Goud</string>
     <string name="zakat_standard_gold_detail">85 g zuiver goud</string>
-    <string name="zakat_standard_silver">Zilvernorm</string>
+    <string name="zakat_standard_silver">Zilver</string>
     <string name="zakat_standard_silver_detail">595 g zilver</string>
     <string name="zakat_standard_threshold">Uw Nisab-drempel</string>
     <string name="zakat_currency_label">Valuta</string>
-    <string name="zakat_currency_helper">Metaalprijzen en alle bedragen worden in deze valuta getoond.</string>
 
-    <string name="zakat_cash_heading">Contanten en liquide middelen</string>
-    <string name="zakat_cash_explainer">Vul in wat u een volledig maanjaar in bezit hebt. Laat op nul staan wat niet van toepassing is.</string>
     <string name="zakat_cash_on_hand">Contant geld</string>
     <string name="zakat_bank_balance">Banksaldi</string>
     <string name="zakat_investments">Liquide beleggingen en aandelen</string>
     <string name="zakat_receivables">Aan u verschuldigde bedragen</string>
-    <string name="zakat_liabilities_heading">Aftrekposten</string>
-    <string name="zakat_liabilities">Direct opeisbare kortlopende schulden</string>
-    <string name="zakat_liabilities_helper">Alleen direct opeisbare schulden worden afgetrokken.</string>
-    <string name="zakat_cash_subtotal">Subtotaal liquide middelen</string>
+    <string name="zakat_liabilities">Direct opeisbare schulden</string>
+    <string name="zakat_liabilities_helper">Alleen wat direct opeisbaar is</string>
 
-    <string name="zakat_metals_heading">Edelmetalen</string>
-    <string name="zakat_metals_explainer">Voeg elk stuk toe met het gehalte. Salati rekent elk item eerst om naar zuiver metaalgewicht.</string>
-    <string name="zakat_gold_items_title">Gouden items</string>
-    <string name="zakat_silver_items_title">Zilveren items</string>
-    <string name="zakat_add_gold_item">Gouden item toevoegen</string>
-    <string name="zakat_add_silver_item">Zilveren item toevoegen</string>
+    <string name="zakat_gold_items_title">Goud</string>
+    <string name="zakat_silver_items_title">Zilver</string>
+    <string name="zakat_add_gold_item">Gouden stuk toevoegen</string>
+    <string name="zakat_add_silver_item">Zilveren stuk toevoegen</string>
     <string name="zakat_item_label">Omschrijving (optioneel)</string>
     <string name="zakat_item_label_hint">Ketting, ring, munten…</string>
     <string name="zakat_item_weight">Gewicht (g)</string>
-    <string name="zakat_item_purity">Gehalte</string>
     <string name="zakat_item_remove">Item verwijderen</string>
     <string name="zakat_item_default_label">Item %1$d</string>
-    <string name="zakat_item_pure_weight">Zuiver equivalent: %1$s g</string>
-    <string name="zakat_gold_empty">Nog geen gouden items.</string>
-    <string name="zakat_silver_empty">Nog geen zilveren items.</string>
-    <string name="zakat_gold_total_pure">Totaal zuiver goud: %1$s g</string>
-    <string name="zakat_silver_total_fine">Totaal fijn zilver: %1$s g</string>
+    <string name="zakat_item_pure_weight">= %1$s g zuiver</string>
+    <string name="zakat_gold_total_pure">%1$s g zuiver</string>
+    <string name="zakat_silver_total_fine">%1$s g fijn</string>
     <string name="zakat_purity_24k">24 kt</string>
     <string name="zakat_purity_22k">22 kt</string>
     <string name="zakat_purity_21k">21 kt</string>
@@ -341,31 +308,24 @@
     <string name="zakat_purity_fine_silver">Fijn 999</string>
     <string name="zakat_purity_sterling">Sterling 925</string>
 
-    <string name="zakat_summary_heading">Uw Zakat-berekening</string>
     <string name="zakat_summary_gross">Brutovermogen</string>
-    <string name="zakat_summary_liabilities">Min direct opeisbare schulden</string>
+    <string name="zakat_summary_liabilities">Direct opeisbare schulden</string>
     <string name="zakat_summary_net">Netto zakatplichtig vermogen</string>
     <string name="zakat_summary_nisab">Nisab-drempel</string>
     <string name="zakat_summary_below_nisab">Uw vermogen ligt onder de Nisab-drempel (%1$s). Geen Zakat verschuldigd.</string>
-    <string name="zakat_summary_due_badge">Zakat verschuldigd: 2,5%%</string>
-    <string name="zakat_summary_breakdown">Specificatie</string>
-    <string name="zakat_summary_cash_line">Contanten en liquide middelen</string>
-    <string name="zakat_summary_gold_line">Goud (%1$s g zuiver)</string>
-    <string name="zakat_summary_silver_line">Zilver (%1$s g fijn)</string>
+    <string name="zakat_summary_cash_line">Contanten &amp; bezit</string>
+    <string name="zakat_summary_gold_line">Goud · %1$s g zuiver</string>
+    <string name="zakat_summary_silver_line">Zilver · %1$s g fijn</string>
 
     <string name="zakat_hawl_calendar_title">Salati: jaarlijkse Zakat Hawl-controle</string>
     <string name="zakat_hawl_calendar_description">Er is een maanjaar (354 dagen) verstreken sinds uw laatste Zakat-berekening. Vergelijk uw vermogen met de Nisab-drempel in Salati.</string>
-    <string name="zakat_hawl_calendar_action">Hawl in agenda zetten</string>
-    <string name="zakat_hawl_calendar_helper">Voegt een hele-dagherinnering toe op %1$s, een maanjaar vanaf vandaag.</string>
     <string name="zakat_hawl_calendar_unavailable">Geen agenda-app gevonden op dit apparaat.</string>
 
     <!-- ============ Stad zoeken ============ -->
     <string name="settings_location_use_gps">Huidige gps gebruiken</string>
-    <string name="settings_location_use_gps_description">Detecteer uw positie en bepaal automatisch de tijdzone</string>
     <string name="settings_location_search_city">Stadsnaam zoeken</string>
-    <string name="settings_location_search_city_description">Vind uw stad op naam, zonder coördinaten</string>
-    <string name="city_search_title">Stad zoeken</string>
-    <string name="city_search_subtitle">Kies uw stad om gebedstijden en tijdzone in te stellen</string>
+    <string name="city_search_title">Locatie</string>
+    <string name="city_search_subtitle">Bepaalt je gebedstijden en tijdzone</string>
     <string name="city_search_placeholder">Stadsnaam, bijv. Istanboel</string>
     <string name="city_search_clear">Zoekopdracht wissen</string>
     <string name="city_search_hint">Typ minstens twee letters om te zoeken.</string>
@@ -376,13 +336,6 @@
     <string name="city_search_result_accessibility">%1$s. Selecteer om deze locatie te gebruiken.</string>
 
     <!-- ============ Instellingen opnieuw ingedeeld ============ -->
-    <string name="settings_card_location_title">Locatie &amp; berekening</string>
-    <string name="settings_card_alarms_title">Alarmen &amp; meldingen</string>
-    <string name="settings_card_appearance_title">Weergave &amp; regio</string>
-    <string name="settings_card_system_title">Systeemstatus &amp; machtigingen</string>
-    <string name="settings_advanced_show">Geavanceerde opties</string>
-    <string name="settings_advanced_expand_accessibility">Geavanceerde opties tonen voor %1$s</string>
-    <string name="settings_advanced_collapse_accessibility">Geavanceerde opties verbergen voor %1$s</string>
     <string name="settings_time_format_title">Tijdnotatie</string>
     <string name="settings_time_format_system">Systeem</string>
     <string name="settings_time_format_12h">12-uurs</string>
@@ -398,8 +351,6 @@
     <string name="settings_about_title">Over Salati</string>
     <string name="settings_about_version">Versie %1$s</string>
 
-    <string name="settings_reminders_sound">Meldingsgeluid</string>
-    <string name="settings_reminders_sound_description">Speel een geluid af op gebedstijden</string>
     <string name="daily_computed_locally">Offline — tijden op dit apparaat berekend</string>
     <string name="notification_channel_vibrate_name">Gebedsherinneringen (trillen)</string>
     <string name="notification_channel_vibrate_description">Meldingen voor gebedstijden die trillen zonder geluid af te spelen</string>
@@ -423,7 +374,6 @@
     <string name="settings_adhan_unavailable">De lijst met opnamen kon niet worden gelezen.</string>
     <string name="settings_adhan_empty">Er zijn nog geen opnamen beschikbaar.</string>
     <string name="settings_adhan_size">Download van %1$s MB</string>
-    <string name="settings_adhan_not_downloaded">Nog niet gedownload</string>
     <string name="settings_adhan_download">%1$s downloaden</string>
     <string name="settings_adhan_delete">%1$s verwijderen</string>
     <string name="settings_adhan_preview">Beluisteren</string>
@@ -432,10 +382,6 @@
     <plurals name="settings_reminders_pre_prayer_value">
         <item quantity="one">%1$d minuut van tevoren</item>
         <item quantity="other">%1$d minuten van tevoren</item>
-    </plurals>
-    <plurals name="settings_reminders_pre_prayer_accessibility">
-        <item quantity="one">%1$d minuut voor het gebed</item>
-        <item quantity="other">%1$d minuten voor het gebed</item>
     </plurals>
     <string name="settings_reminders_pre_prayer_off">Uit</string>
     <string name="settings_reminders_pre_prayer_off_accessibility">Herinnering voor het gebed uit</string>
@@ -449,4 +395,62 @@
     <string name="settings_status_action_optimize">Optimaliseren</string>
     <string name="settings_status_battery_action_description">Batterijoptimalisatie voor Salati uitschakelen</string>
     <string name="settings_status_dnd_action_description">Toegang tot Niet storen toestaan</string>
+    <string name="settings_adhan_download_too_large">Die opname is groter dan Salati downloadt.</string>
+    <string name="settings_adhan_download_cancel">Download annuleren</string>
+    <string name="zakat_price_quoted_on">Koersen van %1$s</string>
+    <string name="settings_card_prayer_times_title">Gebedstijden</string>
+    <string name="settings_card_notifications_title">Meldingen</string>
+    <string name="settings_card_during_prayer_title">Tijdens het gebed</string>
+    <string name="settings_card_display_title">Weergave</string>
+    <string name="settings_card_about_title">Over de app</string>
+    <string name="settings_theme_label">Thema</string>
+    <string name="settings_alerts_label">Waarschuwingen</string>
+    <string name="settings_alerts_sound_vibration">Geluid en trillen</string>
+    <string name="settings_alerts_sound_only">Alleen geluid</string>
+    <string name="settings_alerts_vibration_only">Alleen trillen</string>
+    <string name="settings_alerts_silent">Stille melding</string>
+    <string name="settings_alerts_none">Geen meldingen</string>
+    <string name="settings_permissions_label">Machtigingen</string>
+    <string name="settings_permissions_all_granted">Alles in orde</string>
+    <string name="settings_permissions_attention">Actie vereist</string>
+    <string name="settings_location_label">Locatie</string>
+    <string name="settings_stepper_decrease">Verlagen: %1$s</string>
+    <string name="settings_stepper_increase">Verhogen: %1$s</string>
+    <string name="zakat_business_inventory">Handelsvoorraad</string>
+    <string name="zakat_business_inventory_helper">Tegen inkoopprijs</string>
+    <string name="zakat_metals_choice_heading">Heb je goud of zilver om op te geven?</string>
+    <string name="zakat_metals_choice_explainer">Goud en zilver als belegging - munten, staven - zijn in elke school zakatplichtig. Over sieraden voor persoonlijk gebruik verschillen de geleerden: de malikitische, shafiitische en hanbalitische school stellen ze vrij, de hanafitische school telt ze mee.</string>
+    <string name="zakat_metals_skip_title">Nee, sla deze stap over</string>
+    <string name="zakat_metals_skip_detail">Je hebt er geen, of je sieraden zijn voor persoonlijk gebruik en je volgt een school die ze vrijstelt.</string>
+    <string name="zakat_metals_declare_title">Ja, ik geef ze op</string>
+    <string name="zakat_metals_declare_detail">Je hebt munten of staven, of je volgt de hanafitische school en telt persoonlijke sieraden mee.</string>
+    <string name="zakat_metals_skipped_notice">Goud en zilver blijven buiten deze berekening.</string>
+    <string name="zakat_metals_chip_skip">Overslaan</string>
+    <string name="zakat_metals_chip_declare">Opgeven</string>
+    <string name="zakat_due_label">Verschuldigde Zakat</string>
+    <string name="zakat_due_below_nisab">Onder Nisab</string>
+    <string name="zakat_step_jump">Ga naar stap %1$d: %2$s</string>
+    <string name="zakat_section_standard">Nisab-norm</string>
+    <string name="zakat_section_currency_rates">Valuta &amp; koersen</string>
+    <string name="zakat_standard_note">De zilvernorm ligt lager en maakt Zakat dus vaker verplicht. De meeste geleerden aanvaarden beide.</string>
+    <string name="zakat_rates_label">Metaalkoersen</string>
+    <string name="zakat_rates_values">Goud %1$s/g · Zilver %2$s/g</string>
+    <string name="zakat_nisab_note">Zakat wordt verschuldigd zodra uw nettovermogen hier een maanjaar lang boven blijft.</string>
+    <string name="zakat_section_own">Wat u bezit</string>
+    <string name="zakat_section_owe">Wat u schuldig bent</string>
+    <string name="zakat_cash_total">Totaal bezit</string>
+    <string name="zakat_item_fine_weight">= %1$s g fijn</string>
+    <string name="zakat_item_summary_gold">%1$s · %2$s g zuiver</string>
+    <string name="zakat_item_summary_silver">%1$s · %2$s g fijn</string>
+    <string name="zakat_item_weight_unit">g</string>
+    <string name="zakat_item_edit">Dit stuk bewerken</string>
+    <string name="zakat_item_collapse">Dit stuk sluiten</string>
+    <string name="zakat_summary_above_nisab">Boven Nisab</string>
+    <string name="zakat_summary_rate_of">2,5%% van %1$s</string>
+    <string name="zakat_summary_negative">− %1$s</string>
+    <string name="zakat_hawl_next_label">Volgende Hawl</string>
+    <string name="zakat_hawl_unset">Nog niet ingesteld</string>
+    <string name="zakat_hawl_reached">Nisab bereikt op %1$s</string>
+    <string name="zakat_hawl_change">Wijzigen</string>
+    <string name="zakat_hawl_remind">Herinner mij</string>
 </resources>

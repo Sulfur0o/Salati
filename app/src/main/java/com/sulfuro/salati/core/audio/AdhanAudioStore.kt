@@ -20,6 +20,13 @@ sealed interface AdhanDownloadResult {
     /** The server answered, but not with the recording. Retrying will not help. */
     data class Rejected(val reason: String) : AdhanDownloadResult
 
+    /**
+     * The recording is bigger than the app will accept. Split out from [Rejected] because
+     * it is the one refusal the user can be told something useful about - everything else
+     * collapses to "that did not work", but "too large" names a real limit.
+     */
+    data class TooLarge(val limitBytes: Long) : AdhanDownloadResult
+
     /** Storage was full or unwritable. */
     data class NotStored(val cause: Throwable) : AdhanDownloadResult
 }
@@ -71,19 +78,36 @@ object AdhanAudioStore {
     }
 
     /**
-     * Recordings that were previously offered without a documented redistribution
-     * license. They must not be played or kept on disk after an app update.
+     * Ids that must not be played or kept on disk, whatever a stale manifest says.
+     *
+     * Two reasons land an id here, and both matter because [isDownloaded] trusts the
+     * filename: the digest in the manifest is checked while downloading and never again,
+     * so a file already on disk is played on the strength of its name alone.
+     *
+     *  - **Withdrawn.** Offered once without documented redistribution terms. Leaving the
+     *    file in place would go on playing a recording that has been taken back.
+     *  - **Replaced.** The id was reused for different audio. Without retiring the old id
+     *    the new recording can never arrive: the app sees `<id>.mp3` present, shows the
+     *    row as downloaded, and keeps playing whatever was fetched the first time. So a
+     *    changed recording always gets a new id and the old one is listed here.
      */
     val RETIRED_IDS: Set<String> = setOf(
+        // Withdrawn.
         "makkah_mullah",
         "makkah_faydah",
         "madinah_short",
         "quba",
         "al_surehi",
+        "aqsa",
         "fajr_makkah",
         "fajr_madinah",
         "fajr_abdul_basit",
-        "aaqib_azeez"
+        "aaqib_azeez",
+        // Replaced: see abdul_basit_abdus_samad, madinah_nabawi and
+        // abdul_basit_abdus_samad_fajr in the catalogue.
+        "abdul_basit",
+        "madinah",
+        "abdul_basit_fajr"
     )
 
     fun deleteRetired(context: Context) {
@@ -92,10 +116,16 @@ object AdhanAudioStore {
         }
     }
 
+    /**
+     * @param onProgress bytes received so far, reported as they stream. These are several
+     *   megabytes over a mobile connection, so a spinner alone leaves the user unable to
+     *   tell a slow download from a stuck one. Called off the main thread.
+     */
     suspend fun download(
         context: Context,
         option: AdhanOption,
-        openConnection: (String) -> HttpURLConnection = ::defaultConnection
+        openConnection: (String) -> HttpURLConnection = ::defaultConnection,
+        onProgress: (bytesReceived: Long) -> Unit = {}
     ): AdhanDownloadResult = withContext(Dispatchers.IO) {
         if (!option.isDownloadable) {
             return@withContext AdhanDownloadResult.Rejected("unusable catalogue entry")
@@ -136,7 +166,7 @@ object AdhanAudioStore {
 
             val declaredLength = connection.contentLengthLong
             if (declaredLength > MAX_BYTES) {
-                return@withContext AdhanDownloadResult.Rejected("too large: $declaredLength bytes")
+                return@withContext AdhanDownloadResult.TooLarge(MAX_BYTES)
             }
 
             val digest = MessageDigest.getInstance("SHA-256")
@@ -152,10 +182,11 @@ object AdhanAudioStore {
                             // Enforced while streaming, so a server that lies about or
                             // omits its length cannot run the disk out of space.
                             if (total > MAX_BYTES) {
-                                return@withContext AdhanDownloadResult.Rejected("exceeded size cap")
+                                return@withContext AdhanDownloadResult.TooLarge(MAX_BYTES)
                             }
                             digest.update(buffer, 0, read)
                             output.write(buffer, 0, read)
+                            onProgress(total)
                         }
                     }
                 }

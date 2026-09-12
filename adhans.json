@@ -2,77 +2,11 @@
   "version": 2,
   "adhans": [
     {
-      "id": "abdul_basit_fajr",
-      "name": "Abdul Basit Abdus Samad",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/abdul_basit_fajr.mp3",
-      "bytes": 11753396,
-      "seconds": 293.5,
-      "sha256": "f8d8241168d2fa83ecbe3e2d0f401a7e0638352f62bcdc534510c87becb4ea4c",
-      "reciter": "Egypt",
-      "fajr": true
-    },
-    {
-      "id": "ahmad_al_trabelsi_fajr",
-      "name": "Ahmad Al-Trabelsi",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/ahmad_al_trabelsi_fajr.mp3",
-      "bytes": 1034794,
-      "seconds": 147.5,
-      "sha256": "038cb47b3b294af433c13e65201af84b892927a988d39d3810933fe8b00af55d",
-      "reciter": "Kuwait",
-      "fajr": true
-    },
-    {
-      "id": "ahmad_nawaf_al_mejlad_fajr",
-      "name": "Ahmad Nawaf Al Mejlad",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/ahmad_nawaf_al_mejlad_fajr.mp3",
-      "bytes": 1555922,
-      "seconds": 129.4,
-      "sha256": "ecf2a76ca2ce5f453dc6417ee455121a3fbba6405456f22681fab7a35a62ed3d",
-      "fajr": true
-    },
-    {
-      "id": "algeria_fajr",
-      "name": "Algeria",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/algeria_fajr.mp3",
-      "bytes": 355962,
-      "seconds": 70.9,
-      "sha256": "4e4768f579363a4b574e62357388f7ed90307234a14506ef970e93e59660ac4b",
-      "fajr": true
-    },
-    {
-      "id": "cairo_fajr",
-      "name": "Cairo Fajr",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/cairo_fajr.mp3",
-      "bytes": 492761,
-      "seconds": 98.2,
-      "sha256": "8f234f9b10f0fb1441f01dc77cb0639f2b299e39eeaa06dd99b1ff4460216939",
-      "reciter": "Egypt",
-      "fajr": true
-    },
-    {
-      "id": "ibraheem_jabr_abu_raheq_fajr",
-      "name": "Ibraheem Jabr Abu Raheq",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/ibraheem_jabr_abu_raheq_fajr.mp3",
-      "bytes": 2340749,
-      "seconds": 292.2,
-      "sha256": "179a7f312158b989cab13bfb16c2ef5dbe723ff51d9269e116bd7e6664092f37",
-      "fajr": true
-    },
-    {
-      "id": "kuwait_fajr",
-      "name": "Kuwait",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/kuwait_fajr.mp3",
-      "bytes": 421257,
-      "seconds": 83.9,
-      "sha256": "3bdf5bfd1a590a6c07230d9ba6c65dc3c4053b4d2cd50a975f594984073a90a8",
-      "fajr": true
-    },
-    {
       "id": "makkah_fajr",
       "name": "Masjid al-Haram",
       "url": "https://salati.sulfuro.xyz/audio/fajr/makkah_fajr.mp3",
       "bytes": 447437,
-      "seconds": 89.1,
+      "seconds": 222.9,
       "sha256": "3f36f419846a8676ba8fb34e4eb73462697ed78669cc61e6608a49a606f73249",
       "reciter": "Makkah",
       "fajr": true
@@ -82,9 +16,19 @@
       "name": "Masjid an-Nabawi",
       "url": "https://salati.sulfuro.xyz/audio/fajr/madinah_fajr.mp3",
       "bytes": 559295,
-      "seconds": 111.5,
+      "seconds": 278.8,
       "sha256": "c1ff87466b93009a2025d1dc110fb233589db82da8970359bd1b2fc19dac3ee0",
       "reciter": "Madinah",
+      "fajr": true
+    },
+    {
+      "id": "abdul_basit_abdus_samad_fajr",
+      "name": "Abdul Basit Abdus Samad",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/abdul_basit_abdus_samad_fajr.mp3",
+      "bytes": 4696325,
+      "seconds": 293.5,
+      "sha256": "dbef7de9890d918bc5672b6cc9a7aff37d3f5c94965e80cbf81466db77720e89",
+      "reciter": "Egypt",
       "fajr": true
     },
     {
@@ -92,8 +36,18 @@
       "name": "Mishary Rashid Alafasy",
       "url": "https://salati.sulfuro.xyz/audio/fajr/mishary_alafasy_fajr.mp3",
       "bytes": 2312086,
-      "seconds": 288.6,
+      "seconds": 288.5,
       "sha256": "53c087c64f87a54b15dd9de1f9b18ee978e8f682f19d05f0d3fb9c7a61c86b95",
+      "reciter": "Kuwait",
+      "fajr": true
+    },
+    {
+      "id": "ahmad_al_trabelsi_fajr",
+      "name": "Ahmad Al-Trabelsi",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/ahmad_al_trabelsi_fajr.mp3",
+      "bytes": 1034794,
+      "seconds": 229.5,
+      "sha256": "038cb47b3b294af433c13e65201af84b892927a988d39d3810933fe8b00af55d",
       "reciter": "Kuwait",
       "fajr": true
     },
@@ -107,15 +61,6 @@
       "fajr": true
     },
     {
-      "id": "umm_al_quwain_fajr",
-      "name": "Umm Al Quwain",
-      "url": "https://salati.sulfuro.xyz/audio/fajr/umm_al_quwain_fajr.mp3",
-      "bytes": 382136,
-      "seconds": 76.1,
-      "sha256": "1eab70822f3e047de3672bedc22a23f4070a25c5bcb2508641423a20f5cee3fa",
-      "fajr": true
-    },
-    {
       "id": "yaseen_al_aassaf_fajr",
       "name": "Yaseen Al Aassaf",
       "url": "https://salati.sulfuro.xyz/audio/fajr/yaseen_al_aassaf_fajr.mp3",
@@ -125,13 +70,165 @@
       "fajr": true
     },
     {
-      "id": "abdul_basit",
+      "id": "ibraheem_jabr_abu_raheq_fajr",
+      "name": "Ibraheem Jabr Abu Raheq",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/ibraheem_jabr_abu_raheq_fajr.mp3",
+      "bytes": 2340749,
+      "seconds": 292.2,
+      "sha256": "179a7f312158b989cab13bfb16c2ef5dbe723ff51d9269e116bd7e6664092f37",
+      "fajr": true
+    },
+    {
+      "id": "ahmad_nawaf_al_mejlad_fajr",
+      "name": "Ahmad Nawaf Al Mejlad",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/ahmad_nawaf_al_mejlad_fajr.mp3",
+      "bytes": 1555922,
+      "seconds": 221.9,
+      "sha256": "ecf2a76ca2ce5f453dc6417ee455121a3fbba6405456f22681fab7a35a62ed3d",
+      "fajr": true
+    },
+    {
+      "id": "cairo_fajr",
+      "name": "Cairo",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/cairo_fajr.mp3",
+      "bytes": 492761,
+      "seconds": 245.6,
+      "sha256": "8f234f9b10f0fb1441f01dc77cb0639f2b299e39eeaa06dd99b1ff4460216939",
+      "reciter": "Egypt",
+      "fajr": true
+    },
+    {
+      "id": "kuwait_fajr",
+      "name": "Kuwait",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/kuwait_fajr.mp3",
+      "bytes": 421257,
+      "seconds": 209.8,
+      "sha256": "3bdf5bfd1a590a6c07230d9ba6c65dc3c4053b4d2cd50a975f594984073a90a8",
+      "fajr": true
+    },
+    {
+      "id": "umm_al_quwain_fajr",
+      "name": "Umm Al Quwain",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/umm_al_quwain_fajr.mp3",
+      "bytes": 382136,
+      "seconds": 190.3,
+      "sha256": "1eab70822f3e047de3672bedc22a23f4070a25c5bcb2508641423a20f5cee3fa",
+      "fajr": true
+    },
+    {
+      "id": "algeria_fajr",
+      "name": "Algeria",
+      "url": "https://salati.sulfuro.xyz/audio/fajr/algeria_fajr.mp3",
+      "bytes": 355962,
+      "seconds": 177.2,
+      "sha256": "4e4768f579363a4b574e62357388f7ed90307234a14506ef970e93e59660ac4b",
+      "fajr": true
+    },
+    {
+      "id": "ali_mulla",
+      "name": "Ali Ahmad Mulla",
+      "url": "https://salati.sulfuro.xyz/audio/regular/ali_mulla.mp3",
+      "bytes": 3915076,
+      "seconds": 244.4,
+      "sha256": "c1d71d260055ea80a920087faa801b3f5233a3d1dcdfd3ce7df09fca47ac1c69",
+      "reciter": "Masjid al-Haram, Makkah"
+    },
+    {
+      "id": "naif_faydah_makkah",
+      "name": "Naif Faydah",
+      "url": "https://salati.sulfuro.xyz/audio/regular/naif_faydah_makkah.mp3",
+      "bytes": 422699,
+      "seconds": 210.6,
+      "sha256": "3a670cc71fd926840a497f1a5211fb2b89336568af1c6d4e18396e29d056b948",
+      "reciter": "Masjid al-Haram, Makkah"
+    },
+    {
+      "id": "madinah_nabawi",
+      "name": "Masjid an-Nabawi",
+      "url": "https://salati.sulfuro.xyz/audio/regular/madinah_nabawi.mp3",
+      "bytes": 473015,
+      "seconds": 235.7,
+      "sha256": "fe6fdd61f13654f5d4eb99beea2757281807322394a16282ba7589c9f845362a",
+      "reciter": "Madinah"
+    },
+    {
+      "id": "naji_qazzaz_aqsa",
+      "name": "Naji Qazzaz",
+      "url": "https://salati.sulfuro.xyz/audio/regular/naji_qazzaz_aqsa.mp3",
+      "bytes": 454338,
+      "seconds": 226.4,
+      "sha256": "717ed89afe315fab1e02405ac9dab406a3c03cc05d2768d45e9cb572add2952f",
+      "reciter": "Al-Aqsa, Jerusalem"
+    },
+    {
+      "id": "abdul_basit_abdus_samad",
       "name": "Abdul Basit Abdus Samad",
-      "url": "https://salati.sulfuro.xyz/audio/regular/abdul_basit.mp3",
+      "url": "https://salati.sulfuro.xyz/audio/regular/abdul_basit_abdus_samad.mp3",
       "bytes": 4540356,
       "seconds": 188.9,
       "sha256": "d8a56eea77d33fe8edbb2dc8df61388abba56fbc20748e05592b6c9e961cad98",
       "reciter": "Egypt"
+    },
+    {
+      "id": "minshawi_egypt",
+      "name": "Mohamed Siddiq El-Minshawi",
+      "url": "https://salati.sulfuro.xyz/audio/regular/minshawi_egypt.mp3",
+      "bytes": 3956098,
+      "seconds": 246.9,
+      "sha256": "b3a64b232bcd5bf8f9bf544080514cb1a8e7e9c8999f503ffd57d3a4dba33b89",
+      "reciter": "Egypt"
+    },
+    {
+      "id": "mishary_alafasy",
+      "name": "Mishary Rashid Alafasy",
+      "url": "https://salati.sulfuro.xyz/audio/regular/mishary_alafasy.mp3",
+      "bytes": 2061260,
+      "seconds": 257.2,
+      "sha256": "cf040df9fcaa1a42d037e1ff048ddae096581181052a45c96d88baa520e58f0b",
+      "reciter": "Kuwait"
+    },
+    {
+      "id": "ahmad_al_trabelsi",
+      "name": "Ahmad Al-Trabelsi",
+      "url": "https://salati.sulfuro.xyz/audio/regular/ahmad_al_trabelsi.mp3",
+      "bytes": 6354009,
+      "seconds": 264.4,
+      "sha256": "3157996e948cb027fa7b60904836320273ff9d1deaf3208d650b6b3750f50219",
+      "reciter": "Kuwait"
+    },
+    {
+      "id": "nasser_al_qatami",
+      "name": "Nasser Al-Qatami",
+      "url": "https://salati.sulfuro.xyz/audio/regular/nasser_al_qatami.mp3",
+      "bytes": 2175884,
+      "seconds": 135.8,
+      "sha256": "35326924d5794f31064675b1c5be9d66a7b759d68eef09259133f20c17020cad",
+      "reciter": "Saudi Arabia"
+    },
+    {
+      "id": "yasser_al_dosari",
+      "name": "Yasser Al-Dosari",
+      "url": "https://salati.sulfuro.xyz/audio/regular/yasser_al_dosari.mp3",
+      "bytes": 1461348,
+      "seconds": 182.3,
+      "sha256": "71b6f6ae6b25047acd4fdc0ae6a5cf893d88c36ab2f434612ec9a58feef71b60",
+      "reciter": "Saudi Arabia"
+    },
+    {
+      "id": "mansur_al_zahrani",
+      "name": "Mansour Al-Zahrani",
+      "url": "https://salati.sulfuro.xyz/audio/regular/mansur_al_zahrani.mp3",
+      "bytes": 2959089,
+      "seconds": 184.7,
+      "sha256": "c518666bb401f0a7ccd2cf006145a00ee6e5d1edb62b4291a78e65a94d98fbd0"
+    },
+    {
+      "id": "hamad_al_daghriri",
+      "name": "Hamad Al-Daghriri",
+      "url": "https://salati.sulfuro.xyz/audio/regular/hamad_al_daghriri.mp3",
+      "bytes": 3078742,
+      "seconds": 192.1,
+      "sha256": "1dcccc71095b5d4b3fa8c9dc193bbb47b5cf39979fd6988dc1c22444b301a71f"
     },
     {
       "id": "abdul_majid_al_surehi",
@@ -150,116 +247,29 @@
       "sha256": "f2de50732893927a96a42d31c8ef5e3737635608af66fb47fa55472ed76596f0"
     },
     {
-      "id": "ahmad_al_trabelsi",
-      "name": "Ahmad Al-Trabelsi",
-      "url": "https://salati.sulfuro.xyz/audio/regular/ahmad_al_trabelsi.mp3",
-      "bytes": 6354009,
+      "id": "nasreddine_toubar",
+      "name": "Nasreddine Toubar",
+      "url": "https://salati.sulfuro.xyz/audio/regular/nasreddine_toubar.mp3",
+      "bytes": 4236811,
       "seconds": 264.4,
-      "sha256": "3157996e948cb027fa7b60904836320273ff9d1deaf3208d650b6b3750f50219",
-      "reciter": "Kuwait"
-    },
-    {
-      "id": "ali_mulla",
-      "name": "Ali Ahmad Mulla",
-      "url": "https://salati.sulfuro.xyz/audio/regular/ali_mulla.mp3",
-      "bytes": 3915076,
-      "seconds": 244.4,
-      "sha256": "c1d71d260055ea80a920087faa801b3f5233a3d1dcdfd3ce7df09fca47ac1c69",
-      "reciter": "Masjid al-Haram, Makkah"
-    },
-    {
-      "id": "anuar_duman_turkey",
-      "name": "Anuar Duman Turkey",
-      "url": "https://salati.sulfuro.xyz/audio/regular/anuar_duman_turkey.mp3",
-      "bytes": 4718366,
-      "seconds": 294.5,
-      "sha256": "2c013ddc87671b62e2d4052fd2646ce9056c2e6895f103088a915adc504da84c"
-    },
-    {
-      "id": "hamad_al_daghriri",
-      "name": "Hamad Al-Daghriri",
-      "url": "https://salati.sulfuro.xyz/audio/regular/hamad_al_daghriri.mp3",
-      "bytes": 3078742,
-      "seconds": 192.2,
-      "sha256": "1dcccc71095b5d4b3fa8c9dc193bbb47b5cf39979fd6988dc1c22444b301a71f"
-    },
-    {
-      "id": "mansur_al_zahrani",
-      "name": "Mansour Al-Zahrani",
-      "url": "https://salati.sulfuro.xyz/audio/regular/mansur_al_zahrani.mp3",
-      "bytes": 2959089,
-      "seconds": 184.7,
-      "sha256": "c518666bb401f0a7ccd2cf006145a00ee6e5d1edb62b4291a78e65a94d98fbd0"
-    },
-    {
-      "id": "madinah",
-      "name": "Masjid an-Nabawi",
-      "url": "https://salati.sulfuro.xyz/audio/regular/madinah.mp3",
-      "bytes": 473015,
-      "seconds": 94.3,
-      "sha256": "fe6fdd61f13654f5d4eb99beea2757281807322394a16282ba7589c9f845362a",
-      "reciter": "Madinah"
-    },
-    {
-      "id": "mishary_alafasy",
-      "name": "Mishary Rashid Alafasy",
-      "url": "https://salati.sulfuro.xyz/audio/regular/mishary_alafasy.mp3",
-      "bytes": 2061260,
-      "seconds": 257.3,
-      "sha256": "cf040df9fcaa1a42d037e1ff048ddae096581181052a45c96d88baa520e58f0b",
-      "reciter": "Kuwait"
-    },
-    {
-      "id": "minshawi_egypt",
-      "name": "Mohamed Siddiq El-Minshawi",
-      "url": "https://salati.sulfuro.xyz/audio/regular/minshawi_egypt.mp3",
-      "bytes": 3956098,
-      "seconds": 246.9,
-      "sha256": "b3a64b232bcd5bf8f9bf544080514cb1a8e7e9c8999f503ffd57d3a4dba33b89",
-      "reciter": "Egypt · Egypt"
+      "sha256": "ea35687ee98311ae238f36830d75bef27f3de6bbad576d657d388b119c49feab"
     },
     {
       "id": "mohamed_tarek",
       "name": "Mohamed Tarek",
       "url": "https://salati.sulfuro.xyz/audio/regular/mohamed_tarek.mp3",
       "bytes": 2406821,
-      "seconds": 150.2,
+      "seconds": 150.1,
       "sha256": "e86d8384aae11e2588fa27ee776f7a5fddd5a0767dd3c820b3832a3892c178fa"
     },
     {
-      "id": "naif_faydah_makkah",
-      "name": "Naif Faydah",
-      "url": "https://salati.sulfuro.xyz/audio/regular/naif_faydah_makkah.mp3",
-      "bytes": 422699,
-      "seconds": 84.2,
-      "sha256": "3a670cc71fd926840a497f1a5211fb2b89336568af1c6d4e18396e29d056b948",
-      "reciter": "Masjid al-Haram, Makkah · Makkah"
-    },
-    {
-      "id": "naji_qazzaz_aqsa",
-      "name": "Naji Qazzaz",
-      "url": "https://salati.sulfuro.xyz/audio/regular/naji_qazzaz_aqsa.mp3",
-      "bytes": 454338,
-      "seconds": 90.5,
-      "sha256": "717ed89afe315fab1e02405ac9dab406a3c03cc05d2768d45e9cb572add2952f",
-      "reciter": "Al-Aqsa, Jerusalem · Aqsa"
-    },
-    {
-      "id": "nasreddine_toubar",
-      "name": "Nasreddine Toubar",
-      "url": "https://salati.sulfuro.xyz/audio/regular/nasreddine_toubar.mp3",
-      "bytes": 4236811,
-      "seconds": 264.5,
-      "sha256": "ea35687ee98311ae238f36830d75bef27f3de6bbad576d657d388b119c49feab"
-    },
-    {
-      "id": "nasser_al_qatami",
-      "name": "Nasser Al-Qatami",
-      "url": "https://salati.sulfuro.xyz/audio/regular/nasser_al_qatami.mp3",
-      "bytes": 2175884,
-      "seconds": 135.8,
-      "sha256": "35326924d5794f31064675b1c5be9d66a7b759d68eef09259133f20c17020cad",
-      "reciter": "Saudi Arabia"
+      "id": "anuar_duman_turkey",
+      "name": "Anuar Duman",
+      "url": "https://salati.sulfuro.xyz/audio/regular/anuar_duman_turkey.mp3",
+      "bytes": 4718366,
+      "seconds": 294.5,
+      "sha256": "2c013ddc87671b62e2d4052fd2646ce9056c2e6895f103088a915adc504da84c",
+      "reciter": "Turkey"
     },
     {
       "id": "riyadh",
@@ -277,15 +287,6 @@
       "seconds": 15.0,
       "sha256": "707926709bcbc2d3f7517e5482d78fea0fab965e499b49ddea1660823e495592",
       "reciter": "Ali Ahmad Mulla"
-    },
-    {
-      "id": "yasser_al_dosari",
-      "name": "Yasser Al-Dosari",
-      "url": "https://salati.sulfuro.xyz/audio/regular/yasser_al_dosari.mp3",
-      "bytes": 1461348,
-      "seconds": 182.4,
-      "sha256": "71b6f6ae6b25047acd4fdc0ae6a5cf893d88c36ab2f434612ec9a58feef71b60",
-      "reciter": "Saudi Arabia"
     }
   ]
 }

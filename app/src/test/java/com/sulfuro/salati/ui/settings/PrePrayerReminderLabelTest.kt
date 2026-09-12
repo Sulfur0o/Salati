@@ -120,7 +120,9 @@ class PrePrayerReminderLabelTest {
         val alarmsCard = source("ui/settings/SettingsAlarmsCard.kt")
 
         assertTrue(scheduler.contains("settings.alarms.prePrayerMinutes > 0"))
-        assertTrue(alarmsCard.contains("prePrayerMinutes == 0"))
+        // The screen branches in prePrayerLabel now that the row is a named choice
+        // rather than a slider, but it is still the same comparison against zero.
+        assertTrue(alarmsCard.contains("minutes == 0"))
         assertTrue(alarmsCard.contains("settings_reminders_pre_prayer_off"))
     }
 
@@ -146,12 +148,18 @@ class PrePrayerReminderLabelTest {
         return String(Files.readAllBytes(path))
     }
 
+    /**
+     * The reminder is now a list of named options rather than a slider, so the stops are
+     * written out. The labels above have to cover exactly the ones that are offered: a
+     * seventh option with no plural behind it would render as a raw resource id.
+     */
     @Test
-    fun theSliderStopsAreTheOnesTheseLabelsCover() {
-        // 0..30 in five steps is seven stops; the labels above cover the six non-zero
-        // ones, and the seventh is "Off".
+    fun theOfferedStopsAreTheOnesTheseLabelsCover() {
         val alarmsCard = source("ui/settings/SettingsAlarmsCard.kt")
-        assertTrue(alarmsCard.contains("valueRange = 0f..30f"))
+        assertTrue(
+            "the offered minutes are not the ones these labels cover",
+            alarmsCard.contains("listOf(0, 5, 10, 15, 20, 25, 30)")
+        )
         assertEquals(6, reachableMinutes.size)
     }
 }

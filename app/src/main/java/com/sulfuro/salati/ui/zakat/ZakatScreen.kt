@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -35,7 +36,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,10 +59,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.zakat.MetalPricesResult
@@ -71,14 +73,14 @@ import com.sulfuro.salati.core.zakat.ZakatCalculator
 import com.sulfuro.salati.core.zakat.ZakatGoldItem
 import com.sulfuro.salati.core.zakat.ZakatHawlCalendar
 import com.sulfuro.salati.core.zakat.ZakatSilverItem
-import com.sulfuro.salati.core.zakat.zakatCurrencySymbolFor
 import com.sulfuro.salati.core.zakat.zakatCurrencyOptions
+import com.sulfuro.salati.core.zakat.zakatCurrencySymbolFor
 import com.sulfuro.salati.core.zakat.zakatHawlDueDate
+import com.sulfuro.salati.core.zakat.zakatHawlStartDate
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
-import com.sulfuro.salati.ui.components.StatusPill
 import com.sulfuro.salati.ui.settings.CurrencySelectionSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -97,6 +99,35 @@ internal const val ZAKAT_STEP_COUNT = 4
  */
 private const val TYPING_SETTLE_MILLIS = 400L
 
+/**
+ * How long a fetched gold/silver quote is treated as current.
+ *
+ * The rate source republishes once a day, so anything shorter buys nothing. Six hours
+ * keeps a price the user looks at in the evening from being the one fetched that morning
+ * while still costing at most a handful of requests a day.
+ */
+private const val PRICE_FRESHNESS_MILLIS = 6L * 60 * 60 * 1000
+
+/**
+ * Whether the stored metal prices are worth replacing before showing them.
+ *
+ * This screen is destroyed and rebuilt on every tab switch, so the refresh it runs on
+ * first composition ran on *every visit* - two HTTP requests to a third-party CDN, a
+ * spinner, and a settings write, for numbers that change once a day. `pricesUpdatedAt` was
+ * being stored and never consulted; this is what consults it.
+ */
+internal fun metalPricesAreStale(
+    settings: CalculationSettings,
+    nowMillis: Long = System.currentTimeMillis()
+): Boolean {
+    val zakat = settings.zakat
+    if (zakat.goldPrice <= 0.0 || zakat.silverPrice <= 0.0) return true
+    // Quotes are per currency, so one fetched in another currency is not an answer here.
+    if (!zakat.pricesCurrencyCode.equals(zakat.currencyCode, ignoreCase = true)) return true
+    if (zakat.pricesUpdatedAt <= 0L) return true
+    return nowMillis - zakat.pricesUpdatedAt >= PRICE_FRESHNESS_MILLIS
+}
+
 private fun CalculationSettings.withGoldItem(edited: ZakatGoldItem): CalculationSettings =
     copy(zakat = zakat.copy(goldItems = zakat.goldItems.map { if (it.id == edited.id) edited else it }))
 
@@ -107,9 +138,13 @@ private fun CalculationSettings.withSilverItem(edited: ZakatSilverItem): Calcula
  * Four-step Zakat walkthrough.
  *
  * The assessment is long enough that a single scrolling form buries the parts that
- * actually need thought, so it is split into: pick a Nisab standard, enter liquid
- * wealth, itemise precious metals at their real purities, then review and optionally
- * book the next Hawl in the user's own calendar.
+ * actually need thought, so it is split into: settle the basis, enter liquid wealth,
+ * itemise precious metals at their real purities, then review and optionally book the next
+ * Hawl in the user's own calendar.
+ *
+ * The amount due rides in the header on every step rather than waiting at the end. It is
+ * the thing people open this tab for, and keeping it three taps away meant typing an
+ * amount gave no feedback at all until the walkthrough was finished.
  *
  * Every answer is persisted to [SalatiPreferences] rather than held in screen state: the
  * tab bar tears this screen down on every switch, and the assessment is revisited a lunar
@@ -188,39 +223,77 @@ fun ZakatScreen(
     var showCurrencySheet by remember { mutableStateOf(false) }
     var isRefreshingPrices by remember { mutableStateOf(false) }
     var priceRefreshFailed by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     suspend fun refreshMetalPrices() {
         isRefreshingPrices = true
         priceRefreshFailed = false
         when (val result = MetalsPriceRepository.fetchLatestPrices(settings.zakat.currencyCode)) {
             is MetalPricesResult.Success -> update {
-                it.copy(zakat = it.zakat.copy(goldPrice = result.prices.goldPricePerGram, silverPrice = result.prices.silverPricePerGram, pricesUpdatedAt = result.prices.fetchedAtMillis, pricesCurrencyCode = result.prices.currencyCode))
+                it.copy(zakat = it.zakat.copy(goldPrice = result.prices.goldPricePerGram, silverPrice = result.prices.silverPricePerGram, pricesUpdatedAt = result.prices.fetchedAtMillis, pricesCurrencyCode = result.prices.currencyCode, pricesRateDate = result.prices.rateDate))
             }
             MetalPricesResult.Unavailable -> priceRefreshFailed = true
         }
         isRefreshingPrices = false
     }
 
-    // Prices are quoted per currency, so a currency change invalidates what is stored.
-    LaunchedEffect(settings.zakat.currencyCode) { refreshMetalPrices() }
+    // Prices are quoted per currency, so a currency change invalidates what is stored -
+    // but simply arriving on this screen does not. The manual refresh button beside the
+    // figures is the way to insist.
+    LaunchedEffect(settings.zakat.currencyCode) {
+        if (metalPricesAreStale(settings)) refreshMetalPrices()
+    }
 
     val assessment = rememberZakatAssessment(settings)
 
-    Column(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = SalatiSpacing.md, end = SalatiSpacing.md, bottom = 4.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.zakat_title),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.semantics { heading() }
-            )
-            ZakatStepIndicator(currentStep = step)
+    val hawlStart = remember(settings.zakat.hawlStartEpochDay) {
+        settings.zakat.hawlStartEpochDay?.let(LocalDate::ofEpochDay)
+    }
+    val hawlDue = remember(hawlStart) { hawlStart?.let(::zakatHawlDueDate) }
+    val calendarTitle = stringResource(R.string.zakat_hawl_calendar_title)
+    val calendarDescription = stringResource(R.string.zakat_hawl_calendar_description)
+    val calendarUnavailable = stringResource(R.string.zakat_hawl_calendar_unavailable)
+    val saveHawlToCalendar = {
+        val dueDate = hawlDue ?: ZakatHawlCalendar.dueDateFrom(LocalDate.now())
+        val intent = ZakatHawlCalendar.buildInsertIntent(
+            title = calendarTitle,
+            description = calendarDescription,
+            dueDate = dueDate
+        )
+        try {
+            context.startActivity(intent)
+        } catch (notFound: ActivityNotFoundException) {
+            Toast.makeText(context, calendarUnavailable, Toast.LENGTH_LONG).show()
         }
+    }
+
+    val stepTitles = listOf(
+        stringResource(R.string.zakat_step_1_title),
+        stringResource(R.string.zakat_step_2_title),
+        stringResource(R.string.zakat_step_3_title),
+        stringResource(R.string.zakat_step_4_title)
+    )
+
+    val goToStep = { target: Int ->
+        step = target.coerceIn(0, ZAKAT_STEP_COUNT - 1)
+        // One scroll state is shared across the steps, so without this, moving on from the
+        // bottom of a long step opened the next one part-way down.
+        scope.launch { scrollState.animateScrollTo(0) }
+        Unit
+    }
+
+    Column(modifier = modifier.fillMaxSize()) {
+        ZakatHeader(
+            step = step,
+            stepTitles = stepTitles,
+            dueValue = if (assessment.isEligible) {
+                formatAmount(assessment.zakatDue, true)
+            } else {
+                stringResource(R.string.zakat_due_below_nisab)
+            },
+            isEligible = assessment.isEligible,
+            onJumpToStep = goToStep
+        )
 
         Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             Column(
@@ -253,12 +326,17 @@ fun ZakatScreen(
                             onSelectStandard = { value -> update { it.copy(zakat = it.zakat.copy(standard = value)) } },
                             currencyLabel = currencyLabelFor(settings.zakat.currencyCode),
                             onOpenCurrency = { showCurrencySheet = true },
+                            goldThresholdText = formatAmount(assessment.goldThreshold, true),
+                            silverThresholdText = formatAmount(assessment.silverThreshold, true),
                             nisabThresholdText = formatAmount(assessment.nisabThreshold, true),
-                            priceSummary = {
-                                PriceRefreshHeader(
+                            ratesSummary = {
+                                MetalRatesRow(
                                     isRefreshing = isRefreshingPrices,
                                     updatedAtMillis = settings.zakat.pricesUpdatedAt,
+                                    rateDate = settings.zakat.pricesRateDate,
                                     hasFailed = priceRefreshFailed,
+                                    goldPriceText = formatAmount(settings.zakat.goldPrice, false),
+                                    silverPriceText = formatAmount(settings.zakat.silverPrice, false),
                                     onRefresh = { scope.launch { refreshMetalPrices() } }
                                 )
                             }
@@ -266,20 +344,28 @@ fun ZakatScreen(
 
                         1 -> ZakatCashStep(
                             currencySymbol = currencySymbol,
+                            currencyCode = settings.zakat.currencyCode,
                             cashOnHand = settings.zakat.cashOnHand,
                             bankBalance = settings.zakat.bankBalance,
                             investments = settings.zakat.investments,
                             receivables = settings.zakat.receivables,
+                            businessInventory = settings.zakat.businessInventory,
                             liabilities = settings.zakat.liabilities,
                             subtotalText = formatAmount(assessment.liquidAssets, true),
                             onCashOnHandChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(cashOnHand = v)) } },
                             onBankBalanceChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(bankBalance = v)) } },
                             onInvestmentsChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(investments = v)) } },
                             onReceivablesChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(receivables = v)) } },
+                            onBusinessInventoryChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(businessInventory = v)) } },
                             onLiabilitiesChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(liabilities = v)) } }
                         )
 
                         2 -> ZakatMetalsStep(
+                            declaresMetals = settings.zakat.declaresMetals
+                                ?: if (declaresMetalsOrDefault(settings)) true else null,
+                            onDeclaresMetalsChange = { declaring ->
+                                update { it.copy(zakat = it.zakat.copy(declaresMetals = declaring)) }
+                            },
                             goldItems = settings.zakat.goldItems,
                             silverItems = settings.zakat.silverItems,
                             totalPureGoldText = stringResource(
@@ -327,12 +413,11 @@ fun ZakatScreen(
                         )
 
                         else -> ZakatSummaryStep(
-                            settings = settings,
                             assessment = assessment,
                             formatAmount = formatAmount,
-                            onStartDateChanged = { date ->
-                                update { it.copy(zakat = it.zakat.copy(hawlStartEpochDay = date?.toEpochDay())) }
-                            }
+                            hawlStart = hawlStart,
+                            hawlDue = hawlDue,
+                            onChangeHawlDate = { showDatePicker = true }
                         )
                     }
                 }
@@ -343,8 +428,16 @@ fun ZakatScreen(
 
         ZakatStepNavigation(
             step = step,
-            onBack = { step = (step - 1).coerceAtLeast(0) },
-            onNext = { step = (step + 1).coerceAtMost(ZAKAT_STEP_COUNT - 1) }
+            nextLabel = if (step < ZAKAT_STEP_COUNT - 1) {
+                stepTitles[step + 1]
+            } else {
+                stringResource(R.string.zakat_hawl_remind)
+            },
+            nextIsCalendarHandoff = step == ZAKAT_STEP_COUNT - 1,
+            onBack = { goToStep(step - 1) },
+            onNext = {
+                if (step == ZAKAT_STEP_COUNT - 1) saveHawlToCalendar() else goToStep(step + 1)
+            }
         )
     }
 
@@ -353,6 +446,28 @@ fun ZakatScreen(
             selectedCode = settings.zakat.currencyCode,
             onSelect = { code -> update { it.copy(zakat = it.zakat.copy(currencyCode = code)) } },
             onDismiss = { showCurrencySheet = false }
+        )
+    }
+
+    if (showDatePicker) {
+        HawlDatePickerDialog(
+            // The date asked for is the one the row shows: when Zakat next falls due. An
+            // unset Hawl opened on today, which is never the answer - it is the one date
+            // that cannot be a due date - so every user had to page forward a year by hand.
+            initialDate = hawlDue ?: ZakatHawlCalendar.dueDateFrom(LocalDate.now()),
+            canClear = hawlStart != null,
+            onDismiss = { showDatePicker = false },
+            onPicked = { due ->
+                // What is stored is still the start, which is what the calendar badge and
+                // the milestone are derived from.
+                update {
+                    it.copy(
+                        zakat = it.zakat.copy(
+                            hawlStartEpochDay = due?.let(::zakatHawlStartDate)?.toEpochDay()
+                        )
+                    )
+                }
+            }
         )
     }
 }
@@ -364,6 +479,7 @@ fun ZakatScreen(
 internal data class ZakatAssessment(
     val standard: Int,
     val liquidAssets: Double,
+    val declaresMetals: Boolean,
     val pureGoldGrams: Double,
     val fineSilverGrams: Double,
     val goldValue: Double,
@@ -371,6 +487,8 @@ internal data class ZakatAssessment(
     val grossAssets: Double,
     val liabilities: Double,
     val netWealth: Double,
+    val goldThreshold: Double,
+    val silverThreshold: Double,
     val nisabThreshold: Double,
     val isEligible: Boolean,
     val zakatDue: Double,
@@ -382,6 +500,19 @@ private fun rememberZakatAssessment(settings: CalculationSettings): ZakatAssessm
     remember(settings) { computeAssessment(settings) }
 
 /**
+ * Whether gold and silver count, for someone who has not been asked yet.
+ *
+ * The question is new, so every existing install arrives with no answer on file. Anyone
+ * who had already listed pieces plainly meant to declare them, and it would be wrong to
+ * quietly drop them from a figure the user has already seen - so having pieces is taken
+ * as the answer until they say otherwise. An empty list means the question is genuinely
+ * open, and nothing is owed on metals while it stays that way.
+ */
+internal fun declaresMetalsOrDefault(settings: CalculationSettings): Boolean =
+    settings.zakat.declaresMetals
+        ?: (settings.zakat.goldItems.isNotEmpty() || settings.zakat.silverItems.isNotEmpty())
+
+/**
  * Pure derivation of the whole assessment, kept out of the composables so the arithmetic
  * can be exercised directly in tests.
  */
@@ -389,24 +520,40 @@ internal fun computeAssessment(settings: CalculationSettings): ZakatAssessment {
     val liquid = settings.zakat.cashOnHand +
         settings.zakat.bankBalance +
         settings.zakat.investments +
-        settings.zakat.receivables
+        settings.zakat.receivables +
+        settings.zakat.businessInventory
 
-    val pureGold = ZakatCalculator.totalPureGoldWeight(settings.zakat.goldItems)
-    val fineSilver = ZakatCalculator.totalFineSilverWeight(settings.zakat.silverItems)
+    // Pieces stay on file when the user chooses to skip, so that changing their mind
+    // costs nothing - but nothing they entered counts while the answer is no.
+    val declaringMetals = declaresMetalsOrDefault(settings)
+    val pureGold = if (declaringMetals) {
+        ZakatCalculator.totalPureGoldWeight(settings.zakat.goldItems)
+    } else {
+        0.0
+    }
+    val fineSilver = if (declaringMetals) {
+        ZakatCalculator.totalFineSilverWeight(settings.zakat.silverItems)
+    } else {
+        0.0
+    }
     val goldValue = ZakatCalculator.valueForPureWeight(pureGold, settings.zakat.goldPrice)
     val silverValue = ZakatCalculator.valueForPureWeight(fineSilver, settings.zakat.silverPrice)
 
-    val nisab = if (settings.zakat.standard == STANDARD_SILVER) {
-        ZakatCalculator.calculateNisabValue(settings.zakat.nisabSilverGram, settings.zakat.silverPrice)
-    } else {
+    // Both are derived, not just the chosen one: step 1 shows each standard beside the
+    // threshold it produces, so the choice is between two amounts rather than two names.
+    val goldThreshold =
         ZakatCalculator.calculateNisabValue(settings.zakat.nisabGram, settings.zakat.goldPrice)
-    }
+    val silverThreshold =
+        ZakatCalculator.calculateNisabValue(settings.zakat.nisabSilverGram, settings.zakat.silverPrice)
+    val nisab = if (settings.zakat.standard == STANDARD_SILVER) silverThreshold else goldThreshold
 
     val result = ZakatCalculator.computeZakat(
         cash = settings.zakat.cashOnHand + settings.zakat.bankBalance,
         goldValue = goldValue,
         silverValue = silverValue,
-        otherAssets = settings.zakat.investments + settings.zakat.receivables,
+        otherAssets = settings.zakat.investments +
+            settings.zakat.receivables +
+            settings.zakat.businessInventory,
         shortTermLiabilities = settings.zakat.liabilities,
         nisabThreshold = nisab
     )
@@ -414,6 +561,7 @@ internal fun computeAssessment(settings: CalculationSettings): ZakatAssessment {
     return ZakatAssessment(
         standard = settings.zakat.standard,
         liquidAssets = liquid,
+        declaresMetals = declaringMetals,
         pureGoldGrams = pureGold,
         fineSilverGrams = fineSilver,
         goldValue = goldValue,
@@ -421,6 +569,8 @@ internal fun computeAssessment(settings: CalculationSettings): ZakatAssessment {
         grossAssets = result.totalAssets,
         liabilities = settings.zakat.liabilities,
         netWealth = result.netWealth,
+        goldThreshold = goldThreshold,
+        silverThreshold = silverThreshold,
         nisabThreshold = result.nisabThreshold,
         isEligible = result.isEligible,
         zakatDue = result.zakatDue,
@@ -432,42 +582,40 @@ internal fun computeAssessment(settings: CalculationSettings): ZakatAssessment {
 }
 
 // ---------------------------------------------------------------------------
-// Step 4 - summary, eligibility badge and Hawl calendar hand-off
+// Step 4 - summary, eligibility and the Hawl record
 // ---------------------------------------------------------------------------
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ZakatSummaryStep(
-    settings: CalculationSettings,
     assessment: ZakatAssessment,
     formatAmount: (Double, Boolean) -> String,
-    onStartDateChanged: (LocalDate?) -> Unit
+    hawlStart: LocalDate?,
+    hawlDue: LocalDate?,
+    onChangeHawlDate: () -> Unit
 ) {
-    val context = LocalContext.current
     val displayLocale = LocalConfiguration.current.locales[0]
     val dateFormatter = remember(displayLocale) {
         DateTimeFormatter.ofPattern("d MMM uuuu", displayLocale)
     }
-    val hawlStart = remember(settings.zakat.hawlStartEpochDay) {
-        settings.zakat.hawlStartEpochDay?.let(LocalDate::ofEpochDay)
-    }
-    val hawlDue = remember(hawlStart) { hawlStart?.let(::zakatHawlDueDate) }
-    var showDatePicker by remember { mutableStateOf(false) }
 
-    val calendarTitle = stringResource(R.string.zakat_hawl_calendar_title)
-    val calendarDescription = stringResource(R.string.zakat_hawl_calendar_description)
-    val calendarUnavailable = stringResource(R.string.zakat_hawl_calendar_unavailable)
-
-    Column(verticalArrangement = Arrangement.spacedBy(SalatiSpacing.md)) {
-        StepHeading(
-            title = stringResource(R.string.zakat_summary_heading),
-            explainer = stringResource(R.string.zakat_summary_breakdown)
+    Column(verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)) {
+        EligibilityCard(
+            isEligible = assessment.isEligible,
+            zakatDueText = formatAmount(assessment.zakatDue, true),
+            rateOfText = stringResource(
+                R.string.zakat_summary_rate_of,
+                formatAmount(assessment.netWealth, true)
+            ),
+            belowNisabText = stringResource(
+                R.string.zakat_summary_below_nisab,
+                formatAmount(assessment.nisabThreshold, true)
+            )
         )
 
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = SalatiShapeTokens.Card,
-            color = MaterialTheme.colorScheme.surfaceVariant,
+            color = MaterialTheme.colorScheme.surface,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(
@@ -500,9 +648,28 @@ private fun ZakatSummaryStep(
                     label = stringResource(R.string.zakat_summary_gross),
                     value = formatAmount(assessment.grossAssets, true)
                 )
+                val owesSomething = assessment.liabilities > 0.0
                 TotalsRow(
                     label = stringResource(R.string.zakat_summary_liabilities),
-                    value = formatAmount(assessment.liabilities, true)
+                    // Nothing owed is not a deduction: a red "- EUR 0.00" announced a
+                    // subtraction that never happened.
+                    value = if (owesSomething) {
+                        stringResource(
+                            R.string.zakat_summary_negative,
+                            formatAmount(assessment.liabilities, true)
+                        )
+                    } else {
+                        formatAmount(0.0, true)
+                    },
+                    valueColor = if (owesSomething) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
                 TotalsRow(
                     label = stringResource(R.string.zakat_summary_net),
@@ -516,126 +683,133 @@ private fun ZakatSummaryStep(
             }
         }
 
-        EligibilityCard(
-            isEligible = assessment.isEligible,
-            zakatDueText = formatAmount(assessment.zakatDue, true),
-            belowNisabText = stringResource(
-                R.string.zakat_summary_below_nisab,
-                formatAmount(assessment.nisabThreshold, true)
-            )
+        HawlRow(
+            dueText = hawlDue?.let(dateFormatter::format),
+            reachedText = hawlStart?.let {
+                stringResource(R.string.zakat_hawl_reached, dateFormatter.format(it))
+            },
+            onChange = onChangeHawlDate
         )
+    }
+}
 
-        // Hawl milestone: the in-app record plus a hand-off to the user's own calendar.
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = SalatiShapeTokens.Card,
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+/**
+ * The Hawl milestone as one row rather than a card with its own heading, paragraph, two
+ * text buttons, a divider, a helper line and a button. The calendar hand-off it used to
+ * carry is now the step's primary action, in the bar at the foot of the screen, where the
+ * last step otherwise had a greyed-out Next and nothing to do.
+ */
+@Composable
+private fun HawlRow(dueText: String?, reachedText: String?, onChange: () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = SalatiShapeTokens.Card,
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Row(
+            modifier = Modifier.padding(
+                start = SalatiSpacing.md,
+                end = SalatiSpacing.sm,
+                top = SalatiSpacing.sm,
+                bottom = SalatiSpacing.sm
+            ),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(SalatiSpacing.md),
-                verticalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)
-            ) {
+            Column(modifier = Modifier.weight(1f).padding(end = SalatiSpacing.xs)) {
                 Text(
-                    text = stringResource(R.string.hawl_milestone_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = if (hawlStart != null && hawlDue != null) {
-                        stringResource(
-                            R.string.hawl_milestone_summary,
-                            dateFormatter.format(hawlDue),
-                            dateFormatter.format(hawlStart)
-                        )
-                    } else {
-                        stringResource(R.string.hawl_milestone_not_set)
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.sm)) {
-                    TextButton(onClick = { showDatePicker = true }) {
-                        Text(stringResource(R.string.hawl_set_date))
-                    }
-                    if (hawlStart != null) {
-                        TextButton(onClick = { onStartDateChanged(null) }) {
-                            Text(stringResource(R.string.hawl_clear_date))
-                        }
-                    }
-                }
-
-                HorizontalDivider(
-                    thickness = 0.5.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant
-                )
-
-                val calendarDueDate = hawlDue ?: ZakatHawlCalendar.dueDateFrom(LocalDate.now())
-                Text(
-                    text = stringResource(
-                        R.string.zakat_hawl_calendar_helper,
-                        dateFormatter.format(calendarDueDate)
-                    ),
+                    text = stringResource(R.string.zakat_hawl_next_label),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                FilledTonalButton(
-                    onClick = {
-                        val intent = ZakatHawlCalendar.buildInsertIntent(
-                            title = calendarTitle,
-                            description = calendarDescription,
-                            dueDate = calendarDueDate
-                        )
-                        try {
-                            context.startActivity(intent)
-                        } catch (notFound: ActivityNotFoundException) {
-                            Toast.makeText(context, calendarUnavailable, Toast.LENGTH_LONG).show()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Event,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                Text(
+                    text = dueText ?: stringResource(R.string.zakat_hawl_unset),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                if (reachedText != null) {
+                    Text(
+                        text = reachedText,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.size(SalatiSpacing.xs))
-                    Text(stringResource(R.string.zakat_hawl_calendar_action))
                 }
+            }
+            OutlinedButton(onClick = onChange) {
+                Text(stringResource(R.string.zakat_hawl_change))
             }
         }
     }
+}
 
-    if (showDatePicker) {
-        val initialDate = hawlStart ?: LocalDate.now()
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = initialDate.toEpochDay() * 86_400_000L
-        )
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            onStartDateChanged(
-                                Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC")).toLocalDate()
-                            )
-                        }
-                        showDatePicker = false
+/**
+ * Asks for the day Zakat next falls due.
+ *
+ * The dialog names what it is asking for, because a bare "Select date" over a card that
+ * shows two dates - when the Hawl completes, and when Nisab was reached - does not say
+ * which of them is being changed.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HawlDatePickerDialog(
+    initialDate: LocalDate,
+    canClear: Boolean,
+    onDismiss: () -> Unit,
+    onPicked: (LocalDate?) -> Unit
+) {
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialDate.toEpochDay() * 86_400_000L
+    )
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        onPicked(Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC")).toLocalDate())
                     }
-                ) {
-                    Text(stringResource(R.string.hawl_date_confirm))
+                    onDismiss()
                 }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
+            ) {
+                Text(stringResource(R.string.hawl_date_confirm))
+            }
+        },
+        dismissButton = {
+            // Clearing the date used to be a button on the summary card. The card is a row
+            // now, so it lives here - beside Cancel, which is where someone who has opened
+            // the picker to change their mind will look for it.
+            Row(horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)) {
+                if (canClear) {
+                    TextButton(
+                        onClick = {
+                            onPicked(null)
+                            onDismiss()
+                        }
+                    ) {
+                        Text(stringResource(R.string.hawl_clear_date))
+                    }
+                }
+                TextButton(onClick = onDismiss) {
                     Text(stringResource(R.string.hawl_date_cancel))
                 }
             }
-        ) {
-            DatePicker(state = datePickerState)
         }
+    ) {
+        DatePicker(
+            state = datePickerState,
+            title = {
+                Text(
+                    text = stringResource(R.string.zakat_hawl_next_label),
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(
+                        start = SalatiSpacing.xl,
+                        end = SalatiSpacing.sm,
+                        top = SalatiSpacing.md
+                    )
+                )
+            }
+        )
     }
 }
 
@@ -643,100 +817,186 @@ private fun ZakatSummaryStep(
 private fun EligibilityCard(
     isEligible: Boolean,
     zakatDueText: String,
+    rateOfText: String,
     belowNisabText: String
 ) {
+    if (!isEligible) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = SalatiShapeTokens.Card,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        ) {
+            Text(
+                text = belowNisabText,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(SalatiSpacing.md)
+            )
+        }
+        return
+    }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = SalatiShapeTokens.Card,
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        color = MaterialTheme.colorScheme.primary
     ) {
         Column(
             modifier = Modifier.padding(SalatiSpacing.md),
-            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
+            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)
         ) {
-            if (isEligible) {
-                StatusPill(
-                    text = stringResource(R.string.zakat_summary_due_badge),
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.zakat_summary_above_nisab),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f)
                 )
                 Text(
-                    text = zakatDueText,
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Black,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            } else {
-                Text(
-                    text = belowNisabText,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = rateOfText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f),
+                    textAlign = TextAlign.End
                 )
             }
+            Text(
+                text = zakatDueText,
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Black,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }
 
 // ---------------------------------------------------------------------------
-// Chrome: step indicator, navigation, price header
+// Chrome: header, navigation, rates
 // ---------------------------------------------------------------------------
 
+/**
+ * The step you are on, and what you owe.
+ *
+ * This replaced five stacked rows: a "Zakat" headline the tab bar already carried, a
+ * progress bar, a "Step 2 of 4 - Cash & assets" line, a heading that said the same thing
+ * again, and an explainer paragraph. Two rows now, and the second of them is the answer
+ * the tab exists to give - live, on every step, rather than three taps away.
+ */
 @Composable
-private fun ZakatStepIndicator(currentStep: Int) {
-    val stepTitles = listOf(
-        stringResource(R.string.zakat_step_1_title),
-        stringResource(R.string.zakat_step_2_title),
-        stringResource(R.string.zakat_step_3_title),
-        stringResource(R.string.zakat_step_4_title)
-    )
-    val label = stringResource(
-        R.string.zakat_step_accessibility,
-        currentStep + 1,
-        ZAKAT_STEP_COUNT,
-        stepTitles[currentStep.coerceIn(0, ZAKAT_STEP_COUNT - 1)]
-    )
-
+private fun ZakatHeader(
+    step: Int,
+    stepTitles: List<String>,
+    dueValue: String,
+    isEligible: Boolean,
+    onJumpToStep: (Int) -> Unit
+) {
+    val current = step.coerceIn(0, ZAKAT_STEP_COUNT - 1)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .semantics { contentDescription = label },
-        verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)
+            .padding(
+                start = SalatiSpacing.md,
+                end = SalatiSpacing.md,
+                // The amount is a two-line block, so it reaches higher than the single-line
+                // title it replaced and sat right up against the status bar without this.
+                top = SalatiSpacing.xs,
+                bottom = SalatiSpacing.xxs
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            val spokenTitle = stringResource(
+                R.string.zakat_step_accessibility,
+                current + 1,
+                ZAKAT_STEP_COUNT,
+                stepTitles[current]
+            )
+            Text(
+                text = stepTitles[current],
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = SalatiSpacing.xs)
+                    .semantics {
+                        heading()
+                        contentDescription = spokenTitle
+                    }
+            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = stringResource(R.string.zakat_due_label),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = dueValue,
+                    style = if (isEligible) {
+                        MaterialTheme.typography.headlineMedium
+                    } else {
+                        MaterialTheme.typography.titleMedium
+                    },
+                    fontWeight = FontWeight.Bold,
+                    color = if (isEligible) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                    maxLines = 1
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)
         ) {
             repeat(ZAKAT_STEP_COUNT) { index ->
-                val reached = index <= currentStep
+                val reached = index <= current
                 val weight by animateFloatAsState(
                     targetValue = if (reached) 1f else 0.35f,
                     label = "zakatStepSegment$index"
                 )
+                val jumpLabel = stringResource(R.string.zakat_step_jump, index + 1, stepTitles[index])
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .height(4.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = weight),
-                            shape = RoundedCornerShape(2.dp)
+                        .height(40.dp)
+                        .selectable(
+                            selected = index == current,
+                            role = Role.Tab,
+                            onClick = { onJumpToStep(index) }
                         )
-                )
+                        .semantics { contentDescription = jumpLabel },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(5.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = weight),
+                                shape = RoundedCornerShape(2.5.dp)
+                            )
+                    )
+                }
             }
         }
-        Text(
-            text = stringResource(R.string.zakat_step_indicator, currentStep + 1, ZAKAT_STEP_COUNT) +
-                " · " + stepTitles[currentStep.coerceIn(0, ZAKAT_STEP_COUNT - 1)],
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
 
 @Composable
 private fun ZakatStepNavigation(
     step: Int,
+    nextLabel: String,
+    nextIsCalendarHandoff: Boolean,
     onBack: () -> Unit,
     onNext: () -> Unit
 ) {
@@ -761,54 +1021,86 @@ private fun ZakatStepNavigation(
             }
             Button(
                 onClick = onNext,
-                enabled = step < ZAKAT_STEP_COUNT - 1,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(if (nextIsCalendarHandoff) 1.4f else 1f)
             ) {
-                Text(
-                    stringResource(
-                        if (step == ZAKAT_STEP_COUNT - 2) {
-                            R.string.zakat_step_finish
-                        } else {
-                            R.string.zakat_step_next
-                        }
+                if (nextIsCalendarHandoff) {
+                    Icon(
+                        imageVector = Icons.Default.Event,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
                     )
-                )
+                    Spacer(modifier = Modifier.size(SalatiSpacing.xs))
+                }
+                Text(text = nextLabel, maxLines = 1)
             }
         }
     }
 }
 
+/**
+ * What the metals are worth per gram, when that was quoted, and the button that asks again.
+ *
+ * The prices themselves used not to be shown anywhere, which left a bare "Rates for 11 Sep"
+ * floating between two cards with a refresh button beside it and no way to tell what it
+ * would refresh.
+ */
 @Composable
-private fun PriceRefreshHeader(
+private fun MetalRatesRow(
     isRefreshing: Boolean,
     updatedAtMillis: Long,
+    rateDate: String,
     hasFailed: Boolean,
+    goldPriceText: String,
+    silverPriceText: String,
     onRefresh: () -> Unit
 ) {
+    val displayLocale = LocalConfiguration.current.locales[0]
+    // The source's own quote date, when it gave one. "Updated 2 minutes ago" describes the
+    // download, not the price, and the two can be days apart.
+    val quotedOn = remember(rateDate, displayLocale) {
+        runCatching {
+            DateTimeFormatter.ofPattern("d MMM uuuu", displayLocale)
+                .format(LocalDate.parse(rateDate))
+        }.getOrNull()
+    }
+    val statusText = when {
+        isRefreshing -> stringResource(R.string.zakat_price_updating)
+        hasFailed -> stringResource(R.string.zakat_price_update_failed)
+        quotedOn != null -> stringResource(R.string.zakat_price_quoted_on, quotedOn)
+        updatedAtMillis > 0L -> stringResource(
+            R.string.zakat_price_updated_at,
+            formatPriceTimestamp(updatedAtMillis)
+        )
+        else -> stringResource(R.string.zakat_price_never_updated)
+    }
+
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = SalatiSpacing.md, end = SalatiSpacing.xxs, top = SalatiSpacing.xs, bottom = SalatiSpacing.xs),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val statusText = when {
-            isRefreshing -> stringResource(R.string.zakat_price_updating)
-            hasFailed -> stringResource(R.string.zakat_price_update_failed)
-            updatedAtMillis > 0L -> stringResource(
-                R.string.zakat_price_updated_at,
-                formatPriceTimestamp(updatedAtMillis)
+        Column(modifier = Modifier.weight(1f).padding(end = SalatiSpacing.xs)) {
+            Text(
+                text = stringResource(R.string.zakat_rates_label),
+                style = MaterialTheme.typography.bodyLarge
             )
-            else -> stringResource(R.string.zakat_price_never_updated)
+            Text(
+                text = stringResource(R.string.zakat_rates_values, goldPriceText, silverPriceText),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = statusText,
+                style = MaterialTheme.typography.bodySmall,
+                color = if (hasFailed) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.secondary
+                }
+            )
         }
-        Text(
-            text = statusText,
-            style = MaterialTheme.typography.bodySmall,
-            color = if (hasFailed) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            },
-            modifier = Modifier.weight(1f)
-        )
         IconButton(onClick = onRefresh, enabled = !isRefreshing, modifier = Modifier.size(48.dp)) {
             if (isRefreshing) {
                 CircularProgressIndicator(

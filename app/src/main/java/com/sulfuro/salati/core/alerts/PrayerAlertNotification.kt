@@ -33,6 +33,8 @@ object PrayerAlertNotification {
     const val EXTRA_TEXT = "fallback_text"
     const val EXTRA_SOUND_ENABLED = "fallback_sound_enabled"
     const val EXTRA_VIBRATE_ENABLED = "fallback_vibrate_enabled"
+    const val EXTRA_PLAY_ADHAN_ID = "fallback_play_adhan_id"
+    const val EXTRA_PLAY_PRAYER_LABEL = "fallback_play_prayer_label"
 
     /**
      * Everything needed to post the alert, so a caller that only forwards it (the playback
@@ -49,6 +51,8 @@ object PrayerAlertNotification {
         val playAdhanId: String? = null,
         val playPrayerLabel: String? = null
     ) {
+        // Every field travels. Leaving two of them out made this a value object whose
+        // round trip silently returned something different from what went in.
         fun writeTo(intent: Intent): Intent = intent.apply {
             putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             putExtra(EXTRA_CHANNEL_ID, channelId)
@@ -56,6 +60,8 @@ object PrayerAlertNotification {
             putExtra(EXTRA_TEXT, text)
             putExtra(EXTRA_SOUND_ENABLED, soundEnabled)
             putExtra(EXTRA_VIBRATE_ENABLED, vibrateEnabled)
+            putExtra(EXTRA_PLAY_ADHAN_ID, playAdhanId)
+            putExtra(EXTRA_PLAY_PRAYER_LABEL, playPrayerLabel)
         }
 
         companion object {
@@ -71,7 +77,9 @@ object PrayerAlertNotification {
                     title = title,
                     text = text,
                     soundEnabled = intent.getBooleanExtra(EXTRA_SOUND_ENABLED, false),
-                    vibrateEnabled = intent.getBooleanExtra(EXTRA_VIBRATE_ENABLED, true)
+                    vibrateEnabled = intent.getBooleanExtra(EXTRA_VIBRATE_ENABLED, true),
+                    playAdhanId = intent.getStringExtra(EXTRA_PLAY_ADHAN_ID),
+                    playPrayerLabel = intent.getStringExtra(EXTRA_PLAY_PRAYER_LABEL)
                 )
             }
         }

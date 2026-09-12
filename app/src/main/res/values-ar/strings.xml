@@ -8,7 +8,7 @@
     <string name="daily_display_only">للعرض فقط</string>
     <string name="daily_middle_of_night">نصف الليل</string>
     <string name="daily_last_third_of_night">الثلث الأخير من الليل</string>
-    <string name="daily_loading">جاري تحميل مواقيت الصلاة...</string>
+    <string name="daily_loading">جاري تحميل مواقيت الصلاة…</string>
     <string name="daily_error_title">تعذر تحميل مواقيت الصلاة</string>
     <string name="daily_error_message">مواقيت الصلاة غير متاحة حالياً. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="daily_retry">إعادة المحاولة</string>
@@ -29,7 +29,7 @@
     <string name="monthly_today_action">اليوم</string>
     <string name="monthly_previous_month">الشهر السابق</string>
     <string name="monthly_next_month">الشهر التالي</string>
-    <string name="monthly_loading">جاري تحميل التقويم...</string>
+    <string name="monthly_loading">جاري تحميل التقويم…</string>
     <string name="monthly_retry">إعادة المحاولة</string>
     <string name="monthly_error_title">البيانات غير متوفرة</string>
     <string name="monthly_error_message">تعذر تحميل جدول الصلاة الشهري. يرجى التحقق من اتصالك بالإنترنت.</string>
@@ -42,10 +42,6 @@
     <string name="event_eid_al_adha">عيد الأضحى المبارك</string>
     <string name="event_white_day">الأيام البيض</string>
     <string name="event_zakat_hawl">موعد حول الزكاة</string>
-    <string name="hawl_milestone_title">حول الزكاة</string>
-    <string name="hawl_milestone_not_set">حدد تاريخ بلوغ المال النصاب لأول مرة</string>
-    <string name="hawl_milestone_summary">الاستحقاق %1$s · بلوغ النصاب %2$s</string>
-    <string name="hawl_set_date">تحديد التاريخ</string>
     <string name="hawl_clear_date">مسح</string>
     <string name="hawl_date_confirm">حفظ</string>
     <string name="hawl_date_cancel">إلغاء</string>
@@ -97,8 +93,6 @@
     <string name="settings_high_latitudes_label">قاعدة خطوط العرض العليا</string>
     <string name="settings_madhab_label">المذهب</string>
 
-    <string name="settings_reminders_mute">كتم التنبيهات</string>
-    <string name="settings_reminders_mute_description">تعطيل جميع التنبيهات والأصوات</string>
     <string name="settings_reminders_vibration">الاهتزاز</string>
     <string name="settings_reminders_vibration_description">اهتزاز الهاتف عند دخول وقت الصلاة</string>
     <string name="settings_silent_mode_title">الوضع الصامت للصلاة</string>
@@ -124,7 +118,7 @@
     <string name="notification_pre_prayer_title">تذكير: اقترب وقت صلاة %1$s</string>
     <string name="notification_pre_prayer_message">الصلاة القادمة بعد قليل.</string>
 
-    <string name="settings_reminders_pre_prayer">تنبيه مسبق قبل الصلاة</string>
+    <string name="settings_reminders_pre_prayer">تنبيه مسبق</string>
 
     <string name="settings_calendar_hijri_offset">تعديل التاريخ الهجري</string>
     <string name="settings_calendar_hijri_offset_zero">0 يوم</string>
@@ -144,7 +138,6 @@
         <item quantity="many">-%d يوماً</item>
         <item quantity="other">-%d يوماً</item>
     </plurals>
-    <string name="settings_calendar_hijri_offset_accessibility">فارق %1$s</string>
 
 
     <string name="settings_permission_notifications_title">الإشعارات</string>
@@ -159,11 +152,6 @@
     <string name="settings_permission_exact_alarms_allow">السماح بالمنبه الدقيق</string>
     <string name="settings_permission_exact_alarms_state_allowed">مفعل</string>
     <string name="settings_permission_exact_alarms_state_not_allowed">غير مفعل</string>
-    <string name="settings_permission_silent_mode_title">إذن عدم الإزعاج</string>
-    <string name="settings_permission_silent_mode_description">مطلوب لكتم رنين الهاتف أثناء الصلاة ثم استعادته</string>
-    <string name="settings_permission_silent_mode_allow">فتح الإعدادات</string>
-    <string name="settings_permission_silent_mode_state_allowed">مفعل</string>
-    <string name="settings_permission_silent_mode_state_not_allowed">غير مفعل</string>
 
     <string name="settings_method_mwl">رابطة العالم الإسلامي</string>
     <string name="settings_method_isna">أمريكا الشمالية (ISNA)</string>
@@ -184,7 +172,6 @@
     <string name="settings_high_lat_twilight_angle">زاوية الشفق</string>
 
     <!-- Theme Settings -->
-    <string name="settings_theme_dark_mode">المظهر</string>
     <string name="settings_theme_dark_mode_desc">الاختيار بين مظهر النظام، الوضع الفاتح، أو الوضع الداكن</string>
     <string name="settings_theme_option_system">تلقائي (حسب النظام)</string>
     <string name="settings_theme_option_light">فاتح</string>
@@ -198,7 +185,6 @@
     <string name="settings_support_email_open">مراسلة salati@sulfuro.eu</string>
 
     <!-- Zakat Screen -->
-    <string name="zakat_title">حاسبة الزكاة</string>
     <string name="zakat_refresh_price">تحديث السعر المباشر</string>
     <string name="zakat_price_updating">جاري جلب أحدث الأسعار…</string>
     <string name="zakat_price_updated_at">تم التحديث %1$s</string>
@@ -268,18 +254,14 @@
     <string name="battery_opt_state_restricted">مقيّد</string>
     <string name="battery_opt_state_unrestricted_desc">موفّر البطارية لا يقيّد تنبيهات الصلاة</string>
     <string name="battery_opt_state_restricted_desc">مقيّد: قد يؤخر موفّر البطارية تنبيهات الصلاة</string>
-    <string name="widget_brand_name">صلاتي</string>
     <string name="widget_next_prayer">الصلاة التالية</string>
     <string name="widget_placeholder_time">--:--</string>
-    <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">الموقع</string>
     <string name="widget_timetable_name">صلاتي: الجدول الكامل</string>
     <string name="widget_minimal_bar_name">صلاتي: شريط الصلوات</string>
     <string name="widget_minimal_bar_description">شريط أفقي من سطر واحد يعرض الصلوات الخمس</string>
     <string name="widget_compact_card_name">صلاتي: بطاقة الصلاة القادمة</string>
     <string name="widget_compact_card_description">بطاقة مدمجة تعرض الصلاة القادمة والوقت والموقع</string>
-    <string name="widget_glance_pill_name">صلاتي: لمحة سريعة</string>
-    <string name="widget_glance_pill_description">شريط مصغر يعرض الصلاة القادمة ووقتها</string>
 
     <!-- Language Settings -->
     <string name="settings_language_title">اللغة</string>
@@ -290,7 +272,7 @@
     <string name="settings_language_fr">الفرنسية (Français)</string>
     <string name="settings_language_nl">الهولندية (Nederlands)</string>
     <string name="badge_next">التالي</string>
-    <string name="currency_sheet_title">اختر عملة الزكاة</string>
+    <string name="currency_sheet_title">عملة الزكاة</string>
     <string name="currency_sheet_subtitle">تُستخدم لتحديد نصاب الزكاة وتقييم الأصول</string>
     <string name="currency_search_placeholder">ابحث عن العملة أو الرمز…</string>
     <string name="currency_clear">مسح</string>
@@ -299,57 +281,42 @@
     <string name="onboarding_required_permissions">الأذونات المطلوبة</string>
     <string name="onboarding_action_optimize">تحسين</string>
     <string name="zakat_currency_mismatch_warning">أسعار المعادن المخزنة كانت مقومة بـ %1$s. يرجى النقر على \"تحديث\" للحساب بدقة بـ %2$s.</string>
-    <string name="widget_description">أوقات الصلاة اليومية والعد التنازلي للشاشة الرئيسية</string>
+    <string name="widget_description">أوقات الصلوات الخمس لليوم مع إبراز الصلاة القادمة</string>
 
     <!-- ============ معالج الزكاة ============ -->
-    <string name="zakat_step_indicator">الخطوة %1$d من %2$d</string>
     <string name="zakat_step_back">رجوع</string>
-    <string name="zakat_step_next">التالي</string>
-    <string name="zakat_step_finish">عرض الملخص</string>
-    <string name="zakat_step_1_title">نصاب الزكاة</string>
-    <string name="zakat_step_2_title">النقد والأصول السائلة</string>
+    <string name="zakat_step_1_title">الأساس</string>
+    <string name="zakat_step_2_title">النقد والأصول</string>
     <string name="zakat_step_3_title">الذهب والفضة</string>
     <string name="zakat_step_4_title">الملخص</string>
     <string name="zakat_step_accessibility">الخطوة %1$d من %2$d: %3$s</string>
 
-    <string name="zakat_standard_heading">اختر معيار النصاب</string>
-    <string name="zakat_standard_explainer">النصاب هو الحد الأدنى من المال الذي تجب فيه الزكاة. يقبل أكثر العلماء كلا المعيارين؛ ونصاب الفضة أقل، فتجب به الزكاة في حالات أكثر.</string>
-    <string name="zakat_standard_gold">معيار الذهب</string>
+    <string name="zakat_standard_gold">الذهب</string>
     <string name="zakat_standard_gold_detail">٨٥ غرامًا من الذهب الخالص</string>
-    <string name="zakat_standard_silver">معيار الفضة</string>
+    <string name="zakat_standard_silver">الفضة</string>
     <string name="zakat_standard_silver_detail">٥٩٥ غرامًا من الفضة</string>
     <string name="zakat_standard_threshold">حدّ النصاب لديك</string>
     <string name="zakat_currency_label">العملة</string>
-    <string name="zakat_currency_helper">تُعرض أسعار المعادن وجميع المبالغ بهذه العملة.</string>
 
-    <string name="zakat_cash_heading">النقد والأصول السائلة</string>
-    <string name="zakat_cash_explainer">أدخل ما تملكه منذ حَوْل كامل. اترك ما لا ينطبق عليك صفرًا.</string>
     <string name="zakat_cash_on_hand">النقد في اليد</string>
     <string name="zakat_bank_balance">أرصدة الحسابات المصرفية</string>
     <string name="zakat_investments">الاستثمارات والأسهم السائلة</string>
     <string name="zakat_receivables">الديون المستحقة لك</string>
-    <string name="zakat_liabilities_heading">الخصومات</string>
-    <string name="zakat_liabilities">الديون قصيرة الأجل المستحقة الآن</string>
-    <string name="zakat_liabilities_helper">تُخصم الديون الواجبة السداد فورًا فقط.</string>
-    <string name="zakat_cash_subtotal">مجموع الأصول السائلة</string>
+    <string name="zakat_liabilities">الديون المستحقة الآن</string>
+    <string name="zakat_liabilities_helper">ما يجب سداده فورًا فقط</string>
 
-    <string name="zakat_metals_heading">المعادن الثمينة</string>
-    <string name="zakat_metals_explainer">أضف كل قطعة مع درجة نقائها. يحوّل «صلاتي» كل عنصر إلى وزنه الخالص قبل تقييمه.</string>
-    <string name="zakat_gold_items_title">قطع الذهب</string>
-    <string name="zakat_silver_items_title">قطع الفضة</string>
+    <string name="zakat_gold_items_title">الذهب</string>
+    <string name="zakat_silver_items_title">الفضة</string>
     <string name="zakat_add_gold_item">إضافة قطعة ذهب</string>
     <string name="zakat_add_silver_item">إضافة قطعة فضة</string>
     <string name="zakat_item_label">الوصف (اختياري)</string>
     <string name="zakat_item_label_hint">قلادة، خاتم، عملات…</string>
     <string name="zakat_item_weight">الوزن (غرام)</string>
-    <string name="zakat_item_purity">النقاء</string>
     <string name="zakat_item_remove">إزالة العنصر</string>
     <string name="zakat_item_default_label">العنصر %1$d</string>
-    <string name="zakat_item_pure_weight">المكافئ الخالص: %1$s غرام</string>
-    <string name="zakat_gold_empty">لا توجد قطع ذهب بعد.</string>
-    <string name="zakat_silver_empty">لا توجد قطع فضة بعد.</string>
-    <string name="zakat_gold_total_pure">إجمالي الذهب الخالص: %1$s غرام</string>
-    <string name="zakat_silver_total_fine">إجمالي الفضة الخالصة: %1$s غرام</string>
+    <string name="zakat_item_pure_weight">= %1$s غرام خالص</string>
+    <string name="zakat_gold_total_pure">%1$s غرام خالص</string>
+    <string name="zakat_silver_total_fine">%1$s غرام خالصة</string>
     <string name="zakat_purity_24k">عيار ٢٤</string>
     <string name="zakat_purity_22k">عيار ٢٢</string>
     <string name="zakat_purity_21k">عيار ٢١</string>
@@ -358,31 +325,24 @@
     <string name="zakat_purity_fine_silver">فضة خالصة ٩٩٩</string>
     <string name="zakat_purity_sterling">فضة إسترليني ٩٢٥</string>
 
-    <string name="zakat_summary_heading">تقدير زكاتك</string>
     <string name="zakat_summary_gross">إجمالي الأصول</string>
-    <string name="zakat_summary_liabilities">ناقص الديون الحالّة</string>
+    <string name="zakat_summary_liabilities">الديون المستحقة الآن</string>
     <string name="zakat_summary_net">صافي المال الزكوي</string>
     <string name="zakat_summary_nisab">حدّ النصاب</string>
     <string name="zakat_summary_below_nisab">مالك دون حدّ النصاب (%1$s). لا زكاة عليك.</string>
-    <string name="zakat_summary_due_badge">الزكاة الواجبة: ٢٫٥%%</string>
-    <string name="zakat_summary_breakdown">التفصيل</string>
-    <string name="zakat_summary_cash_line">النقد والأصول السائلة</string>
-    <string name="zakat_summary_gold_line">الذهب (%1$s غرام خالص)</string>
-    <string name="zakat_summary_silver_line">الفضة (%1$s غرام خالصة)</string>
+    <string name="zakat_summary_cash_line">النقد والأصول</string>
+    <string name="zakat_summary_gold_line">الذهب · %1$s غرام خالص</string>
+    <string name="zakat_summary_silver_line">الفضة · %1$s غرام خالصة</string>
 
     <string name="zakat_hawl_calendar_title">صلاتي: مراجعة حَوْل الزكاة السنوي</string>
     <string name="zakat_hawl_calendar_description">مضى حَوْل قمري كامل (٣٥٤ يومًا) على آخر تقدير للزكاة. راجع مالك مقابل حدّ النصاب في تطبيق صلاتي.</string>
-    <string name="zakat_hawl_calendar_action">حفظ الحَوْل في التقويم</string>
-    <string name="zakat_hawl_calendar_helper">يضيف تذكيرًا ليوم كامل في %1$s، بعد حَوْل قمري من اليوم.</string>
     <string name="zakat_hawl_calendar_unavailable">لم يُعثر على تطبيق تقويم على هذا الجهاز.</string>
 
     <!-- ============ البحث عن المدينة ============ -->
     <string name="settings_location_use_gps">استخدام الموقع الحالي</string>
-    <string name="settings_location_use_gps_description">تحديد موقعك وضبط المنطقة الزمنية تلقائيًا</string>
     <string name="settings_location_search_city">البحث باسم المدينة</string>
-    <string name="settings_location_search_city_description">اعثر على مدينتك بالاسم دون إدخال إحداثيات</string>
-    <string name="city_search_title">البحث عن مدينة</string>
-    <string name="city_search_subtitle">اختر مدينتك لضبط مواقيت الصلاة والمنطقة الزمنية</string>
+    <string name="city_search_title">الموقع</string>
+    <string name="city_search_subtitle">يحدد أوقات الصلاة والمنطقة الزمنية</string>
     <string name="city_search_placeholder">اسم المدينة، مثل: إسطنبول</string>
     <string name="city_search_clear">مسح البحث</string>
     <string name="city_search_hint">اكتب حرفين على الأقل للبحث.</string>
@@ -393,13 +353,6 @@
     <string name="city_search_result_accessibility">%1$s. اختر لاستخدام هذا الموقع.</string>
 
     <!-- ============ إعادة تنظيم الإعدادات ============ -->
-    <string name="settings_card_location_title">الموقع والحساب</string>
-    <string name="settings_card_alarms_title">التنبيهات والإشعارات</string>
-    <string name="settings_card_appearance_title">المظهر والإقليم</string>
-    <string name="settings_card_system_title">حالة النظام والأذونات</string>
-    <string name="settings_advanced_show">خيارات متقدمة</string>
-    <string name="settings_advanced_expand_accessibility">إظهار الخيارات المتقدمة لـ %1$s</string>
-    <string name="settings_advanced_collapse_accessibility">إخفاء الخيارات المتقدمة لـ %1$s</string>
     <string name="settings_time_format_title">تنسيق الوقت</string>
     <string name="settings_time_format_system">النظام</string>
     <string name="settings_time_format_12h">١٢ ساعة</string>
@@ -415,8 +368,6 @@
     <string name="settings_about_title">عن صلاتي</string>
     <string name="settings_about_version">الإصدار %1$s</string>
 
-    <string name="settings_reminders_sound">صوت الإشعار</string>
-    <string name="settings_reminders_sound_description">تشغيل صوت عند دخول أوقات الصلاة</string>
     <string name="daily_computed_locally">غير متصل — حُسبت الأوقات على هذا الجهاز</string>
     <string name="notification_channel_vibrate_name">تنبيهات الصلاة (اهتزاز)</string>
     <string name="notification_channel_vibrate_description">تنبيهات أوقات الصلاة تهتز دون تشغيل صوت</string>
@@ -440,21 +391,12 @@
     <string name="settings_adhan_unavailable">تعذّرت قراءة قائمة التسجيلات.</string>
     <string name="settings_adhan_empty">لا تتوفر تسجيلات بعد.</string>
     <string name="settings_adhan_size">التنزيل %1$s ميغابايت</string>
-    <string name="settings_adhan_not_downloaded">لم يُنزَّل بعد</string>
     <string name="settings_adhan_download">تنزيل %1$s</string>
     <string name="settings_adhan_delete">حذف %1$s</string>
     <string name="settings_adhan_preview">استماع</string>
     <string name="settings_adhan_download_offline">فشل التنزيل. تحقّق من اتصالك ثم أعد المحاولة.</string>
     <string name="settings_adhan_download_failed">تعذّر حفظ هذا التسجيل.</string>
     <plurals name="settings_reminders_pre_prayer_value">
-        <item quantity="zero">قبل الصلاة بـ %1$d دقيقة</item>
-        <item quantity="one">قبل الصلاة بدقيقة واحدة</item>
-        <item quantity="two">قبل الصلاة بدقيقتين</item>
-        <item quantity="few">قبل الصلاة بـ %1$d دقائق</item>
-        <item quantity="many">قبل الصلاة بـ %1$d دقيقة</item>
-        <item quantity="other">قبل الصلاة بـ %1$d دقيقة</item>
-    </plurals>
-    <plurals name="settings_reminders_pre_prayer_accessibility">
         <item quantity="zero">قبل الصلاة بـ %1$d دقيقة</item>
         <item quantity="one">قبل الصلاة بدقيقة واحدة</item>
         <item quantity="two">قبل الصلاة بدقيقتين</item>
@@ -474,4 +416,62 @@
     <string name="settings_status_action_optimize">تحسين</string>
     <string name="settings_status_battery_action_description">إيقاف تحسين البطارية لتطبيق صلاتي</string>
     <string name="settings_status_dnd_action_description">السماح بالوصول إلى وضع عدم الإزعاج</string>
+    <string name="settings_adhan_download_too_large">هذا التسجيل أكبر ممّا ينزّله صلاتي.</string>
+    <string name="settings_adhan_download_cancel">إلغاء التنزيل</string>
+    <string name="zakat_price_quoted_on">أسعار %1$s</string>
+    <string name="settings_card_prayer_times_title">أوقات الصلاة</string>
+    <string name="settings_card_notifications_title">الإشعارات</string>
+    <string name="settings_card_during_prayer_title">أثناء الصلاة</string>
+    <string name="settings_card_display_title">العرض</string>
+    <string name="settings_card_about_title">حول التطبيق</string>
+    <string name="settings_theme_label">المظهر</string>
+    <string name="settings_alerts_label">التنبيهات</string>
+    <string name="settings_alerts_sound_vibration">صوت واهتزاز</string>
+    <string name="settings_alerts_sound_only">صوت فقط</string>
+    <string name="settings_alerts_vibration_only">اهتزاز فقط</string>
+    <string name="settings_alerts_silent">إشعار صامت</string>
+    <string name="settings_alerts_none">بدون إشعارات</string>
+    <string name="settings_permissions_label">الأذونات</string>
+    <string name="settings_permissions_all_granted">كل شيء جاهز</string>
+    <string name="settings_permissions_attention">يحتاج إلى إجراء</string>
+    <string name="settings_location_label">الموقع</string>
+    <string name="settings_stepper_decrease">إنقاص %1$s</string>
+    <string name="settings_stepper_increase">زيادة %1$s</string>
+    <string name="zakat_business_inventory">عروض التجارة</string>
+    <string name="zakat_business_inventory_helper">بسعر التكلفة</string>
+    <string name="zakat_metals_choice_heading">هل لديك ذهب أو فضة تريد تسجيلها؟</string>
+    <string name="zakat_metals_choice_explainer">الذهب والفضة المقتناة للاستثمار من عملات وسبائك تجب فيها الزكاة عند جميع المذاهب. أما حلي الاستعمال الشخصي فاختلف فيه العلماء: المالكية والشافعية والحنابلة على إعفائه، والحنفية على وجوب الزكاة فيه.</string>
+    <string name="zakat_metals_skip_title">لا، تخطَّ هذه الخطوة</string>
+    <string name="zakat_metals_skip_detail">لا تملك شيئًا منها، أو أن حليك للاستعمال الشخصي وتتبع مذهبًا يعفيه.</string>
+    <string name="zakat_metals_declare_title">نعم، أريد تسجيلها</string>
+    <string name="zakat_metals_declare_detail">تملك عملات أو سبائك، أو تتبع المذهب الحنفي وتُدخل حلي الاستعمال.</string>
+    <string name="zakat_metals_skipped_notice">الذهب والفضة غير مُدرجين في هذا الحساب.</string>
+    <string name="zakat_metals_chip_skip">تخطٍّ</string>
+    <string name="zakat_metals_chip_declare">تسجيل</string>
+    <string name="zakat_due_label">الزكاة الواجبة</string>
+    <string name="zakat_due_below_nisab">دون النصاب</string>
+    <string name="zakat_step_jump">الانتقال إلى الخطوة %1$d: %2$s</string>
+    <string name="zakat_section_standard">معيار النصاب</string>
+    <string name="zakat_section_currency_rates">العملة والأسعار</string>
+    <string name="zakat_standard_note">معيار الفضة أدنى، فيوجب الزكاة أكثر. وأكثر العلماء يقبلون كليهما.</string>
+    <string name="zakat_rates_label">أسعار المعادن</string>
+    <string name="zakat_rates_values">الذهب %1$s/غ · الفضة %2$s/غ</string>
+    <string name="zakat_nisab_note">تجب الزكاة إذا بقي صافي مالك فوق هذا الحدّ عامًا قمريًا.</string>
+    <string name="zakat_section_own">ما تملك</string>
+    <string name="zakat_section_owe">ما عليك</string>
+    <string name="zakat_cash_total">إجمالي الأصول</string>
+    <string name="zakat_item_fine_weight">= %1$s غرام خالصة</string>
+    <string name="zakat_item_summary_gold">%1$s · %2$s غرام خالص</string>
+    <string name="zakat_item_summary_silver">%1$s · %2$s غرام خالصة</string>
+    <string name="zakat_item_weight_unit">غرام</string>
+    <string name="zakat_item_edit">تعديل هذه القطعة</string>
+    <string name="zakat_item_collapse">طيّ هذه القطعة</string>
+    <string name="zakat_summary_above_nisab">فوق النصاب</string>
+    <string name="zakat_summary_rate_of">٢٫٥%% من %1$s</string>
+    <string name="zakat_summary_negative">− %1$s</string>
+    <string name="zakat_hawl_next_label">الحَوْل القادم</string>
+    <string name="zakat_hawl_unset">لم يُحدَّد بعد</string>
+    <string name="zakat_hawl_reached">بلغ النصاب في %1$s</string>
+    <string name="zakat_hawl_change">تغيير</string>
+    <string name="zakat_hawl_remind">ذكّرني</string>
 </resources>

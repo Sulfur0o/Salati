@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.test.*
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -22,29 +23,60 @@ class SettingsComponentsTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    /**
+     * The state is a pill and the action is a button beside it. Both halves of the pill
+     * are one string, so the row reads as a single statement rather than a label and a
+     * value that happen to sit near each other.
+     */
     @Test
-    fun verifyPermissionStatusRowDoesNotAutoLaunch() {
+    fun aMissingPermissionStatesItselfAndOffersTheWayOut() {
         var clicked = false
         composeTestRule.setContent {
             PermissionStatusRow(
-                title = "Notifications",
-                description = "Desc",
-                statusText = "Not allowed",
+                label = "Notifications",
+                statusText = "Denied",
                 isAllowed = false,
+                actionText = "Allow",
+                actionDescription = "Allow notifications for Salati",
                 onActionClick = { clicked = true },
-                actionText = "Allow"
+                description = "Needed to alert you at prayer time"
             )
         }
-        
-        composeTestRule.onNodeWithText("Notifications").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Not allowed").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Allow").assertIsDisplayed()
-        
-        // Assert not clicked initially
-        assert(!clicked)
-        
-        composeTestRule.onNodeWithText("Allow").performClick()
+
+        composeTestRule.onNodeWithText("Notifications · Denied").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Needed to alert you at prayer time").assertIsDisplayed()
+        // Named for a screen reader: "Allow" alone says nothing about which permission.
+        composeTestRule.onNodeWithContentDescription("Allow notifications for Salati")
+            .assertIsDisplayed()
+
+        assert(!clicked) { "the row must not act until it is asked to" }
+        composeTestRule.onNodeWithContentDescription("Allow notifications for Salati").performClick()
         assert(clicked)
+    }
+
+    /**
+     * Granted means the button is *absent*, not disabled. A control that cannot do
+     * anything is a question the user has to answer; nothing to tap is nothing to wonder
+     * about. The explanation goes too - it only exists to justify the ask.
+     */
+    @Test
+    fun aGrantedPermissionKeepsItsLabelAndLosesItsButton() {
+        composeTestRule.setContent {
+            PermissionStatusRow(
+                label = "Notifications",
+                statusText = "Granted",
+                isAllowed = true,
+                actionText = "Allow",
+                actionDescription = "Allow notifications for Salati",
+                onActionClick = {},
+                description = "Needed to alert you at prayer time"
+            )
+        }
+
+        composeTestRule.onNodeWithText("Notifications · Granted").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Allow notifications for Salati")
+            .assertDoesNotExist()
+        composeTestRule.onNodeWithText("Needed to alert you at prayer time").assertDoesNotExist()
     }
 
     @Test
@@ -78,7 +110,9 @@ class SettingsComponentsTest {
             }
         }
         
-        composeTestRule.onNodeWithText("Mute").onParent().onParent().performClick()
+        // Walking up two parents assumed a particular tree shape and broke on the merged
+        // tree. The thing under test is the toggleable wrapper, so ask for that directly.
+        composeTestRule.onNode(isToggleable()).performClick()
         assert(toggledValue)
     }
 }

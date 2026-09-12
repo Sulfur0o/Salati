@@ -106,18 +106,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/salati_appwidget_compact_info" />
         </receiver>
-
-        <!-- Salati Glance Pill Widget (2x1) -->
-        <receiver
-            android:name=".widget.SalatiGlanceWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/salati_appwidget_glance_info" />
-        </receiver>
     </application>
 
 </manifest>

@@ -216,7 +216,10 @@ internal fun MonthNavigationHeader(
                 text = monthName,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                // It looks like a heading and it is the thing the rest of the screen is
+                // about, so screen-reader heading navigation should land on it.
+                modifier = Modifier.semantics { heading() }
             )
             if (showTodayAction) {
                 TextButton(
@@ -346,7 +349,12 @@ internal fun CalendarDateCell(
         "${hijri.day} ${hijri.monthName} ${hijri.year}"
     }
 
-    val contentDesc = remember(gregorianDateStr, hijriDateStr, eventNames, state) {
+    // The label is what the day *is*; "today" and "selected" are what it currently *is like*,
+    // and those belong in stateDescription so a screen reader can re-announce the state alone
+    // when it changes rather than reading the whole date again. Appending them to the label
+    // also left the node unselected as far as the framework was concerned, so selection was
+    // spoken but not exposed.
+    val contentDesc = remember(gregorianDateStr, hijriDateStr, eventNames) {
         buildString {
             append(gregorianDateStr)
             append(", ")
@@ -354,10 +362,6 @@ internal fun CalendarDateCell(
             if (eventNames.isNotEmpty()) {
                 append(", ")
                 append(eventNames)
-            }
-            if (state != null) {
-                append(", ")
-                append(state)
             }
         }
     }
@@ -367,6 +371,8 @@ internal fun CalendarDateCell(
             .aspectRatio(1.15f)
             .semantics(mergeDescendants = true) {
                 contentDescription = contentDesc
+                selected = isSelected
+                state?.let { stateDescription = it }
             }
             .padding(4.dp)
             .clip(SalatiShapeTokens.Control)
@@ -502,7 +508,10 @@ internal fun CompactPrayerTimeItem(
             .clip(SalatiShapeTokens.Control)
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f))
             .padding(horizontal = 8.dp, vertical = 6.dp)
-            .semantics {
+            // Merged so the row is one thing to a screen reader: without this the state
+            // description sat on a container with no text of its own while the name, the
+            // "Display only" label and the time were announced as three separate nodes.
+            .semantics(mergeDescendants = true) {
                 stateDescription = semanticState
             },
         horizontalArrangement = Arrangement.SpaceBetween,

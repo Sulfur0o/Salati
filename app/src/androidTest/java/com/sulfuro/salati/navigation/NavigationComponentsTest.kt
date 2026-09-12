@@ -22,8 +22,10 @@ class NavigationComponentsTest {
     @Test
     fun `navigation_bottom_bar_displays_all_text_labels_correctly`() {
         // We use dummy instances since we only want to test navigation bar presence.
-        // The actual inner content will just render Dashboard initially.
-        val dummySettings = CalculationSettings()
+        // Onboarding has to be marked done: MainNavigation renders the onboarding flow and
+        // returns before the Scaffold when it is not, so with default settings there is no
+        // bottom bar to find at all.
+        val dummySettings = CalculationSettings(hasCompletedOnboarding = true)
 
         // Setup a real preferences instance using the TEST context (not the target app context)
         // This completely isolates the DataStore file to the test APK's isolated storage

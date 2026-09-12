@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,7 +63,13 @@ private const val SEARCH_DEBOUNCE_MILLIS = 350L
 @Composable
 internal fun CitySearchSheet(
     onSelect: (CitySuggestion) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    /**
+     * Offered above the search field when the caller can detect a position. The settings
+     * card used to carry this as a row of its own beside the search row; both were ways of
+     * answering the same question, so they belong in the same place.
+     */
+    onUseCurrentLocation: (() -> Unit)? = null
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
@@ -110,6 +117,34 @@ internal fun CitySearchSheet(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            if (onUseCurrentLocation != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 48.dp)
+                        .clickable(role = Role.Button, onClick = onUseCurrentLocation)
+                        .padding(vertical = SalatiSpacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.md),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MyLocation,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_location_use_gps),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                HorizontalDivider(
+                    modifier = Modifier.padding(bottom = SalatiSpacing.xs),
+                    thickness = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+            }
 
             OutlinedTextField(
                 value = query,

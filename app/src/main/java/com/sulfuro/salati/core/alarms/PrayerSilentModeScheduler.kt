@@ -319,6 +319,11 @@ internal object PrayerSilentModeController {
             if (audioManager.ringerMode == AudioManager.RINGER_MODE_SILENT) {
                 audioManager.ringerMode = previousMode
             }
+            // commit(), not apply(): this runs inside a BroadcastReceiver that the system
+            // may stop as soon as it returns. An asynchronous write could be lost, and the
+            // app would then believe it still owes the user a ringer restore it has
+            // already performed - silencing the phone again at the next prayer.
+            @Suppress("ApplySharedPref")
             preferences.edit()
                 .remove(KEY_PREVIOUS_RINGER_MODE)
                 .remove(KEY_ACTIVE_UNTIL_MILLIS)

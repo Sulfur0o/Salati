@@ -8,6 +8,7 @@
     <color name="salati_widget_accent">#174B38</color>
     <color name="salati_widget_on_surface">#26312C</color>
     <color name="salati_widget_on_surface_variant">#59635E</color>
-    <color name="salati_widget_pill_bg">#E4EFE8</color>
-    <color name="salati_widget_pill_stroke">#B6D3C3</color>
+    <color name="salati_widget_pill_bg">#D1E1D9</color>
+    <color name="salati_widget_on_pill">#0F3225</color>
+    <color name="salati_widget_brass">#7C5C24</color>
 </resources>

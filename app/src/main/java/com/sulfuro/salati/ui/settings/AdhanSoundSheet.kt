@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PlayArrow
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -45,6 +47,7 @@ import com.sulfuro.salati.core.audio.AdhanAudioStore
 import com.sulfuro.salati.core.audio.AdhanCatalogFetcher
 import com.sulfuro.salati.core.audio.AdhanCatalogResult
 import com.sulfuro.salati.core.audio.AdhanDownloadResult
+import com.sulfuro.salati.core.audio.AdhanDownloads
 import com.sulfuro.salati.core.audio.AdhanOption
 import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.theme.SalatiSpacing
@@ -81,8 +84,11 @@ fun AdhanSoundSheet(
 
     var catalog by remember { mutableStateOf<AdhanCatalogResult?>(null) }
     var downloadedIds by remember { mutableStateOf(emptySet<String>()) }
-    var downloadingId by remember { mutableStateOf<String?>(null) }
     var failureMessage by remember { mutableStateOf<String?>(null) }
+
+    // Held outside this sheet, so closing the picker no longer throws away a transfer
+    // that is already several megabytes in.
+    val downloadState by AdhanDownloads.state.collectAsState()
 
     // What is actually playing, read from the service rather than tracked here. A
     // recording ends by itself when it finishes, and a local flag would go on claiming
@@ -113,83 +119,125 @@ fun AdhanSoundSheet(
     // behind in the previous language.
     val offlineMessage = stringResource(R.string.settings_adhan_download_offline)
     val failedMessage = stringResource(R.string.settings_adhan_download_failed)
+    val tooLargeMessage = stringResource(R.string.settings_adhan_download_too_large)
 
     LaunchedEffect(Unit) {
         catalog = AdhanCatalogFetcher.fetch()
     }
 
+    // A download that finished while the sheet was closed is picked up here on reopening,
+    // so its outcome is never lost with the screen that started it.
+    LaunchedEffect(downloadState) {
+        when (val current = downloadState) {
+            is AdhanDownloads.State.Done -> {
+                storeRevision++
+                failureMessage = null
+                onSelect(current.option)
+                AdhanDownloads.acknowledge()
+            }
+            is AdhanDownloads.State.Failed -> {
+                storeRevision++
+                failureMessage = when (current.cause) {
+                    AdhanDownloadResult.Unreachable -> offlineMessage
+                    is AdhanDownloadResult.TooLarge -> tooLargeMessage
+                    else -> failedMessage
+                }
+                AdhanDownloads.acknowledge()
+            }
+            else -> Unit
+        }
+    }
+
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
-        Column(
+        val offered = (catalog as? AdhanCatalogResult.Available)
+            ?.options
+            ?.filter { it.isFajr == fajr }
+            .orEmpty()
+
+        // A recording withdrawn from the catalogue leaves a stored id that matches no row.
+        // Without this the sheet would show every option unselected - including the row
+        // that clears the choice - while the alarm went on playing the vanished file.
+        val selectionIsOffered = selectedId.isNullOrBlank() || offered.any { it.id == selectedId }
+
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm),
-            verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xs)
+                .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.sm)
         ) {
-            Text(
-                text = stringResource(
-                    if (fajr) R.string.settings_adhan_fajr_title
-                    else R.string.settings_adhan_sound_title
-                ),
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            if (fajr) {
-                // Says why this list is separate, where the user is actually choosing.
+            item {
                 Text(
-                    text = stringResource(R.string.settings_adhan_fajr_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = stringResource(
+                        if (fajr) R.string.settings_adhan_fajr_title
+                        else R.string.settings_adhan_sound_title
+                    ),
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                if (fajr) {
+                    // Says why this list is separate, where the user is actually choosing.
+                    Text(
+                        text = stringResource(R.string.settings_adhan_fajr_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                // Kept at the top, next to the title. Below the list it would render under
+                // thirty-odd rows, where the user who tapped row three would never find it.
+                failureMessage?.let { message ->
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(vertical = SalatiSpacing.xs)
+                    )
+                }
+
+                // The row that clears the choice always leads, because it needs no
+                // download. For Fajr that means falling back to the general adhan;
+                // elsewhere it means the short device notification tone.
+                AdhanRow(
+                    label = stringResource(
+                        if (fajr) R.string.settings_adhan_fajr_same
+                        else R.string.settings_adhan_device_tone
+                    ),
+                    supporting = stringResource(
+                        if (fajr) R.string.settings_adhan_fajr_same_description
+                        else R.string.settings_adhan_device_tone_description
+                    ),
+                    selected = !selectionIsOffered || selectedId.isNullOrBlank(),
+                    onSelect = {
+                        AdhanPlaybackService.stop(context)
+                        previewStartedId.value = null
+                        onSelect(null)
+                    }
+                )
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
             }
 
-            // The row that clears the choice always leads, because it needs no download.
-            // For Fajr that means falling back to the general adhan; elsewhere it means
-            // the short device notification tone.
-            AdhanRow(
-                label = stringResource(
-                    if (fajr) R.string.settings_adhan_fajr_same
-                    else R.string.settings_adhan_device_tone
-                ),
-                supporting = stringResource(
-                    if (fajr) R.string.settings_adhan_fajr_same_description
-                    else R.string.settings_adhan_device_tone_description
-                ),
-                selected = selectedId.isNullOrBlank(),
-                onSelect = {
-                    AdhanPlaybackService.stop(context)
-                    previewStartedId.value = null
-                    onSelect(null)
-                }
-            )
-            HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-            when (val current = catalog) {
-                null -> StatusText(stringResource(R.string.settings_adhan_loading))
+            when (catalog) {
+                null -> item { StatusText(stringResource(R.string.settings_adhan_loading)) }
 
                 AdhanCatalogResult.Unreachable ->
-                    StatusText(stringResource(R.string.settings_adhan_unreachable))
+                    item { StatusText(stringResource(R.string.settings_adhan_unreachable)) }
 
                 AdhanCatalogResult.Malformed ->
-                    StatusText(stringResource(R.string.settings_adhan_unavailable))
+                    item { StatusText(stringResource(R.string.settings_adhan_unavailable)) }
 
                 is AdhanCatalogResult.Available -> {
-                    val offered = current.options.filter { it.isFajr == fajr }
                     if (offered.isEmpty()) {
-                        StatusText(stringResource(R.string.settings_adhan_empty))
+                        item { StatusText(stringResource(R.string.settings_adhan_empty)) }
                     } else {
-                        offered.forEach { option ->
+                        items(offered, key = AdhanOption::id) { option ->
                             val isDownloaded = option.id in downloadedIds
-                            val sizeText = sizeLabel(option)
-                            val supportingText = listOfNotNull(
-                                option.reciter?.takeIf { it.isNotBlank() },
-                                option.license?.takeIf { it.isNotBlank() },
-                                sizeText.takeIf { it.isNotBlank() }
-                            ).joinToString(" · ")
+                            val running = downloadState as? AdhanDownloads.State.Running
                             AdhanRow(
                                 label = option.name,
-                                supporting = supportingText,
-                                selected = selectedId == option.id,
+                                supporting = supportingLine(option),
+                                selected = selectionIsOffered && selectedId == option.id,
                                 enabled = isDownloaded,
                                 onSelect = {
                                     AdhanPlaybackService.stop(context)
@@ -198,10 +246,12 @@ fun AdhanSoundSheet(
                                 },
                                 trailing = {
                                     when {
-                                        downloadingId == option.id -> CircularProgressIndicator(
-                                            modifier = Modifier.size(20.dp),
-                                            strokeWidth = 2.dp
+                                        running?.id == option.id -> DownloadProgress(
+                                            received = running.bytesReceived,
+                                            total = running.totalBytes,
+                                            onCancel = { AdhanDownloads.cancel() }
                                         )
+
                                         isDownloaded -> Row {
                                             PreviewButton(
                                                 isPreviewing = playingId == option.id,
@@ -212,7 +262,10 @@ fun AdhanSoundSheet(
                                                     } else {
                                                         AdhanPlaybackService.stop(context)
                                                         val started = AdhanPlaybackService.start(
-                                                            context, option.id, option.name
+                                                            context = context,
+                                                            adhanId = option.id,
+                                                            prayerLabel = option.name,
+                                                            preview = true
                                                         )
                                                         previewStartedId.value =
                                                             if (started) option.id else null
@@ -241,23 +294,10 @@ fun AdhanSoundSheet(
                                                 )
                                             }
                                         }
+
                                         else -> IconButton(onClick = {
                                             failureMessage = null
-                                            downloadingId = option.id
-                                            scope.launch {
-                                                val result = AdhanAudioStore.download(context, option)
-                                                downloadingId = null
-                                                storeRevision++
-                                                failureMessage = when (result) {
-                                                    is AdhanDownloadResult.Success -> {
-                                                        onSelect(option)
-                                                        null
-                                                    }
-                                                    AdhanDownloadResult.Unreachable -> offlineMessage
-                                                    is AdhanDownloadResult.Rejected,
-                                                    is AdhanDownloadResult.NotStored -> failedMessage
-                                                }
-                                            }
+                                            AdhanDownloads.start(context, option)
                                         }) {
                                             Icon(
                                                 Icons.Default.Download,
@@ -278,16 +318,33 @@ fun AdhanSoundSheet(
                     }
                 }
             }
-
-            failureMessage?.let { message ->
-                Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(vertical = SalatiSpacing.xs)
-                )
-            }
         }
+    }
+}
+
+/**
+ * How far the transfer has got, and the way out of it.
+ *
+ * The ring doubles as the cancel button: there is only ever one download in flight, so a
+ * separate control beside it would be one more thing on a crowded row.
+ */
+@Composable
+private fun DownloadProgress(received: Long, total: Long, onCancel: () -> Unit) {
+    IconButton(onClick = onCancel) {
+        if (total > 0) {
+            CircularProgressIndicator(
+                progress = { (received.toFloat() / total).coerceIn(0f, 1f) },
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp
+            )
+        } else {
+            CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
+        }
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = stringResource(R.string.settings_adhan_download_cancel),
+            modifier = Modifier.size(12.dp)
+        )
     }
 }
 
@@ -349,10 +406,39 @@ private fun AdhanRow(
     }
 }
 
+/**
+ * The line under the name: who and where, how long, how much data.
+ *
+ * Length earns its place because the choice is between recitations that differ by minutes
+ * and is being made for something that will play unattended at dawn.
+ */
+@Composable
+private fun supportingLine(option: AdhanOption): String {
+    return listOfNotNull(
+        option.reciter?.takeIf { it.isNotBlank() },
+        option.license?.takeIf { it.isNotBlank() },
+        durationLabel(option),
+        sizeLabel(option)
+    ).joinToString(" · ")
+}
+
+/** Minutes and seconds, in the display locale's own digits. */
+@Composable
+private fun durationLabel(option: AdhanOption): String? {
+    if (option.seconds <= 0) return null
+    val locale = LocalConfiguration.current.locales[0]
+    val total = option.seconds.toInt()
+    return java.lang.String.format(locale, "%d:%02d", total / 60, total % 60)
+}
+
 /** Renders a download size the way a person would say it, or nothing when unknown. */
 @Composable
-private fun sizeLabel(option: AdhanOption): String {
-    if (option.sizeBytes <= 0) return stringResource(R.string.settings_adhan_not_downloaded)
+private fun sizeLabel(option: AdhanOption): String? {
+    if (option.sizeBytes <= 0) return null
     val megabytes = option.sizeBytes / BYTES_PER_MEGABYTE
-    return stringResource(R.string.settings_adhan_size, "%.1f".format(megabytes))
+    val locale = LocalConfiguration.current.locales[0]
+    return stringResource(
+        R.string.settings_adhan_size,
+        java.lang.String.format(locale, "%.1f", megabytes)
+    )
 }

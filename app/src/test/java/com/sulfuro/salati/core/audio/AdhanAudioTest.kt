@@ -112,7 +112,9 @@ class AdhanAudioTest {
             connection(body = oversized, declaredLength = 1024L)
         )
 
-        assertTrue(result is AdhanDownloadResult.Rejected)
+        // Reported as its own outcome rather than a generic rejection: it is the one
+        // refusal the picker can explain to the user.
+        assertTrue(result is AdhanDownloadResult.TooLarge)
         assertFalse(AdhanAudioStore.isDownloaded(context, "makkah"))
         assertTrue(
             "nothing partial may be left behind",

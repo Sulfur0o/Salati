@@ -93,7 +93,11 @@ class MonthlyComponentsTest {
         }
         composeRule.onNodeWithText("Brussels", substring = true).assertIsDisplayed()
         composeRule.onNodeWithText("Europe/Brussels", substring = true).assertIsDisplayed()
-        composeRule.onNodeWithText("Display only").assertIsDisplayed()
+        // The visible "Display only" label was removed by request: on this compact row it
+        // repeated what the muted colour and the Daily screen already say. What has to
+        // survive is the spoken form, which is the only way a screen-reader user learns
+        // that sunrise is not a prayer.
+        composeRule.onNodeWithText("Display only").assertDoesNotExist()
         composeRule.onNodeWithText("Sunrise")
             .assert(SemanticsMatcher.expectValue(
                 SemanticsProperties.StateDescription,

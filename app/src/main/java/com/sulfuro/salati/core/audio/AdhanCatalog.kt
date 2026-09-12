@@ -11,6 +11,8 @@ import kotlinx.serialization.json.Json
  *   never change for a given recording.
  * @param sizeBytes the expected download size, shown before the user commits to it and
  *   checked afterwards.
+ * @param seconds how long the recording runs. Worth showing: the choice is between things
+ *   that differ by minutes, and it is being made for something that will play at dawn.
  * @param sha256 lower-case hex digest. Optional in the manifest, but when present the
  *   download is rejected unless it matches.
  * @param isFajr whether this is a Fajr recording. The Fajr adhan carries
@@ -23,6 +25,7 @@ data class AdhanOption(
     val name: String,
     val url: String,
     @SerialName("bytes") val sizeBytes: Long = 0L,
+    val seconds: Double = 0.0,
     val reciter: String? = null,
     val sha256: String? = null,
     @SerialName("fajr") val isFajr: Boolean = false,
@@ -71,11 +74,23 @@ object AdhanCatalog {
     /** A manifest is a short list of short strings; anything larger is not one. */
     internal const val MAX_MANIFEST_BYTES = 256 * 1024
 
+    /**
+     * Highest manifest layout this build understands.
+     *
+     * Unknown *fields* are ignored, which covers adding one. A bumped version means
+     * something existing changed meaning, and an old install guessing at it would be
+     * worse than admitting it cannot read the list: it would show the user entries whose
+     * semantics it has wrong.
+     */
+    internal const val SUPPORTED_VERSION = 2
+
     private val json = Json { ignoreUnknownKeys = true }
 
     internal fun parse(rawJson: String): AdhanCatalogResult {
         val manifest = runCatching { json.decodeFromString(AdhanManifest.serializer(), rawJson) }
             .getOrElse { return AdhanCatalogResult.Malformed }
+
+        if (manifest.version > SUPPORTED_VERSION) return AdhanCatalogResult.Malformed
 
         // A single bad entry should not cost the user the whole list.
         // Retired recordings are dropped even if a stale hosted manifest still lists them.

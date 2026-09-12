@@ -28,7 +28,7 @@
     <string name="monthly_today_action">Today</string>
     <string name="monthly_previous_month">Previous month</string>
     <string name="monthly_next_month">Next month</string>
-    <string name="monthly_loading">Loading calendar...</string>
+    <string name="monthly_loading">Loading calendar…</string>
     <string name="monthly_retry">Retry</string>
     <string name="monthly_error_title">Data Unavailable</string>
     <string name="monthly_error_message">Unable to load the monthly prayer schedule. Please check your connection.</string>
@@ -41,10 +41,6 @@
     <string name="event_eid_al_adha">Eid al-Adha</string>
     <string name="event_white_day">White Day</string>
     <string name="event_zakat_hawl">Zakat Hawl due</string>
-    <string name="hawl_milestone_title">Zakat Hawl</string>
-    <string name="hawl_milestone_not_set">Set the date your wealth first reached Nisab</string>
-    <string name="hawl_milestone_summary">Due %1$s · Nisab reached %2$s</string>
-    <string name="hawl_set_date">Set date</string>
     <string name="hawl_clear_date">Clear</string>
     <string name="hawl_date_confirm">Save</string>
     <string name="hawl_date_cancel">Cancel</string>
@@ -92,11 +88,9 @@
     <string name="settings_location_current">Current location</string>
     <string name="settings_location_gps_action">Use current GPS location</string>
     <string name="settings_method_label">Method</string>
-    <string name="settings_high_latitudes_label">High Latitudes Rule</string>
+    <string name="settings_high_latitudes_label">High latitudes rule</string>
     <string name="settings_madhab_label">Madhab</string>
 
-    <string name="settings_reminders_mute">Mute Notifications</string>
-    <string name="settings_reminders_mute_description">Disable all alarm alerts</string>
     <string name="settings_reminders_vibration">Vibration Alerts</string>
     <string name="settings_reminders_vibration_description">Vibrate the device at prayer times</string>
     <string name="settings_silent_mode_title">Prayer silent mode</string>
@@ -122,9 +116,9 @@
     <string name="notification_pre_prayer_title">Reminder: %1$s time is approaching</string>
     <string name="notification_pre_prayer_message">Upcoming prayer in a few minutes.</string>
 
-    <string name="settings_reminders_pre_prayer">Pre-Prayer Alert Duration</string>
+    <string name="settings_reminders_pre_prayer">Early reminder</string>
 
-    <string name="settings_calendar_hijri_offset">Hijri Date Offset</string>
+    <string name="settings_calendar_hijri_offset">Hijri date offset</string>
     <string name="settings_calendar_hijri_offset_zero">0 days</string>
     <plurals name="settings_calendar_hijri_offset_plus">
         <item quantity="one">+%d day</item>
@@ -134,7 +128,6 @@
         <item quantity="one">−%d day</item>
         <item quantity="other">−%d days</item>
     </plurals>
-    <string name="settings_calendar_hijri_offset_accessibility">%1$s offset</string>
 
 
     <string name="settings_permission_notifications_title">Notifications</string>
@@ -149,11 +142,6 @@
     <string name="settings_permission_exact_alarms_allow">Allow exact alarms</string>
     <string name="settings_permission_exact_alarms_state_allowed">Allowed</string>
     <string name="settings_permission_exact_alarms_state_not_allowed">Not allowed</string>
-    <string name="settings_permission_silent_mode_title">Do Not Disturb access</string>
-    <string name="settings_permission_silent_mode_description">Required to change and restore the phone ringer during prayer</string>
-    <string name="settings_permission_silent_mode_allow">Open settings</string>
-    <string name="settings_permission_silent_mode_state_allowed">Allowed</string>
-    <string name="settings_permission_silent_mode_state_not_allowed">Not allowed</string>
 
     <string name="settings_method_mwl">Muslim World League</string>
     <string name="settings_method_isna">North America (ISNA)</string>
@@ -169,12 +157,11 @@
     <string name="settings_madhab_shafi">Shafi / Maliki / Hanbali</string>
     <string name="settings_madhab_hanafi">Hanafi</string>
 
-    <string name="settings_high_lat_middle_of_night">Middle of the Night</string>
-    <string name="settings_high_lat_seventh_of_night">Seventh of the Night</string>
-    <string name="settings_high_lat_twilight_angle">Twilight Angle</string>
+    <string name="settings_high_lat_middle_of_night">Middle of the night</string>
+    <string name="settings_high_lat_seventh_of_night">Seventh of the night</string>
+    <string name="settings_high_lat_twilight_angle">Twilight angle</string>
 
     <!-- Theme Settings -->
-    <string name="settings_theme_dark_mode">Appearance</string>
     <string name="settings_theme_dark_mode_desc">Choose between your device\'s theme, light, or dark appearance</string>
     <string name="settings_theme_option_system">System</string>
     <string name="settings_theme_option_light">Light</string>
@@ -190,7 +177,6 @@
     <string name="settings_support_email_open">Email salati@sulfuro.eu</string>
 
     <!-- Zakat Screen -->
-    <string name="zakat_title">Zakat</string>
     <string name="zakat_refresh_price">Refresh live price</string>
     <string name="zakat_price_updating">Fetching latest price…</string>
     <string name="zakat_price_updated_at">Updated %1$s</string>
@@ -230,7 +216,7 @@
     <string name="onboarding_location_auto_desc">Use device GPS, or search for a city by name. Prayer times cannot be calculated until a location is set.</string>
     <string name="onboarding_location_detect">Detect my location</string>
     <string name="onboarding_location_selected">Location selected</string>
-    <string name="onboarding_method_title">Calculation Method</string>
+    <string name="onboarding_method_title">Calculation method</string>
     <string name="onboarding_method_subtitle">Choose the standard calculation method for your region</string>
     <string name="onboarding_notifications_title">Alarms &amp; Notifications</string>
     <string name="onboarding_notifications_subtitle">Configure on-time prayer reminders and exact alarms</string>
@@ -261,88 +247,69 @@
     <string name="battery_opt_state_unrestricted_desc">Battery saver does not restrict prayer alarms</string>
     <string name="battery_opt_state_restricted_desc">Restricted: system battery saver may delay prayer alarms</string>
 
-    <string name="widget_brand_name">Salati</string>
     <string name="widget_next_prayer">Next prayer</string>
     <string name="widget_placeholder_time">--:--</string>
-    <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">Location</string>
     <string name="widget_timetable_name">Salati: Complete Schedule</string>
     <string name="widget_minimal_bar_name">Salati: Prayer Strip</string>
     <string name="widget_minimal_bar_description">Single-row horizontal bar showing all 5 daily prayers</string>
     <string name="widget_compact_card_name">Salati: Next Prayer Card</string>
     <string name="widget_compact_card_description">Compact square card showing upcoming prayer, location, and date</string>
-    <string name="widget_glance_pill_name">Salati: Glance Pill</string>
-    <string name="widget_glance_pill_description">Ultra-compact horizontal pill for upcoming prayer</string>
 
     <!-- Language Settings -->
     <string name="settings_language_title">Language</string>
-    <string name="settings_language_label">App Language</string>
+    <string name="settings_language_label">App language</string>
     <string name="settings_language_system">System default</string>
     <string name="settings_language_en">English</string>
     <string name="settings_language_ar">العربية (Arabic)</string>
     <string name="settings_language_fr">Français (French)</string>
     <string name="settings_language_nl">Nederlands (Dutch)</string>
     <string name="badge_next">NEXT</string>
-    <string name="currency_sheet_title">Select Zakat Currency</string>
+    <string name="currency_sheet_title">Zakat currency</string>
     <string name="currency_sheet_subtitle">Used for Nisab threshold and asset valuation</string>
     <string name="currency_search_placeholder">Search currency or code…</string>
     <string name="currency_clear">Clear</string>
-    <string name="method_sheet_title">Calculation Method</string>
+    <string name="method_sheet_title">Calculation method</string>
     <string name="method_sheet_subtitle">Astronomical angle conventions used for prayer times</string>
     <string name="onboarding_required_permissions">Required Permissions</string>
     <string name="onboarding_action_optimize">Optimize</string>
     <string name="zakat_currency_mismatch_warning">Stored metal prices were quoted in %1$s. Please tap \'Refresh\' to calculate accurately in %2$s.</string>
-    <string name="widget_description">Glanceable daily prayer times and countdown widget</string>
+    <string name="widget_description">All five prayer times for the day, with the next one highlighted</string>
 
     <!-- ============ Zakat walkthrough ============ -->
-    <string name="zakat_step_indicator">Step %1$d of %2$d</string>
     <string name="zakat_step_back">Back</string>
-    <string name="zakat_step_next">Next</string>
-    <string name="zakat_step_finish">See summary</string>
-    <string name="zakat_step_1_title">Nisab standard</string>
-    <string name="zakat_step_2_title">Cash &amp; liquid assets</string>
+    <string name="zakat_step_1_title">Basis</string>
+    <string name="zakat_step_2_title">Cash &amp; assets</string>
     <string name="zakat_step_3_title">Gold &amp; silver</string>
     <string name="zakat_step_4_title">Summary</string>
     <string name="zakat_step_accessibility">Step %1$d of %2$d: %3$s</string>
 
-    <string name="zakat_standard_heading">Choose your Nisab standard</string>
-    <string name="zakat_standard_explainer">Nisab is the minimum wealth at which Zakat becomes due. Most scholars accept either standard; the silver standard is lower, so it obliges Zakat more often.</string>
-    <string name="zakat_standard_gold">Gold standard</string>
+    <string name="zakat_standard_gold">Gold</string>
     <string name="zakat_standard_gold_detail">85 g of pure gold</string>
-    <string name="zakat_standard_silver">Silver standard</string>
+    <string name="zakat_standard_silver">Silver</string>
     <string name="zakat_standard_silver_detail">595 g of silver</string>
     <string name="zakat_standard_threshold">Your Nisab threshold</string>
     <string name="zakat_currency_label">Currency</string>
-    <string name="zakat_currency_helper">Metal prices and all amounts are shown in this currency.</string>
 
-    <string name="zakat_cash_heading">Cash and liquid assets</string>
-    <string name="zakat_cash_explainer">Enter what you have held for a full lunar year. Leave anything that does not apply at zero.</string>
     <string name="zakat_cash_on_hand">Cash in hand</string>
     <string name="zakat_bank_balance">Bank balances</string>
     <string name="zakat_investments">Liquid investments and shares</string>
     <string name="zakat_receivables">Money owed to you</string>
-    <string name="zakat_liabilities_heading">Deductions</string>
-    <string name="zakat_liabilities">Short-term debts due now</string>
-    <string name="zakat_liabilities_helper">Only debts payable immediately are deducted.</string>
-    <string name="zakat_cash_subtotal">Liquid subtotal</string>
+    <string name="zakat_liabilities">Debts due now</string>
+    <string name="zakat_liabilities_helper">Only what is payable immediately</string>
 
-    <string name="zakat_metals_heading">Precious metals</string>
-    <string name="zakat_metals_explainer">Add each piece with its purity. Salati converts every item to its pure-metal weight before valuing it.</string>
-    <string name="zakat_gold_items_title">Gold items</string>
-    <string name="zakat_silver_items_title">Silver items</string>
-    <string name="zakat_add_gold_item">Add gold item</string>
-    <string name="zakat_add_silver_item">Add silver item</string>
+    <string name="zakat_gold_items_title">Gold</string>
+    <string name="zakat_silver_items_title">Silver</string>
+    <string name="zakat_add_gold_item">Add a gold piece</string>
+    <string name="zakat_add_silver_item">Add a silver piece</string>
     <string name="zakat_item_label">Description (optional)</string>
     <string name="zakat_item_label_hint">Necklace, ring, coins…</string>
     <string name="zakat_item_weight">Weight (g)</string>
-    <string name="zakat_item_purity">Purity</string>
     <string name="zakat_item_remove">Remove item</string>
     <string name="zakat_item_default_label">Item %1$d</string>
-    <string name="zakat_item_pure_weight">Pure equivalent: %1$s g</string>
-    <string name="zakat_gold_empty">No gold items yet.</string>
-    <string name="zakat_silver_empty">No silver items yet.</string>
-    <string name="zakat_gold_total_pure">Total pure gold: %1$s g</string>
-    <string name="zakat_silver_total_fine">Total fine silver: %1$s g</string>
+    <string name="zakat_item_pure_weight">= %1$s g pure</string>
+    <string name="zakat_gold_total_pure">%1$s g pure</string>
+    <string name="zakat_silver_total_fine">%1$s g fine</string>
     <string name="zakat_purity_24k">24k</string>
     <string name="zakat_purity_22k">22k</string>
     <string name="zakat_purity_21k">21k</string>
@@ -351,31 +318,24 @@
     <string name="zakat_purity_fine_silver">Fine 999</string>
     <string name="zakat_purity_sterling">Sterling 925</string>
 
-    <string name="zakat_summary_heading">Your Zakat assessment</string>
     <string name="zakat_summary_gross">Gross assets</string>
-    <string name="zakat_summary_liabilities">Less immediate debts</string>
+    <string name="zakat_summary_liabilities">Debts due now</string>
     <string name="zakat_summary_net">Net zakatable wealth</string>
     <string name="zakat_summary_nisab">Nisab threshold</string>
     <string name="zakat_summary_below_nisab">Wealth is below the Nisab threshold (%1$s). No Zakat due.</string>
-    <string name="zakat_summary_due_badge">Zakat due: 2.5%%</string>
-    <string name="zakat_summary_breakdown">Breakdown</string>
-    <string name="zakat_summary_cash_line">Cash and liquid assets</string>
-    <string name="zakat_summary_gold_line">Gold (%1$s g pure)</string>
-    <string name="zakat_summary_silver_line">Silver (%1$s g fine)</string>
+    <string name="zakat_summary_cash_line">Cash &amp; assets</string>
+    <string name="zakat_summary_gold_line">Gold · %1$s g pure</string>
+    <string name="zakat_summary_silver_line">Silver · %1$s g fine</string>
 
     <string name="zakat_hawl_calendar_title">Salati: Annual Zakat Hawl Review</string>
     <string name="zakat_hawl_calendar_description">One lunar year (354 days) has passed since your last Zakat assessment. Review your wealth against the Nisab threshold in Salati.</string>
-    <string name="zakat_hawl_calendar_action">Save Hawl to calendar</string>
-    <string name="zakat_hawl_calendar_helper">Adds an all-day reminder on %1$s, one lunar year from today.</string>
     <string name="zakat_hawl_calendar_unavailable">No calendar app was found on this device.</string>
 
     <!-- ============ City search ============ -->
     <string name="settings_location_use_gps">Use current GPS</string>
-    <string name="settings_location_use_gps_description">Detect your position and resolve the time zone automatically</string>
     <string name="settings_location_search_city">Search city name</string>
-    <string name="settings_location_search_city_description">Find your city by name, no coordinates needed</string>
-    <string name="city_search_title">Search city</string>
-    <string name="city_search_subtitle">Pick your city to set prayer times and time zone</string>
+    <string name="city_search_title">Location</string>
+    <string name="city_search_subtitle">Sets your prayer times and time zone</string>
     <string name="city_search_placeholder">City name, e.g. Istanbul</string>
     <string name="city_search_clear">Clear search</string>
     <string name="city_search_hint">Type at least two letters to search.</string>
@@ -386,13 +346,6 @@
     <string name="city_search_result_accessibility">%1$s. Select to use this location.</string>
 
     <!-- ============ Settings restructure ============ -->
-    <string name="settings_card_location_title">Location &amp; calculation</string>
-    <string name="settings_card_alarms_title">Alarms &amp; notifications</string>
-    <string name="settings_card_appearance_title">Appearance &amp; regional</string>
-    <string name="settings_card_system_title">System status &amp; permissions</string>
-    <string name="settings_advanced_show">Advanced options</string>
-    <string name="settings_advanced_expand_accessibility">Show advanced options for %1$s</string>
-    <string name="settings_advanced_collapse_accessibility">Hide advanced options for %1$s</string>
     <string name="settings_time_format_title">Time format</string>
     <string name="settings_time_format_system">System</string>
     <string name="settings_time_format_12h">12-hour</string>
@@ -408,8 +361,6 @@
     <string name="settings_about_title">About Salati</string>
     <string name="settings_about_version">Version %1$s</string>
 
-    <string name="settings_reminders_sound">Notification Sound</string>
-    <string name="settings_reminders_sound_description">Play a sound at prayer times</string>
     <string name="daily_computed_locally">Offline — times calculated on this device</string>
     <string name="notification_channel_vibrate_name">Prayer reminders (vibrate)</string>
     <string name="notification_channel_vibrate_description">Prayer time alerts that vibrate without playing a sound</string>
@@ -433,7 +384,6 @@
     <string name="settings_adhan_unavailable">The recordings list could not be read.</string>
     <string name="settings_adhan_empty">No recordings are available yet.</string>
     <string name="settings_adhan_size">%1$s MB download</string>
-    <string name="settings_adhan_not_downloaded">Not downloaded yet</string>
     <string name="settings_adhan_download">Download %1$s</string>
     <string name="settings_adhan_delete">Delete %1$s</string>
     <string name="settings_adhan_preview">Preview</string>
@@ -442,10 +392,6 @@
     <plurals name="settings_reminders_pre_prayer_value">
         <item quantity="one">%1$d minute before</item>
         <item quantity="other">%1$d minutes before</item>
-    </plurals>
-    <plurals name="settings_reminders_pre_prayer_accessibility">
-        <item quantity="one">%1$d minute before prayer</item>
-        <item quantity="other">%1$d minutes before prayer</item>
     </plurals>
     <string name="settings_reminders_pre_prayer_off">Off</string>
     <string name="settings_reminders_pre_prayer_off_accessibility">Pre-prayer reminder off</string>
@@ -459,4 +405,62 @@
     <string name="settings_status_action_optimize">Optimize</string>
     <string name="settings_status_battery_action_description">Turn off battery optimisation for Salati</string>
     <string name="settings_status_dnd_action_description">Allow Do Not Disturb access</string>
+    <string name="settings_adhan_download_too_large">That recording is larger than Salati will download.</string>
+    <string name="settings_adhan_download_cancel">Cancel download</string>
+    <string name="zakat_price_quoted_on">Quoted %1$s</string>
+    <string name="settings_card_prayer_times_title">Prayer times</string>
+    <string name="settings_card_notifications_title">Notifications</string>
+    <string name="settings_card_during_prayer_title">During prayer</string>
+    <string name="settings_card_display_title">Display</string>
+    <string name="settings_card_about_title">About</string>
+    <string name="settings_theme_label">Theme</string>
+    <string name="settings_alerts_label">Alerts</string>
+    <string name="settings_alerts_sound_vibration">Sound and vibration</string>
+    <string name="settings_alerts_sound_only">Sound only</string>
+    <string name="settings_alerts_vibration_only">Vibration only</string>
+    <string name="settings_alerts_silent">Silent notification</string>
+    <string name="settings_alerts_none">No notifications</string>
+    <string name="settings_permissions_label">Permissions</string>
+    <string name="settings_permissions_all_granted">All set</string>
+    <string name="settings_permissions_attention">Needs attention</string>
+    <string name="settings_location_label">Location</string>
+    <string name="settings_stepper_decrease">Decrease %1$s</string>
+    <string name="settings_stepper_increase">Increase %1$s</string>
+    <string name="zakat_business_inventory">Business inventory</string>
+    <string name="zakat_business_inventory_helper">At what it cost you</string>
+    <string name="zakat_metals_choice_heading">Do you need to declare gold or silver?</string>
+    <string name="zakat_metals_choice_explainer">Gold and silver held as investment - coins, bars, bullion - are zakatable in every school. Scholars differ on jewellery worn for personal use: the Maliki, Shafi\'i and Hanbali schools exempt it, the Hanafi school includes it.</string>
+    <string name="zakat_metals_skip_title">No, skip this step</string>
+    <string name="zakat_metals_skip_detail">You hold none, or your jewellery is for personal wear and you follow a school that exempts it.</string>
+    <string name="zakat_metals_declare_title">Yes, let me declare it</string>
+    <string name="zakat_metals_declare_detail">You hold coins, bars or bullion, or you follow the Hanafi school and include personal jewellery.</string>
+    <string name="zakat_metals_skipped_notice">Gold and silver are left out of this assessment.</string>
+    <string name="zakat_metals_chip_skip">Skip</string>
+    <string name="zakat_metals_chip_declare">Declare</string>
+    <string name="zakat_due_label">Zakat due</string>
+    <string name="zakat_due_below_nisab">Below Nisab</string>
+    <string name="zakat_step_jump">Go to step %1$d: %2$s</string>
+    <string name="zakat_section_standard">Nisab standard</string>
+    <string name="zakat_section_currency_rates">Currency &amp; rates</string>
+    <string name="zakat_standard_note">The silver standard is lower, so it obliges Zakat more often. Most scholars accept either.</string>
+    <string name="zakat_rates_label">Metal rates</string>
+    <string name="zakat_rates_values">Gold %1$s/g · Silver %2$s/g</string>
+    <string name="zakat_nisab_note">Zakat falls due once your net wealth stays above this for a lunar year.</string>
+    <string name="zakat_section_own">What you own</string>
+    <string name="zakat_section_owe">What you owe</string>
+    <string name="zakat_cash_total">Total assets</string>
+    <string name="zakat_item_fine_weight">= %1$s g fine</string>
+    <string name="zakat_item_summary_gold">%1$s · %2$s g pure</string>
+    <string name="zakat_item_summary_silver">%1$s · %2$s g fine</string>
+    <string name="zakat_item_weight_unit">g</string>
+    <string name="zakat_item_edit">Edit this piece</string>
+    <string name="zakat_item_collapse">Close this piece</string>
+    <string name="zakat_summary_above_nisab">Above Nisab</string>
+    <string name="zakat_summary_rate_of">2.5%% of %1$s</string>
+    <string name="zakat_summary_negative">− %1$s</string>
+    <string name="zakat_hawl_next_label">Next Hawl</string>
+    <string name="zakat_hawl_unset">Not set yet</string>
+    <string name="zakat_hawl_reached">Nisab reached %1$s</string>
+    <string name="zakat_hawl_change">Change</string>
+    <string name="zakat_hawl_remind">Remind me</string>
 </resources>

@@ -1,74 +1,27 @@
 package com.sulfuro.salati.ui.settings
 
-import android.Manifest
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.produceState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.audio.AdhanAudioStore
-import com.sulfuro.salati.core.audio.AdhanOption
-import com.sulfuro.salati.core.zakat.zakatCurrencyOptions
-import com.sulfuro.salati.core.location.DeviceLocationProvider
-import com.sulfuro.salati.core.location.DeviceLocationResult
-import com.sulfuro.salati.core.location.PrayerLocationResolver
 import com.sulfuro.salati.core.work.enqueueAlarmSettingsRefreshIfNeeded
-import com.sulfuro.salati.core.alarms.PrayerSilentModeController
-import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
 import com.sulfuro.salati.core.permissions.readAppPermissionState
+import com.sulfuro.salati.core.permissions.rememberNotificationPermissionRequest
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiSpacing
-import com.sulfuro.salati.ui.components.SettingRow
-import com.sulfuro.salati.ui.components.SettingSection
-import com.sulfuro.salati.ui.components.ValueSelectionRow
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
+import com.sulfuro.salati.widget.SalatiAppWidgetProvider
 import com.sulfuro.salati.core.permissions.AppPermissionState
-import com.sulfuro.salati.data.settings.TimeFormatPreference
-import com.sulfuro.salati.ui.components.ExpandableSettingSection
-import com.sulfuro.salati.ui.components.SegmentedTabRow
-import androidx.core.app.LocaleManagerCompat
-import androidx.core.os.LocaleListCompat
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 
 internal object LoadedSettingsCache {
@@ -155,9 +108,9 @@ fun SettingsScreen(
     // the launcher's result has to land where it is observed.
     val lifecycleOwner = LocalLifecycleOwner.current
     var permissionState by remember { mutableStateOf(readAppPermissionState(context)) }
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
+    // Falls through to system settings once Android stops showing the dialog, so the
+    // button cannot become a no-op.
+    val requestNotificationPermission = rememberNotificationPermissionRequest {
         permissionState = readAppPermissionState(context)
     }
 
@@ -187,6 +140,13 @@ fun SettingsScreen(
                 }
                 settingsChange?.let { (previous, updated) ->
                     enqueueAlarmSettingsRefreshIfNeeded(appContext, previous, updated)
+                    // Widgets otherwise only redrew every half hour or when a prayer
+                    // fired, so changing city, method or clock format left every one of
+                    // them showing the old times - and muting notifications, which stops
+                    // the alarms, took the prayer-time refresh away with it.
+                    if (previous != updated) {
+                        SalatiAppWidgetProvider.updateAllWidgets(appContext)
+                    }
                 }
             }
             Unit
@@ -209,7 +169,9 @@ fun SettingsScreen(
 
         SettingsLocationCard(settings = settings, saveSettings = saveSettings)
 
-        SettingsAlarmsCard(
+        SettingsAlarmsCard(settings = settings, saveSettings = saveSettings)
+
+        SettingsDuringPrayerCard(
             settings = settings,
             permissionState = permissionState,
             saveSettings = saveSettings
@@ -220,9 +182,7 @@ fun SettingsScreen(
         SettingsSystemCard(
             settings = settings,
             permissionState = permissionState,
-            onRequestNotificationPermission = {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
+            onRequestNotificationPermission = requestNotificationPermission
         )
 
         Spacer(modifier = Modifier.height(SalatiSpacing.xl))

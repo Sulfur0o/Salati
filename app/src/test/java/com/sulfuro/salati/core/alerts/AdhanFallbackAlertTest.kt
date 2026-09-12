@@ -85,10 +85,12 @@ class AdhanFallbackAlertTest {
     fun theServicePostsTheAlertOnEveryFailureAndClearsItOnceAudioStarts() {
         val service = source("core/audio/AdhanPlaybackService.kt")
 
-        // Four ways out that are not audible playback: no recording on disk, audio focus
-        // denied, the player refusing the file, and a decode error before the first frame.
+        // Five ways out that are not audible playback: no recording on disk, audio focus
+        // denied, the player refusing the file, a decode error before the first frame, and
+        // preparation that never calls back at all - which used to leave the service in
+        // the foreground indefinitely with the prayer unannounced.
         val callSites = Regex("(?<!fun )failToNotification\\(\\)").findAll(service).count()
-        assertEquals("every silent exit must still post the alert", 4, callSites)
+        assertEquals("every silent exit must still post the alert", 5, callSites)
 
         assertTrue(
             "the alert is spent once the recitation is actually audible",

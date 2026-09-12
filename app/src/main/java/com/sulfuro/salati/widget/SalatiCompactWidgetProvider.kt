@@ -15,7 +15,11 @@ class SalatiCompactWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         val pendingResult = goAsync()
-        SalatiWidgetData.updateAllWidgets(context, pendingResult)
+        // Only this provider's own widgets: the broadcast reaches all four providers, and
+        // each redrawing everything meant the same work four times over.
+        SalatiWidgetData.updateWidgets(context, pendingResult, appWidgetIds) { snapshot, intent ->
+            applySnapshot(context, appWidgetManager, appWidgetIds, snapshot, intent)
+        }
     }
 
     companion object {

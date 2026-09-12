@@ -42,10 +42,6 @@
     <string name="event_eid_al_adha">Aïd al-Adha</string>
     <string name="event_white_day">Jour Blanc</string>
     <string name="event_zakat_hawl">Échéance du Hawl de la Zakat</string>
-    <string name="hawl_milestone_title">Hawl de la Zakat</string>
-    <string name="hawl_milestone_not_set">Définissez la date où vos avoirs ont atteint le Nissab</string>
-    <string name="hawl_milestone_summary">Échéance %1$s · Nissab atteint le %2$s</string>
-    <string name="hawl_set_date">Définir la date</string>
     <string name="hawl_clear_date">Effacer</string>
     <string name="hawl_date_confirm">Enregistrer</string>
     <string name="hawl_date_cancel">Annuler</string>
@@ -96,8 +92,6 @@
     <string name="settings_high_latitudes_label">Règle des hautes latitudes</string>
     <string name="settings_madhab_label">Madhab</string>
 
-    <string name="settings_reminders_mute">Mettre les notifications en sourdine</string>
-    <string name="settings_reminders_mute_description">Désactiver toutes les alertes de prière</string>
     <string name="settings_reminders_vibration">Alertes par vibration</string>
     <string name="settings_reminders_vibration_description">Faire vibrer l\'appareil aux heures de prière</string>
     <string name="settings_silent_mode_title">Mode silencieux prière</string>
@@ -123,7 +117,7 @@
     <string name="notification_pre_prayer_title">Rappel : l\'heure de %1$s approche</string>
     <string name="notification_pre_prayer_message">Prière imminente dans quelques minutes.</string>
 
-    <string name="settings_reminders_pre_prayer">Délai du rappel pré-prière</string>
+    <string name="settings_reminders_pre_prayer">Rappel anticipé</string>
 
     <string name="settings_calendar_hijri_offset">Ajustement du calendrier hégirien</string>
     <string name="settings_calendar_hijri_offset_zero">0 jour</string>
@@ -137,7 +131,6 @@
         <item quantity="many">−%d jours</item>
         <item quantity="other">−%d jours</item>
     </plurals>
-    <string name="settings_calendar_hijri_offset_accessibility">Décalage de %1$s</string>
 
     <string name="settings_permission_notifications_title">Notifications</string>
     <string name="settings_permission_notifications_description">Recevoir les rappels de prière</string>
@@ -151,11 +144,6 @@
     <string name="settings_permission_exact_alarms_allow">Autoriser les alarmes exactes</string>
     <string name="settings_permission_exact_alarms_state_allowed">Autorisé</string>
     <string name="settings_permission_exact_alarms_state_not_allowed">Non autorisé</string>
-    <string name="settings_permission_silent_mode_title">Accès Ne pas déranger</string>
-    <string name="settings_permission_silent_mode_description">Requis pour modifier et restaurer la sonnerie du téléphone pendant la prière</string>
-    <string name="settings_permission_silent_mode_allow">Ouvrir les paramètres</string>
-    <string name="settings_permission_silent_mode_state_allowed">Autorisé</string>
-    <string name="settings_permission_silent_mode_state_not_allowed">Non autorisé</string>
 
     <string name="settings_method_mwl">Ligue Islamique Mondiale</string>
     <string name="settings_method_isna">Amérique du Nord (ISNA)</string>
@@ -176,7 +164,6 @@
     <string name="settings_high_lat_twilight_angle">Angle du crépuscule</string>
 
     <!-- Theme Settings -->
-    <string name="settings_theme_dark_mode">Apparence</string>
     <string name="settings_theme_dark_mode_desc">Choisissez entre le thème du système, clair ou sombre</string>
     <string name="settings_theme_option_system">Système</string>
     <string name="settings_theme_option_light">Clair</string>
@@ -200,7 +187,6 @@
 
 
     <!-- Zakat Screen -->
-    <string name="zakat_title">Zakat</string>
     <string name="zakat_refresh_price">Actualiser le cours en direct</string>
     <string name="zakat_price_updating">Récupération du dernier cours…</string>
     <string name="zakat_price_updated_at">Mis à jour le %1$s</string>
@@ -262,20 +248,16 @@
     <string name="battery_opt_state_restricted">Restreint</string>
     <string name="battery_opt_state_unrestricted_desc">L\'économiseur de batterie ne retarde pas les alarmes de prière</string>
     <string name="battery_opt_state_restricted_desc">Restreint : l\'économiseur de batterie peut retarder les alarmes de prière</string>
-    <string name="widget_brand_name">Salati</string>
     <string name="widget_next_prayer">Prochaine prière</string>
     <string name="widget_placeholder_time">--:--</string>
-    <string name="widget_dot"> · </string>
     <string name="widget_location_placeholder">Lieu</string>
     <string name="widget_timetable_name">Salati : Horaires complets</string>
     <string name="widget_minimal_bar_name">Salati : Bandeau prières</string>
     <string name="widget_minimal_bar_description">Bandeau horizontal d\'une seule ligne avec les 5 prières quotidiennes</string>
     <string name="widget_compact_card_name">Salati : Carte prochaine prière</string>
     <string name="widget_compact_card_description">Carte compacte avec la prochaine prière, le lieu et la date</string>
-    <string name="widget_glance_pill_name">Salati : Pilule aperçu</string>
-    <string name="widget_glance_pill_description">Pilule ultra-compacte affichant la prochaine prière</string>
     <string name="badge_next">SUIVANT</string>
-    <string name="currency_sheet_title">Sélectionner la devise de la Zakat</string>
+    <string name="currency_sheet_title">Devise de la Zakat</string>
     <string name="currency_sheet_subtitle">Utilisé pour le seuil du Nisab et l\'évaluation des avoirs</string>
     <string name="currency_search_placeholder">Rechercher une devise ou un code…</string>
     <string name="currency_clear">Effacer</string>
@@ -284,57 +266,42 @@
     <string name="onboarding_required_permissions">Autorisations requises</string>
     <string name="onboarding_action_optimize">Optimiser</string>
     <string name="zakat_currency_mismatch_warning">Les prix enregistrés des métaux étaient en %1$s. Appuyez sur « Actualiser » pour calculer précisément en %2$s.</string>
-    <string name="widget_description">Horaires de prière quotidiens et compte à rebours sur l\'écran d\'accueil</string>
+    <string name="widget_description">Les cinq prières du jour, avec la prochaine mise en évidence</string>
 
     <!-- ============ Assistant Zakat ============ -->
-    <string name="zakat_step_indicator">Étape %1$d sur %2$d</string>
     <string name="zakat_step_back">Retour</string>
-    <string name="zakat_step_next">Suivant</string>
-    <string name="zakat_step_finish">Voir le récapitulatif</string>
-    <string name="zakat_step_1_title">Seuil du Nisab</string>
-    <string name="zakat_step_2_title">Liquidités</string>
+    <string name="zakat_step_1_title">Base</string>
+    <string name="zakat_step_2_title">Liquidités &amp; biens</string>
     <string name="zakat_step_3_title">Or &amp; argent</string>
     <string name="zakat_step_4_title">Récapitulatif</string>
     <string name="zakat_step_accessibility">Étape %1$d sur %2$d : %3$s</string>
 
-    <string name="zakat_standard_heading">Choisissez votre référence de Nisab</string>
-    <string name="zakat_standard_explainer">Le Nisab est le patrimoine minimal à partir duquel la Zakat est due. La plupart des savants acceptent les deux références ; celle de l\'argent étant plus basse, elle rend la Zakat obligatoire plus souvent.</string>
-    <string name="zakat_standard_gold">Référence or</string>
+    <string name="zakat_standard_gold">Or</string>
     <string name="zakat_standard_gold_detail">85 g d\'or pur</string>
-    <string name="zakat_standard_silver">Référence argent</string>
+    <string name="zakat_standard_silver">Argent</string>
     <string name="zakat_standard_silver_detail">595 g d\'argent</string>
     <string name="zakat_standard_threshold">Votre seuil de Nisab</string>
     <string name="zakat_currency_label">Devise</string>
-    <string name="zakat_currency_helper">Les cours des métaux et tous les montants sont affichés dans cette devise.</string>
 
-    <string name="zakat_cash_heading">Liquidités et actifs disponibles</string>
-    <string name="zakat_cash_explainer">Indiquez ce que vous détenez depuis une année lunaire complète. Laissez à zéro ce qui ne s\'applique pas.</string>
     <string name="zakat_cash_on_hand">Espèces</string>
     <string name="zakat_bank_balance">Soldes bancaires</string>
     <string name="zakat_investments">Placements et actions liquides</string>
     <string name="zakat_receivables">Sommes qui vous sont dues</string>
-    <string name="zakat_liabilities_heading">Déductions</string>
-    <string name="zakat_liabilities">Dettes à court terme exigibles</string>
-    <string name="zakat_liabilities_helper">Seules les dettes immédiatement exigibles sont déduites.</string>
-    <string name="zakat_cash_subtotal">Sous-total des liquidités</string>
+    <string name="zakat_liabilities">Dettes exigibles</string>
+    <string name="zakat_liabilities_helper">Uniquement ce qui est payable immédiatement</string>
 
-    <string name="zakat_metals_heading">Métaux précieux</string>
-    <string name="zakat_metals_explainer">Ajoutez chaque pièce avec sa pureté. Salati convertit chaque article en poids de métal pur avant de l\'évaluer.</string>
-    <string name="zakat_gold_items_title">Articles en or</string>
-    <string name="zakat_silver_items_title">Articles en argent</string>
-    <string name="zakat_add_gold_item">Ajouter un article en or</string>
-    <string name="zakat_add_silver_item">Ajouter un article en argent</string>
+    <string name="zakat_gold_items_title">Or</string>
+    <string name="zakat_silver_items_title">Argent</string>
+    <string name="zakat_add_gold_item">Ajouter une pièce en or</string>
+    <string name="zakat_add_silver_item">Ajouter une pièce en argent</string>
     <string name="zakat_item_label">Description (facultatif)</string>
     <string name="zakat_item_label_hint">Collier, bague, pièces…</string>
     <string name="zakat_item_weight">Poids (g)</string>
-    <string name="zakat_item_purity">Pureté</string>
     <string name="zakat_item_remove">Supprimer l\'article</string>
     <string name="zakat_item_default_label">Article %1$d</string>
-    <string name="zakat_item_pure_weight">Équivalent pur : %1$s g</string>
-    <string name="zakat_gold_empty">Aucun article en or pour l\'instant.</string>
-    <string name="zakat_silver_empty">Aucun article en argent pour l\'instant.</string>
-    <string name="zakat_gold_total_pure">Or pur total : %1$s g</string>
-    <string name="zakat_silver_total_fine">Argent fin total : %1$s g</string>
+    <string name="zakat_item_pure_weight">= %1$s g pur</string>
+    <string name="zakat_gold_total_pure">%1$s g pur</string>
+    <string name="zakat_silver_total_fine">%1$s g fin</string>
     <string name="zakat_purity_24k">24 ct</string>
     <string name="zakat_purity_22k">22 ct</string>
     <string name="zakat_purity_21k">21 ct</string>
@@ -343,31 +310,24 @@
     <string name="zakat_purity_fine_silver">Fin 999</string>
     <string name="zakat_purity_sterling">Sterling 925</string>
 
-    <string name="zakat_summary_heading">Votre évaluation de la Zakat</string>
     <string name="zakat_summary_gross">Actifs bruts</string>
-    <string name="zakat_summary_liabilities">Moins les dettes exigibles</string>
+    <string name="zakat_summary_liabilities">Dettes exigibles</string>
     <string name="zakat_summary_net">Patrimoine net zakatable</string>
     <string name="zakat_summary_nisab">Seuil du Nisab</string>
     <string name="zakat_summary_below_nisab">Votre patrimoine est inférieur au seuil du Nisab (%1$s). Aucune Zakat due.</string>
-    <string name="zakat_summary_due_badge">Zakat due : 2,5 %%</string>
-    <string name="zakat_summary_breakdown">Détail</string>
-    <string name="zakat_summary_cash_line">Liquidités et actifs disponibles</string>
-    <string name="zakat_summary_gold_line">Or (%1$s g pur)</string>
-    <string name="zakat_summary_silver_line">Argent (%1$s g fin)</string>
+    <string name="zakat_summary_cash_line">Liquidités &amp; biens</string>
+    <string name="zakat_summary_gold_line">Or · %1$s g pur</string>
+    <string name="zakat_summary_silver_line">Argent · %1$s g fin</string>
 
     <string name="zakat_hawl_calendar_title">Salati : revue annuelle du Hawl de la Zakat</string>
     <string name="zakat_hawl_calendar_description">Une année lunaire (354 jours) s\'est écoulée depuis votre dernière évaluation. Comparez votre patrimoine au seuil du Nisab dans Salati.</string>
-    <string name="zakat_hawl_calendar_action">Enregistrer le Hawl dans l\'agenda</string>
-    <string name="zakat_hawl_calendar_helper">Ajoute un rappel sur toute la journée du %1$s, une année lunaire à compter d\'aujourd\'hui.</string>
     <string name="zakat_hawl_calendar_unavailable">Aucune application d\'agenda trouvée sur cet appareil.</string>
 
     <!-- ============ Recherche de ville ============ -->
     <string name="settings_location_use_gps">Utiliser le GPS</string>
-    <string name="settings_location_use_gps_description">Détecter votre position et déterminer le fuseau horaire automatiquement</string>
     <string name="settings_location_search_city">Rechercher une ville</string>
-    <string name="settings_location_search_city_description">Trouvez votre ville par son nom, sans coordonnées</string>
-    <string name="city_search_title">Rechercher une ville</string>
-    <string name="city_search_subtitle">Choisissez votre ville pour définir les horaires et le fuseau horaire</string>
+    <string name="city_search_title">Lieu</string>
+    <string name="city_search_subtitle">Détermine vos heures de prière et votre fuseau horaire</string>
     <string name="city_search_placeholder">Nom de ville, par ex. Istanbul</string>
     <string name="city_search_clear">Effacer la recherche</string>
     <string name="city_search_hint">Saisissez au moins deux lettres pour lancer la recherche.</string>
@@ -378,13 +338,6 @@
     <string name="city_search_result_accessibility">%1$s. Sélectionnez pour utiliser cette position.</string>
 
     <!-- ============ Réorganisation des paramètres ============ -->
-    <string name="settings_card_location_title">Position &amp; calcul</string>
-    <string name="settings_card_alarms_title">Alarmes &amp; notifications</string>
-    <string name="settings_card_appearance_title">Apparence &amp; région</string>
-    <string name="settings_card_system_title">État du système &amp; autorisations</string>
-    <string name="settings_advanced_show">Options avancées</string>
-    <string name="settings_advanced_expand_accessibility">Afficher les options avancées de %1$s</string>
-    <string name="settings_advanced_collapse_accessibility">Masquer les options avancées de %1$s</string>
     <string name="settings_time_format_title">Format de l\'heure</string>
     <string name="settings_time_format_system">Système</string>
     <string name="settings_time_format_12h">12 heures</string>
@@ -400,8 +353,6 @@
     <string name="settings_about_title">À propos de Salati</string>
     <string name="settings_about_version">Version %1$s</string>
 
-    <string name="settings_reminders_sound">Son de notification</string>
-    <string name="settings_reminders_sound_description">Émettre un son aux heures de prière</string>
     <string name="daily_computed_locally">Hors ligne — horaires calculés sur cet appareil</string>
     <string name="notification_channel_vibrate_name">Rappels de prière (vibration)</string>
     <string name="notification_channel_vibrate_description">Alertes des heures de prière qui vibrent sans émettre de son</string>
@@ -425,7 +376,6 @@
     <string name="settings_adhan_unavailable">La liste des enregistrements n’a pas pu être lue.</string>
     <string name="settings_adhan_empty">Aucun enregistrement n’est encore disponible.</string>
     <string name="settings_adhan_size">Téléchargement de %1$s Mo</string>
-    <string name="settings_adhan_not_downloaded">Pas encore téléchargé</string>
     <string name="settings_adhan_download">Télécharger %1$s</string>
     <string name="settings_adhan_delete">Supprimer %1$s</string>
     <string name="settings_adhan_preview">Écouter</string>
@@ -435,11 +385,6 @@
         <item quantity="one">%1$d minute avant</item>
         <item quantity="many">%1$d de minutes avant</item>
         <item quantity="other">%1$d minutes avant</item>
-    </plurals>
-    <plurals name="settings_reminders_pre_prayer_accessibility">
-        <item quantity="one">%1$d minute avant la prière</item>
-        <item quantity="many">%1$d de minutes avant la prière</item>
-        <item quantity="other">%1$d minutes avant la prière</item>
     </plurals>
     <string name="settings_reminders_pre_prayer_off">Désactivé</string>
     <string name="settings_reminders_pre_prayer_off_accessibility">Rappel avant la prière désactivé</string>
@@ -453,4 +398,62 @@
     <string name="settings_status_action_optimize">Optimiser</string>
     <string name="settings_status_battery_action_description">Désactiver l’optimisation de la batterie pour Salati</string>
     <string name="settings_status_dnd_action_description">Autoriser l’accès au mode Ne pas déranger</string>
+    <string name="settings_adhan_download_too_large">Cet enregistrement dépasse la taille que Salati télécharge.</string>
+    <string name="settings_adhan_download_cancel">Annuler le téléchargement</string>
+    <string name="zakat_price_quoted_on">Cours du %1$s</string>
+    <string name="settings_card_prayer_times_title">Heures de prière</string>
+    <string name="settings_card_notifications_title">Notifications</string>
+    <string name="settings_card_during_prayer_title">Pendant la prière</string>
+    <string name="settings_card_display_title">Affichage</string>
+    <string name="settings_card_about_title">À propos</string>
+    <string name="settings_theme_label">Thème</string>
+    <string name="settings_alerts_label">Alertes</string>
+    <string name="settings_alerts_sound_vibration">Son et vibration</string>
+    <string name="settings_alerts_sound_only">Son uniquement</string>
+    <string name="settings_alerts_vibration_only">Vibration uniquement</string>
+    <string name="settings_alerts_silent">Notification silencieuse</string>
+    <string name="settings_alerts_none">Aucune notification</string>
+    <string name="settings_permissions_label">Autorisations</string>
+    <string name="settings_permissions_all_granted">Tout est en ordre</string>
+    <string name="settings_permissions_attention">Action requise</string>
+    <string name="settings_location_label">Lieu</string>
+    <string name="settings_stepper_decrease">Diminuer : %1$s</string>
+    <string name="settings_stepper_increase">Augmenter : %1$s</string>
+    <string name="zakat_business_inventory">Stock commercial</string>
+    <string name="zakat_business_inventory_helper">À son prix de revient</string>
+    <string name="zakat_metals_choice_heading">Avez-vous de l\'or ou de l\'argent à déclarer ?</string>
+    <string name="zakat_metals_choice_explainer">L\'or et l\'argent détenus comme placement - pièces, lingots - sont soumis à la Zakat dans toutes les écoles. Les savants divergent sur les bijoux portés à titre personnel : les écoles malikite, chaféite et hanbalite les exemptent, l\'école hanafite les inclut.</string>
+    <string name="zakat_metals_skip_title">Non, passer cette étape</string>
+    <string name="zakat_metals_skip_detail">Vous n\'en détenez pas, ou vos bijoux sont d\'usage personnel et vous suivez une école qui les exempte.</string>
+    <string name="zakat_metals_declare_title">Oui, je veux les déclarer</string>
+    <string name="zakat_metals_declare_detail">Vous détenez des pièces ou des lingots, ou vous suivez l\'école hanafite et incluez vos bijoux personnels.</string>
+    <string name="zakat_metals_skipped_notice">L\'or et l\'argent sont exclus de ce calcul.</string>
+    <string name="zakat_metals_chip_skip">Ignorer</string>
+    <string name="zakat_metals_chip_declare">Déclarer</string>
+    <string name="zakat_due_label">Zakat due</string>
+    <string name="zakat_due_below_nisab">Sous le Nisab</string>
+    <string name="zakat_step_jump">Aller à l\'étape %1$d : %2$s</string>
+    <string name="zakat_section_standard">Référence du Nisab</string>
+    <string name="zakat_section_currency_rates">Devise &amp; cours</string>
+    <string name="zakat_standard_note">La référence argent est plus basse, elle rend donc la Zakat obligatoire plus souvent. La plupart des savants acceptent les deux.</string>
+    <string name="zakat_rates_label">Cours des métaux</string>
+    <string name="zakat_rates_values">Or %1$s/g · Argent %2$s/g</string>
+    <string name="zakat_nisab_note">La Zakat devient due lorsque votre patrimoine net reste au-dessus pendant une année lunaire.</string>
+    <string name="zakat_section_own">Ce que vous possédez</string>
+    <string name="zakat_section_owe">Ce que vous devez</string>
+    <string name="zakat_cash_total">Total des actifs</string>
+    <string name="zakat_item_fine_weight">= %1$s g fin</string>
+    <string name="zakat_item_summary_gold">%1$s · %2$s g pur</string>
+    <string name="zakat_item_summary_silver">%1$s · %2$s g fin</string>
+    <string name="zakat_item_weight_unit">g</string>
+    <string name="zakat_item_edit">Modifier cette pièce</string>
+    <string name="zakat_item_collapse">Replier cette pièce</string>
+    <string name="zakat_summary_above_nisab">Au-dessus du Nisab</string>
+    <string name="zakat_summary_rate_of">2,5 %% de %1$s</string>
+    <string name="zakat_summary_negative">− %1$s</string>
+    <string name="zakat_hawl_next_label">Prochain Hawl</string>
+    <string name="zakat_hawl_unset">Non définie</string>
+    <string name="zakat_hawl_reached">Nisab atteint le %1$s</string>
+    <string name="zakat_hawl_change">Modifier</string>
+    <string name="zakat_hawl_remind">Me le rappeler</string>
 </resources>

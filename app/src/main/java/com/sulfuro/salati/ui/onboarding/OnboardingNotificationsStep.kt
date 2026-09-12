@@ -39,6 +39,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.permissions.readAppPermissionState
+import com.sulfuro.salati.core.permissions.rememberNotificationPermissionRequest
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
@@ -73,9 +74,9 @@ internal fun NotificationsStep(
         }
     }
 
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) {
+    // Falls through to system settings once Android stops showing the dialog. Onboarding
+    // is the worst place for an inert button: the next tap is "Finish".
+    val requestNotificationPermission = rememberNotificationPermissionRequest {
         permissionState = readAppPermissionState(context)
     }
 
@@ -116,29 +117,26 @@ internal fun NotificationsStep(
                     )
 
                     // 1. Post Notifications (Android 13+)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val hasNotification = permissionState.notificationPermission
-                        PermissionStatusRow(
-                            title = stringResource(R.string.settings_permission_notifications_title),
-                            description = stringResource(R.string.settings_permission_notifications_description),
-                            statusText = stringResource(
-                                if (hasNotification) R.string.settings_permission_notifications_state_allowed
-                                else R.string.settings_permission_notifications_state_not_allowed
-                            ),
-                            isAllowed = hasNotification,
-                            onActionClick = {
-                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            },
-                            actionText = stringResource(R.string.settings_permission_notifications_allow)
-                        )
-                        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-                    }
+                    val hasNotification = permissionState.notificationPermission
+                    PermissionStatusRow(
+                        label = stringResource(R.string.settings_permission_notifications_title),
+                        description = stringResource(R.string.settings_permission_notifications_description),
+                        statusText = stringResource(
+                            if (hasNotification) R.string.settings_permission_notifications_state_allowed
+                            else R.string.settings_permission_notifications_state_not_allowed
+                        ),
+                        isAllowed = hasNotification,
+                        onActionClick = requestNotificationPermission,
+                        actionText = stringResource(R.string.settings_permission_notifications_allow),
+                        actionDescription = stringResource(R.string.settings_permission_notifications_allow)
+                    )
+                    HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
                     // 2. Exact Alarms (Android 12+)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         val hasExact = permissionState.exactAlarmAccess
                         PermissionStatusRow(
-                            title = stringResource(R.string.settings_permission_exact_alarms_title),
+                            label = stringResource(R.string.settings_permission_exact_alarms_title),
                             description = stringResource(
                                 if (hasExact) R.string.settings_permission_exact_alarms_enabled
                                 else R.string.settings_permission_exact_alarms_disabled
@@ -155,7 +153,8 @@ internal fun NotificationsStep(
                                     })
                                 }
                             },
-                            actionText = stringResource(R.string.settings_permission_exact_alarms_allow)
+                            actionText = stringResource(R.string.settings_permission_exact_alarms_allow),
+                            actionDescription = stringResource(R.string.settings_permission_exact_alarms_allow)
                         )
                         HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                     }
@@ -163,7 +162,7 @@ internal fun NotificationsStep(
                     // 3. Battery Optimization
                     val isBatteryUnrestricted = permissionState.batteryOptimizationIgnored
                     PermissionStatusRow(
-                        title = stringResource(R.string.battery_opt_title),
+                        label = stringResource(R.string.battery_opt_title),
                         description = stringResource(
                             if (isBatteryUnrestricted) R.string.battery_opt_state_unrestricted_desc
                             else R.string.battery_opt_state_restricted_desc
@@ -174,7 +173,8 @@ internal fun NotificationsStep(
                         ),
                         isAllowed = isBatteryUnrestricted,
                         onActionClick = { showBatteryHelp = true },
-                        actionText = stringResource(R.string.onboarding_action_optimize)
+                        actionText = stringResource(R.string.onboarding_action_optimize),
+                        actionDescription = stringResource(R.string.settings_status_battery_action_description)
                     )
                 }
             }

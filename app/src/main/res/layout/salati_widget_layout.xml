@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Complete Schedule (4x2).
+
+  Three bands: where and when, the prayer that is coming, then the whole day.
+  The brand name used to sit in the first band; it named the thing the user had
+  already chosen to put on their home screen, so it is gone and the space went to
+  the time, which is what the widget exists to show.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/salati_widget_background"
-    android:padding="12dp">
+    android:padding="10dp">
 
-    <!-- Top header row: Title + Location + Hijri Date -->
+    <!-- Where, and which day -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/widget_app_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/widget_brand_name"
-            android:textColor="@color/salati_widget_accent"
-            android:textStyle="bold"
-            android:textSize="13sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/widget_dot"
-            android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="12sp" />
+        android:gravity="center_vertical"
+        android:baselineAligned="false">
 
         <TextView
             android:id="@+id/widget_location"
@@ -37,7 +31,7 @@
             android:layout_weight="1"
             android:text="@string/widget_location_placeholder"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -45,97 +39,84 @@
             android:id="@+id/widget_hijri_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text=""
-            android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="11sp" />
+            android:textColor="@color/salati_widget_brass"
+            android:textSize="11sp"
+            android:maxLines="1" />
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/salati_widget_outline"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:contentDescription="@null" />
-
-    <!-- Center Hero Row: Next Prayer Highlight (Proportionally expands & vertically centers) -->
-    <LinearLayout
+    <!-- The prayer that is coming -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1.2"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/widget_next_prayer"
-                android:textColor="@color/salati_widget_on_surface_variant"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.06" />
-
-            <TextView
-                android:id="@+id/widget_next_prayer_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/salati_widget_on_surface"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+        android:layout_weight="1"
+        android:layout_marginTop="4dp">
 
         <TextView
             android:id="@+id/widget_next_prayer_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:text="@string/widget_placeholder_time"
             android:textColor="@color/salati_widget_accent"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:includeFontPadding="false"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/widget_next_prayer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignBaseline="@id/widget_next_prayer_time"
+            android:layout_toStartOf="@id/widget_next_prayer_time"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            android:textColor="@color/salati_widget_on_surface"
+            android:textSize="17sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="1dp"
         android:background="@color/salati_widget_outline"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:contentDescription="@null" />
 
-    <!-- Bottom: 5 Daily Prayers Timeline Grid (Vertically centered with active pill support) -->
+    <!-- The whole day, with the next one filled -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1.0"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingTop="2dp"
-        android:paddingBottom="4dp"
-        android:weightSum="5">
+        android:baselineAligned="false"
+        android:weightSum="5"
+        tools:ignore="NestedWeights">
 
-        <!-- Fajr -->
         <LinearLayout
             android:id="@+id/widget_cell_fajr"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="3dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="1dp">
             <TextView
                 android:id="@+id/widget_label_fajr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_fajr"
+                android:textAllCaps="true"
                 android:textColor="@color/salati_widget_on_surface_variant"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:maxLines="1" />
             <TextView
                 android:id="@+id/widget_time_fajr"
                 android:layout_width="wrap_content"
@@ -143,25 +124,27 @@
                 android:text="@string/widget_placeholder_time"
                 android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1" />
         </LinearLayout>
 
-        <!-- Dhuhr -->
         <LinearLayout
             android:id="@+id/widget_cell_dhuhr"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="3dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="1dp">
             <TextView
                 android:id="@+id/widget_label_dhuhr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_dhuhr"
+                android:textAllCaps="true"
                 android:textColor="@color/salati_widget_on_surface_variant"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:maxLines="1" />
             <TextView
                 android:id="@+id/widget_time_dhuhr"
                 android:layout_width="wrap_content"
@@ -169,25 +152,27 @@
                 android:text="@string/widget_placeholder_time"
                 android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1" />
         </LinearLayout>
 
-        <!-- Asr -->
         <LinearLayout
             android:id="@+id/widget_cell_asr"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="3dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="1dp">
             <TextView
                 android:id="@+id/widget_label_asr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_asr"
+                android:textAllCaps="true"
                 android:textColor="@color/salati_widget_on_surface_variant"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:maxLines="1" />
             <TextView
                 android:id="@+id/widget_time_asr"
                 android:layout_width="wrap_content"
@@ -195,25 +180,27 @@
                 android:text="@string/widget_placeholder_time"
                 android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1" />
         </LinearLayout>
 
-        <!-- Maghrib -->
         <LinearLayout
             android:id="@+id/widget_cell_maghrib"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="3dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="1dp">
             <TextView
                 android:id="@+id/widget_label_maghrib"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_maghrib"
+                android:textAllCaps="true"
                 android:textColor="@color/salati_widget_on_surface_variant"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:maxLines="1" />
             <TextView
                 android:id="@+id/widget_time_maghrib"
                 android:layout_width="wrap_content"
@@ -221,25 +208,27 @@
                 android:text="@string/widget_placeholder_time"
                 android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1" />
         </LinearLayout>
 
-        <!-- Isha -->
         <LinearLayout
             android:id="@+id/widget_cell_isha"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="3dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="1dp">
             <TextView
                 android:id="@+id/widget_label_isha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prayer_isha"
+                android:textAllCaps="true"
                 android:textColor="@color/salati_widget_on_surface_variant"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:maxLines="1" />
             <TextView
                 android:id="@+id/widget_time_isha"
                 android:layout_width="wrap_content"
@@ -247,7 +236,8 @@
                 android:text="@string/widget_placeholder_time"
                 android:textColor="@color/salati_widget_on_surface"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

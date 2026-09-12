@@ -30,7 +30,6 @@ import com.sulfuro.salati.ui.components.ValueSelectionRow
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material.icons.filled.Search
-import com.sulfuro.salati.ui.components.ExpandableSettingSection
 import kotlinx.coroutines.launch
 
 /**
@@ -78,7 +77,6 @@ internal fun SettingsLocationCard(
     var showHighLatSheet by remember { mutableStateOf(false) }
     var showMadhabSheet by remember { mutableStateOf(false) }
     var showCitySearchSheet by remember { mutableStateOf(false) }
-    var showLocationAdvanced by rememberSaveable { mutableStateOf(false) }
     var isUpdatingLocation by remember { mutableStateOf(false) }
 
     fun persistLocation(
@@ -190,79 +188,25 @@ internal fun SettingsLocationCard(
         }
     }
 
-    SettingSection(title = stringResource(R.string.settings_card_location_title)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = SalatiSpacing.sm, horizontal = SalatiSpacing.md),
-            horizontalArrangement = Arrangement.spacedBy(SalatiSpacing.md),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (isUpdatingLocation) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.5.dp,
-                    color = MaterialTheme.colorScheme.primary
-                )
+    SettingSection(title = stringResource(R.string.settings_card_prayer_times_title)) {
+        // One row, not three. The city sat on a display row of its own, and underneath it
+        // "Use current GPS" and "Search city name" were two more rows wearing the same
+        // crosshair - so the thing you had and the two ways of changing it took three rows
+        // and two shapes to say. The row now reads like every other row in the card: what
+        // it is on the left, what it currently is on the right, a sheet to change it. Both
+        // ways of changing it live in that sheet.
+        ValueSelectionRow(
+            title = stringResource(R.string.settings_location_label),
+            value = if (isUpdatingLocation) {
+                stringResource(R.string.settings_location_detecting)
             } else {
-                Icon(
-                    imageVector = Icons.Default.MyLocation,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = settings.location.cityName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (isUpdatingLocation) {
-                    Text(
-                        text = stringResource(R.string.settings_location_detecting),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
+                settings.location.cityName
+            },
+            expanded = showCitySearchSheet,
+            onExpandedChange = { if (!isUpdatingLocation) showCitySearchSheet = it }
+        )
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-        SettingRow(
-            title = stringResource(R.string.settings_location_use_gps),
-            supportingText = stringResource(R.string.settings_location_use_gps_description),
-            modifier = Modifier.clickable(enabled = !isUpdatingLocation, role = Role.Button) {
-                handleGpsClick()
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Default.MyLocation,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-        SettingRow(
-            title = stringResource(R.string.settings_location_search_city),
-            supportingText = stringResource(R.string.settings_location_search_city_description),
-            modifier = Modifier.clickable(enabled = !isUpdatingLocation, role = Role.Button) {
-                showCitySearchSheet = true
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        SettingsDivider()
 
         val selectedMethodName = methods.firstOrNull { it.first == settings.prayer.calculationMethod }?.second
             ?: settings.prayer.calculationMethod
@@ -273,7 +217,7 @@ internal fun SettingsLocationCard(
             onExpandedChange = { showMethodSheet = it }
         )
 
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+        SettingsDivider()
 
         val selectedMadhabName = madhabs.firstOrNull { it.first == settings.prayer.madhab }?.second
             ?: settings.prayer.madhab
@@ -284,20 +228,20 @@ internal fun SettingsLocationCard(
             onExpandedChange = { showMadhabSheet = it }
         )
 
-        ExpandableSettingSection(
-            sectionName = stringResource(R.string.settings_card_location_title),
-            expanded = showLocationAdvanced,
-            onExpandedChange = { showLocationAdvanced = it }
-        ) {
-            val selectedRuleName = highLatRules.firstOrNull { it.first == settings.prayer.highLatitudeRule }?.second
-                ?: settings.prayer.highLatitudeRule
-            ValueSelectionRow(
-                title = stringResource(R.string.settings_high_latitudes_label),
-                value = selectedRuleName,
-                expanded = showHighLatSheet,
-                onExpandedChange = { showHighLatSheet = it }
-            )
-        }
+        SettingsDivider()
+
+        // Was behind "Advanced". It decides what Fajr and Isha even mean above roughly
+        // 48 degrees, where the sun never dips far enough for the usual angles to have an
+        // answer - which covers most of northern Europe. Hiding the setting did not make
+        // the problem advanced, it just made the fix hard to find.
+        val selectedRuleName = highLatRules.firstOrNull { it.first == settings.prayer.highLatitudeRule }?.second
+            ?: settings.prayer.highLatitudeRule
+        ValueSelectionRow(
+            title = stringResource(R.string.settings_high_latitudes_label),
+            value = selectedRuleName,
+            expanded = showHighLatSheet,
+            onExpandedChange = { showHighLatSheet = it }
+        )
     }
 
     if (showMethodSheet) {
@@ -331,6 +275,10 @@ internal fun SettingsLocationCard(
 
     if (showCitySearchSheet) {
         CitySearchSheet(
+            onUseCurrentLocation = {
+                showCitySearchSheet = false
+                handleGpsClick()
+            },
             onSelect = { suggestion ->
                 showCitySearchSheet = false
                 persistLocation(

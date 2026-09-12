@@ -230,15 +230,44 @@ object SalatiWidgetData {
         val parsedTime: LocalTime?
     )
 
+    /**
+     * Redraws one provider's own widgets.
+     *
+     * Each of the four providers used to answer its own APPWIDGET_UPDATE by redrawing all
+     * four kinds, so a broadcast to all of them - after a reboot, say - did the same work
+     * four times over, with four pending results held open and four reads of the same
+     * prayer data.
+     */
+    fun updateWidgets(
+        context: Context,
+        pendingResult: BroadcastReceiver.PendingResult?,
+        appWidgetIds: IntArray,
+        apply: (WidgetDataSnapshot, PendingIntent) -> Unit
+    ) {
+        if (appWidgetIds.isEmpty()) {
+            pendingResult?.finish()
+            return
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val snapshot = loadWidgetSnapshot(context) ?: return@launch
+                apply(snapshot, createLaunchPendingIntent(context))
+            } catch (e: Exception) {
+                android.util.Log.e("SalatiWidget", "Error updating widgets", e)
+            } finally {
+                pendingResult?.finish()
+            }
+        }
+    }
+
+    /** Redraws every placed widget of every kind. For callers outside the providers. */
     fun updateAllWidgets(context: Context, pendingResult: BroadcastReceiver.PendingResult? = null) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
 
         val fullIds = appWidgetManager.getAppWidgetIds(ComponentName(context, SalatiAppWidgetProvider::class.java))
         val barIds = appWidgetManager.getAppWidgetIds(ComponentName(context, SalatiMinimalBarWidgetProvider::class.java))
         val compactIds = appWidgetManager.getAppWidgetIds(ComponentName(context, SalatiCompactWidgetProvider::class.java))
-        val glanceIds = appWidgetManager.getAppWidgetIds(ComponentName(context, SalatiGlanceWidgetProvider::class.java))
-
-        val hasAny = fullIds.isNotEmpty() || barIds.isNotEmpty() || compactIds.isNotEmpty() || glanceIds.isNotEmpty()
+        val hasAny = fullIds.isNotEmpty() || barIds.isNotEmpty() || compactIds.isNotEmpty()
 
         if (hasAny) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -254,9 +283,6 @@ object SalatiWidgetData {
                     }
                     if (compactIds.isNotEmpty()) {
                         SalatiCompactWidgetProvider.applySnapshot(context, appWidgetManager, compactIds, snapshot, pendingIntent)
-                    }
-                    if (glanceIds.isNotEmpty()) {
-                        SalatiGlanceWidgetProvider.applySnapshot(context, appWidgetManager, glanceIds, snapshot, pendingIntent)
                     }
                 } catch (e: Exception) {
                     android.util.Log.e("SalatiWidget", "Error updating all widgets", e)

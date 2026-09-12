@@ -21,68 +21,65 @@ class AlarmReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         Log.d(TAG, "onReceive: action=$action")
 
-        if (action != AlarmScheduler.ACTION_PRAYER_ALARM ||
-            action == Intent.ACTION_BOOT_COMPLETED ||
-            action == "android.intent.action.LOCKED_BOOT_COMPLETED"
-        ) {
-            return
-        }
+        if (action != AlarmScheduler.ACTION_PRAYER_ALARM) return
 
         val prayerName = intent.getStringExtra(AlarmScheduler.EXTRA_PRAYER_NAME) ?: ""
-            val kind = intent.getStringExtra(AlarmScheduler.EXTRA_NOTIFICATION_KIND)
-            val isPreReminder = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_PRE_REMINDER, false)
-            val vibrateEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_VIBRATE_ENABLED, true)
-            val soundEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_SOUND_ENABLED, false)
-            val adhanSoundId = intent.getStringExtra(AlarmScheduler.EXTRA_ADHAN_SOUND_ID)
-            val alarmTime = intent.getLongExtra(
-                AlarmScheduler.EXTRA_ALARM_TIME,
-                System.currentTimeMillis()
-            )
-            val alarmRequestCode = intent.getIntExtra(
-                AlarmScheduler.EXTRA_ALARM_REQUEST_CODE,
-                prayerName.hashCode()
-            )
+        if (prayerName.isEmpty()) return
 
-            val resolvedKind = kind ?: when {
-                prayerName == "white_days" -> AlarmScheduler.KIND_WHITE_DAYS
-                isPreReminder -> AlarmScheduler.KIND_PRE_PRAYER
-                else -> AlarmScheduler.KIND_PRAYER
-            }
+        val kind = intent.getStringExtra(AlarmScheduler.EXTRA_NOTIFICATION_KIND)
+        val isPreReminder = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_PRE_REMINDER, false)
+        val vibrateEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_VIBRATE_ENABLED, true)
+        val soundEnabled = intent.getBooleanExtra(AlarmScheduler.EXTRA_SOUND_ENABLED, false)
+        val adhanSoundId = intent.getStringExtra(AlarmScheduler.EXTRA_ADHAN_SOUND_ID)
+        val alarmTime = intent.getLongExtra(
+            AlarmScheduler.EXTRA_ALARM_TIME,
+            System.currentTimeMillis()
+        )
+        val alarmRequestCode = intent.getIntExtra(
+            AlarmScheduler.EXTRA_ALARM_REQUEST_CODE,
+            prayerName.hashCode()
+        )
 
-            if (prayerName.isNotEmpty()) {
-                if (resolvedKind == AlarmScheduler.KIND_PRAYER) {
-                    PrayerSilentModeScheduler.scheduleForPrayer(
-                        context = context.applicationContext,
-                        prayerRequestCode = alarmRequestCode,
-                        prayerAtMillis = alarmTime,
-                        enabled = intent.getBooleanExtra(
-                            AlarmScheduler.EXTRA_SILENT_MODE_AUTOMATION_ENABLED,
-                            false
-                        ),
-                        minutesAfterAdhan = intent.getIntExtra(
-                            AlarmScheduler.EXTRA_SILENT_MODE_MINUTES_AFTER_ADHAN,
-                            0
-                        ),
-                        durationMinutes = intent.getIntExtra(
-                            AlarmScheduler.EXTRA_SILENT_MODE_DURATION_MINUTES,
-                            20
-                        )
-                    )
-                }
-                showNotification(
-                    context = context,
-                    prayerName = prayerName,
-                    kind = resolvedKind,
-                    vibrateEnabled = vibrateEnabled,
-                    soundEnabled = soundEnabled,
-                    adhanSoundId = adhanSoundId
+        val resolvedKind = kind ?: when {
+            prayerName == "white_days" -> AlarmScheduler.KIND_WHITE_DAYS
+            isPreReminder -> AlarmScheduler.KIND_PRE_PRAYER
+            else -> AlarmScheduler.KIND_PRAYER
+        }
+
+        if (resolvedKind == AlarmScheduler.KIND_PRAYER) {
+            PrayerSilentModeScheduler.scheduleForPrayer(
+                context = context.applicationContext,
+                prayerRequestCode = alarmRequestCode,
+                prayerAtMillis = alarmTime,
+                enabled = intent.getBooleanExtra(
+                    AlarmScheduler.EXTRA_SILENT_MODE_AUTOMATION_ENABLED,
+                    false
+                ),
+                minutesAfterAdhan = intent.getIntExtra(
+                    AlarmScheduler.EXTRA_SILENT_MODE_MINUTES_AFTER_ADHAN,
+                    0
+                ),
+                durationMinutes = intent.getIntExtra(
+                    AlarmScheduler.EXTRA_SILENT_MODE_DURATION_MINUTES,
+                    20
                 )
-            val widgetPendingResult = goAsync()
-            runCatching {
-                com.sulfuro.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context, widgetPendingResult)
-            }.onFailure {
-                widgetPendingResult.finish()
-            }
+            )
+        }
+
+        showNotification(
+            context = context,
+            prayerName = prayerName,
+            kind = resolvedKind,
+            vibrateEnabled = vibrateEnabled,
+            soundEnabled = soundEnabled,
+            adhanSoundId = adhanSoundId
+        )
+
+        val widgetPendingResult = goAsync()
+        runCatching {
+            com.sulfuro.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(context, widgetPendingResult)
+        }.onFailure {
+            widgetPendingResult.finish()
         }
     }
 

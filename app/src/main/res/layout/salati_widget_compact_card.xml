@@ -1,69 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Next Prayer Card (2x2).
+
+  Location pinned top, Hijri date pinned bottom, and the prayer itself taking
+  whatever is left in the middle. The time is the largest thing on a square this
+  small, so it is the only thing a glance has to land on.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_compact_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/salati_widget_background"
-    android:padding="12dp">
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
-    <!-- Top header: Brand · Location -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/widget_compact_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:text="@string/widget_location_placeholder"
+        android:textColor="@color/salati_widget_on_surface_variant"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/widget_brand_name"
-            android:textColor="@color/salati_widget_accent"
-            android:textStyle="bold"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/widget_dot"
-            android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="11sp" />
-
-        <TextView
-            android:id="@+id/widget_compact_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/widget_location_placeholder"
-            android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="11sp"
-            android:maxLines="1"
-            android:ellipsize="end" />
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/salati_widget_outline"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="4dp"
-        android:contentDescription="@null" />
-
-    <!-- Center Hero Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/widget_next_prayer"
+            android:textAllCaps="true"
             android:textColor="@color/salati_widget_on_surface_variant"
-            android:textSize="10.5sp"
+            android:textSize="11sp"
             android:textStyle="bold"
-            android:letterSpacing="0.06" />
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/widget_compact_prayer_name"
@@ -71,9 +50,9 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@color/salati_widget_on_surface"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            android:layout_marginTop="1dp" />
+            android:textSize="17sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/widget_compact_prayer_time"
@@ -81,21 +60,19 @@
             android:layout_height="wrap_content"
             android:text="@string/widget_placeholder_time"
             android:textColor="@color/salati_widget_accent"
-            android:textSize="24sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:layout_marginTop="2dp" />
+            android:includeFontPadding="false"
+            android:maxLines="1" />
     </LinearLayout>
 
-    <!-- Bottom Footer: Hijri Date -->
     <TextView
         android:id="@+id/widget_compact_hijri_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="@color/salati_widget_on_surface_variant"
-        android:textSize="10.5sp"
-        android:gravity="center"
+        android:textColor="@color/salati_widget_brass"
+        android:textSize="11sp"
         android:maxLines="1"
         android:ellipsize="end" />
-
 </LinearLayout>

@@ -20,3 +20,4 @@ salati-signing.properties
 *.aab
 *.apks
 .agents/
+/releases/
