@@ -28,7 +28,11 @@ data class PrayerMethodSettings(
 @Immutable
 @Serializable
 data class AlarmPreferences(
-    val prePrayerMinutes: Int = 10,
+    // Off by default: an extra notification before every prayer is an opt-in, not
+    // something to hand someone five times a day before they have asked for it.
+    // Only fresh installs see this - encodeDefaults writes the key on every save, so
+    // anyone who already has a value keeps it.
+    val prePrayerMinutes: Int = 0,
     val vibrateEnabled: Boolean = true,
     val soundEnabled: Boolean = false,
     val adhanSoundId: String? = null,

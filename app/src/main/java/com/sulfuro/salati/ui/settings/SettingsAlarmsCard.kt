@@ -141,31 +141,36 @@ internal fun SettingsAlarmsCard(
             )
         }
 
-        SettingsDivider()
-        SettingStepperRow(
-            title = stringResource(R.string.settings_reminders_pre_prayer),
-            value = prePrayerLabel(settings.alarms.prePrayerMinutes),
-            canDecrease = prePrayerIndex > 0,
-            canIncrease = prePrayerIndex < prePrayerStops.lastIndex,
-            onDecrease = {
-                saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerStops[prePrayerIndex - 1])) }
-            },
-            onIncrease = {
-                saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerStops[prePrayerIndex + 1])) }
-            }
-        )
+        // Both of these are notifications, and muting stops the scheduler preparing any
+        // alarm at all - so with alerts off they offered a reminder the scheduler had
+        // already refused to make, the same way the adhan rows above once did.
+        if (alertStyle != AlertStyle.NONE) {
+            SettingsDivider()
+            SettingStepperRow(
+                title = stringResource(R.string.settings_reminders_pre_prayer),
+                value = prePrayerLabel(settings.alarms.prePrayerMinutes),
+                canDecrease = prePrayerIndex > 0,
+                canIncrease = prePrayerIndex < prePrayerStops.lastIndex,
+                onDecrease = {
+                    saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerStops[prePrayerIndex - 1])) }
+                },
+                onIncrease = {
+                    saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerStops[prePrayerIndex + 1])) }
+                }
+            )
 
-        SettingsDivider()
-        // Was behind "Advanced", which is a strange place for the only reminder in the app
-        // that is not about prayer.
-        SettingToggleRow(
-            title = stringResource(R.string.settings_reminders_white_days_title),
-            supportingText = stringResource(R.string.settings_reminders_white_days_description),
-            checked = settings.alarms.whiteDaysReminder,
-            onCheckedChange = { isChecked ->
-                saveSettings { it.copy(alarms = it.alarms.copy(whiteDaysReminder = isChecked)) }
-            }
-        )
+            SettingsDivider()
+            // Was behind "Advanced", which is a strange place for the only reminder in the
+            // app that is not about prayer.
+            SettingToggleRow(
+                title = stringResource(R.string.settings_reminders_white_days_title),
+                supportingText = stringResource(R.string.settings_reminders_white_days_description),
+                checked = settings.alarms.whiteDaysReminder,
+                onCheckedChange = { isChecked ->
+                    saveSettings { it.copy(alarms = it.alarms.copy(whiteDaysReminder = isChecked)) }
+                }
+            )
+        }
     }
 
     if (showAlertStyleSheet) {

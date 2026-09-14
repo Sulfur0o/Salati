@@ -8,6 +8,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
+import com.sulfuro.salati.data.settings.AlarmPreferences
+import kotlinx.serialization.json.Json
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
@@ -161,5 +163,26 @@ class PrePrayerReminderLabelTest {
             alarmsCard.contains("listOf(0, 5, 10, 15, 20, 25, 30)")
         )
         assertEquals(6, reachableMinutes.size)
+    }
+
+    /**
+     * A fresh install gets no early reminder until it is asked for.
+     *
+     * Ten minutes was the default, which meant every new user was signed up to a second
+     * notification before all five prayers without ever choosing one. Existing installs
+     * keep whatever they have: the settings document is written with encodeDefaults, so
+     * the key is present in every saved copy and the Kotlin default is never consulted
+     * for them.
+     */
+    @Test
+    fun aFreshInstallHasNoEarlyReminder() {
+        assertEquals(0, AlarmPreferences().prePrayerMinutes)
+
+        val encoded = Json { encodeDefaults = true }
+            .encodeToString(AlarmPreferences.serializer(), AlarmPreferences(prePrayerMinutes = 15))
+        assertTrue(
+            "the key has to be written, or changing the default would move existing users",
+            encoded.contains("\"prePrayerMinutes\":15")
+        )
     }
 }

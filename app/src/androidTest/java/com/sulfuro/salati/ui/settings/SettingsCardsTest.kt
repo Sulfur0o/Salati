@@ -1,5 +1,6 @@
 package com.sulfuro.salati.ui.settings
 
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -92,6 +93,58 @@ class SettingsCardsTest {
             ),
             updated
         )
+    }
+
+    /**
+     * Nothing is notified, so nothing is offered.
+     *
+     * The early reminder and White Days are both notifications, and muting makes the
+     * scheduler refuse to prepare any alarm at all - so both were offering a reminder that
+     * could never arrive, exactly as the adhan rows above them once did.
+     */
+    @Test
+    fun theReminderRowsGoWhenThereAreNoNotifications() {
+        val muted = CalculationSettings(
+            alarms = AlarmPreferences(
+                notificationsMuted = true,
+                soundEnabled = false,
+                vibrateEnabled = false,
+                prePrayerMinutes = 15
+            )
+        )
+
+        composeTestRule.setContent {
+            SettingsAlarmsCard(settings = muted, saveSettings = {})
+        }
+
+        composeTestRule.onNodeWithText(string(R.string.settings_reminders_pre_prayer))
+            .assertDoesNotExist()
+        composeTestRule.onNodeWithText(string(R.string.settings_reminders_white_days_title))
+            .assertDoesNotExist()
+        // The alert style itself stays - it is the way back.
+        composeTestRule.onNodeWithText(string(R.string.settings_alerts_label)).assertIsDisplayed()
+    }
+
+    /** And comes back the moment anything is being notified, silently or otherwise. */
+    @Test
+    fun theReminderRowsReturnOnceSomethingIsNotified() {
+        val silent = CalculationSettings(
+            alarms = AlarmPreferences(
+                notificationsMuted = false,
+                soundEnabled = false,
+                vibrateEnabled = false,
+                prePrayerMinutes = 15
+            )
+        )
+
+        composeTestRule.setContent {
+            SettingsAlarmsCard(settings = silent, saveSettings = {})
+        }
+
+        composeTestRule.onNodeWithText(string(R.string.settings_reminders_pre_prayer))
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.settings_reminders_white_days_title))
+            .assertIsDisplayed()
     }
 
     /** Sound without vibration is one of the five states, and it has to be reachable. */
