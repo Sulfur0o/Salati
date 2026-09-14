@@ -7,16 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -39,9 +37,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -50,9 +48,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.withSave
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.computation.QiblaCalculator
 import com.sulfuro.salati.core.sensors.CompassAccuracy
+import com.sulfuro.salati.core.sensors.CompassReading
 import com.sulfuro.salati.core.sensors.rememberCompassReading
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiShapeTokens
@@ -62,18 +62,22 @@ import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
-
-
 @Composable
 fun QiblaScreen(
     settings: CalculationSettings,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // The live magnetometer, by default. A test hands in a fixed reading instead: the
+    // states this screen exists to show - no sensor, aligned, keep turning, needs
+    // calibrating - are otherwise only reachable by waving a real phone about.
+    compass: CompassReading = rememberCompassReading(
+        settings.location.latitude,
+        settings.location.longitude
+    ).value
 ) {
     val qiblaBearing = remember(settings.location.latitude, settings.location.longitude) {
         QiblaCalculator.bearingToKaaba(settings.location.latitude, settings.location.longitude)
     }
-    val compass by rememberCompassReading(settings.location.latitude, settings.location.longitude)
     val heading = compass.trueHeadingDegrees
 
     val isAligned = heading != null && QiblaCalculator.isAligned(heading, qiblaBearing)
@@ -348,12 +352,10 @@ private fun DrawScope.drawCompassRose(
         val y = center.y - labelRadius * cos(angle).toFloat()
         val paint = if (bearing == 0f) northPaint else cardinalPaint
         paint.textSize = 17.dp.toPx()
-        drawContext.canvas.nativeCanvas.apply {
-            // The rose rotates as a graphics layer; counter-rotate glyphs so they stay upright.
-            save()
+        // The rose rotates as a graphics layer; counter-rotate glyphs so they stay upright.
+        drawContext.canvas.nativeCanvas.withSave {
             rotate(-labelCounterRotationDegrees, x, y)
             drawText(label, x, y + paint.textSize / 3f, paint)
-            restore()
         }
     }
 
