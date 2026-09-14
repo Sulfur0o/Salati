@@ -46,7 +46,7 @@ android {
     defaultConfig {
         applicationId = "com.sulfuro.salati"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 6
         versionName = "1.4.0"
     }

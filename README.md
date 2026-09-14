@@ -55,7 +55,7 @@ Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.
 
 - **Package ID:** `com.sulfuro.salati`
 - **Min SDK:** Android 7.0 (API 24)
-- **Target SDK:** Android 16 (API 36)
+- **Target SDK:** Android 17 (API 37)
 - **Architecture:** Jetpack Compose, Material 3, Navigation 3, Coroutines & Flow, WorkManager, DataStore.
 
 ## Repository layout

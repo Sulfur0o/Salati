@@ -1,6 +1,8 @@
 # Salati Google Play Release Checklist
 
-This checklist is for application ID `com.sulfuro.salati`, version code `5`, version name `1.3.0`.
+This checklist is for application ID `com.sulfuro.salati`. The version code and name live in
+`app/build.gradle.kts`; they are deliberately not repeated here, because a number written in two
+places is a number that goes stale in one of them.
 
 ## 1. Run the release gates
 
@@ -11,7 +13,7 @@ $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
 .\gradlew.bat testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleAndroidTest
 ```
 
-Run the instrumented tests on at least one API 36 emulator or device:
+Run the instrumented tests on at least one API 37 emulator or device:
 
 ```powershell
 .\gradlew.bat connectedDebugAndroidTest
@@ -37,7 +39,9 @@ $env:SALATI_SIGNING_PROPERTIES = 'C:\secure\salati-signing.properties'
 
 Upload `app/build/outputs/bundle/release/app-release.aab`. Enroll in Play App Signing and securely back up the upload key and its passwords. Never commit the keystore or signing properties.
 
-Before every later release, increase `versionCode`. Keep the application ID `com.sulfuro.salati` unchanged after the first Play upload.
+Before every later release, increase `versionCode` past the highest one ever uploaded to Play -
+including to a closed or internal track, which burns the number just as surely as production does.
+Keep the application ID `com.sulfuro.salati` unchanged after the first Play upload.
 
 Confirm Play Console reports 16 KB page-size compatibility for the native libraries in the bundle. Local ELF check of the current AndroidX `.so` files (`libandroidx.graphics.path.so`, `libdatastore_shared_counter.so`) shows `p_align >= 16384` on every ABI.
 
@@ -71,7 +75,7 @@ After pushing, deploy `adhans.json`, `audio/fajr/`, and `audio/regular/` to `htt
 - API 24: launch, onboarding, city search, prayer schedule, calendar, Qibla fallback, and Zakat.
 - API 31/32: exact-alarm access denied and granted; confirm the inexact fallback and settings return flow.
 - API 33+: notification permission denied and granted.
-- API 35/36: edge-to-edge layout, predictive back, notification delivery, and alarm restoration.
+- API 35+: edge-to-edge layout, predictive back, notification delivery, and alarm restoration.
 - Phone, tablet/foldable, portrait, landscape, split-screen, large font, and display scaling.
 - First launch online, cached/offline launch, failed API calls, and retry behavior.
 - Timezone and daylight-saving changes, manual clock changes, reboot, app update, and force-stop recovery.
