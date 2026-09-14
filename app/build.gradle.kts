@@ -102,6 +102,12 @@ android {
     lint {
         checkReleaseBuilds = true
         abortOnError = true
+        // Every UnusedAttribute here is a forward-compatible attribute - localeConfig,
+        // enableOnBackInvokedCallback, the widgets' target cell sizes - declared on purpose
+        // for the API levels that read it and harmlessly ignored below minSdk. The check
+        // has nothing left to tell us, and silencing it per-attribute in the XML would say
+        // less than this does.
+        disable += "UnusedAttribute"
     }
 }
 

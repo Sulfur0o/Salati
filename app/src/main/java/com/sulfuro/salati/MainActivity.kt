@@ -1,6 +1,5 @@
 package com.sulfuro.salati
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +19,6 @@ import com.sulfuro.salati.core.permissions.PermissionStateRefreshController
 import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
 import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
 import com.sulfuro.salati.core.permissions.readAppPermissionState
-import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiTheme
 import com.sulfuro.salati.ui.settings.LoadedSettingsCache

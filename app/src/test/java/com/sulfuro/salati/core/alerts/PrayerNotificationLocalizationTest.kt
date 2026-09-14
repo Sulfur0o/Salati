@@ -9,7 +9,6 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.util.Locale
 import com.sulfuro.salati.core.alarms.AlarmReceiver
 
 @RunWith(AndroidJUnit4::class)

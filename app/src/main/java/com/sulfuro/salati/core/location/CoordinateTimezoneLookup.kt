@@ -3,7 +3,6 @@ package com.sulfuro.salati.core.location
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /**

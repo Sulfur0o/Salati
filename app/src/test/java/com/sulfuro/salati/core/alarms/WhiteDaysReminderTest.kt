@@ -1,8 +1,5 @@
 package com.sulfuro.salati.core.alarms
 
-import android.content.Context
-import android.content.Intent
-import androidx.test.core.app.ApplicationProvider
 import com.sulfuro.salati.core.computation.AladhanDate
 import com.sulfuro.salati.core.computation.AladhanDayData
 import com.sulfuro.salati.core.computation.AladhanGregorianDate
@@ -22,11 +19,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.YearMonth
 import com.sulfuro.salati.data.settings.PrayerMethodSettings
 import com.sulfuro.salati.data.settings.AlarmPreferences
 

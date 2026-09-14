@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,16 +19,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiSpacing
+import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
 import com.sulfuro.salati.ui.components.SalatiLogo
 import com.sulfuro.salati.ui.components.SettingRow
-import androidx.compose.runtime.saveable.rememberSaveable
-import com.sulfuro.salati.ui.components.ValueSelectionRow
 import com.sulfuro.salati.ui.components.SettingSection
-import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
+import com.sulfuro.salati.ui.components.ValueSelectionRow
 
 /**
  * What the operating system is currently allowing, and who to talk to about it.
@@ -77,7 +78,7 @@ internal fun SettingsSystemCard(
                     runCatching {
                         context.startActivity(
                             Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                                data = Uri.parse("package:${context.packageName}")
+                                data = "package:${context.packageName}".toUri()
                             }
                         )
                     }
@@ -126,7 +127,7 @@ internal fun SettingsSystemCard(
             supportingText = stringResource(R.string.settings_privacy_policy_description),
             modifier = Modifier.clickable(role = Role.Button) {
                 runCatching {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(privacyPolicyUrl)))
+                    context.startActivity(Intent(Intent.ACTION_VIEW, privacyPolicyUrl.toUri()))
                 }
             }
         ) {
@@ -145,7 +146,7 @@ internal fun SettingsSystemCard(
             modifier = Modifier.clickable(role = Role.Button) {
                 runCatching {
                     context.startActivity(
-                        Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$supportEmail"))
+                        Intent(Intent.ACTION_SENDTO, "mailto:$supportEmail".toUri())
                     )
                 }
             }

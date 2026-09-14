@@ -79,7 +79,7 @@ fun CalendarScreen(
     }
 
     var selectedDayIndex by remember(currentYearMonth) {
-        mutableStateOf(initialCalendarDay(currentYearMonth, today))
+        mutableIntStateOf(initialCalendarDay(currentYearMonth, today))
     }
     val selectedDate = remember(selectedDayIndex, currentYearMonth) {
         currentYearMonth.atDay(selectedDayIndex)

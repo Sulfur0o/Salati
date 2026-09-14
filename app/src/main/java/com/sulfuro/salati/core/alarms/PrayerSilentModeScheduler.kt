@@ -6,9 +6,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.core.content.edit
+import androidx.core.net.toUri
 
 internal data class PrayerSilentWindow(
     val startAtMillis: Long,
@@ -58,9 +59,9 @@ internal object PrayerSilentModeScheduler {
     }
 
     fun setAutomationEnabled(context: Context, enabled: Boolean) {
-        silentModePreferences(context).edit()
-            .putBoolean(KEY_AUTOMATION_ENABLED, enabled)
-            .apply()
+        silentModePreferences(context).edit {
+            putBoolean(KEY_AUTOMATION_ENABLED, enabled)
+        }
     }
 
     fun isAutomationEnabled(context: Context): Boolean {
@@ -187,7 +188,7 @@ internal object PrayerSilentModeScheduler {
     ): PendingIntent {
         val intent = Intent(context, MosqueModeReceiver::class.java).apply {
             this.action = action
-            data = Uri.parse("salati://silent-mode/$prayerRequestCode/$action/$sessionEndMillis")
+            data = "salati://silent-mode/$prayerRequestCode/$action/$sessionEndMillis".toUri()
             putExtra(MosqueModeReceiver.EXTRA_PRAYER_REQUEST_CODE, prayerRequestCode)
             putExtra(MosqueModeReceiver.EXTRA_SESSION_END_MILLIS, sessionEndMillis)
         }
@@ -324,10 +325,10 @@ internal object PrayerSilentModeController {
             // app would then believe it still owes the user a ringer restore it has
             // already performed - silencing the phone again at the next prayer.
             @Suppress("ApplySharedPref")
-            preferences.edit()
-                .remove(KEY_PREVIOUS_RINGER_MODE)
-                .remove(KEY_ACTIVE_UNTIL_MILLIS)
-                .commit()
+            preferences.edit(commit = true) {
+                remove(KEY_PREVIOUS_RINGER_MODE)
+                remove(KEY_ACTIVE_UNTIL_MILLIS)
+            }
             SilentModeRestoreResult.Restored
         } catch (securityException: SecurityException) {
             Log.w(TAG, "Unable to restore the previous ringer mode", securityException)

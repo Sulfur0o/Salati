@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.core.net.toUri
 import com.sulfuro.salati.MainActivity
 
 private const val ALARM_RECEIVER_CLASS_NAME =
@@ -81,7 +82,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
 
             val intent = alarmReceiverIntent(context).apply {
                 action = AlarmScheduler.ACTION_PRAYER_ALARM
-                data = android.net.Uri.parse(alarm.uri)
+                data = alarm.uri.toUri()
                 putExtra(AlarmScheduler.EXTRA_PRAYER_NAME, alarm.prayerKey)
                 putExtra(AlarmScheduler.EXTRA_IS_PRE_REMINDER, alarm.isPreReminder)
                 putExtra(AlarmScheduler.EXTRA_ALARM_TIME, alarm.triggerAtMillis)
@@ -152,7 +153,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
 
             val intent = alarmReceiverIntent(context).apply {
                 action = AlarmScheduler.ACTION_PRAYER_ALARM
-                data = android.net.Uri.parse(alarm.uri)
+                data = alarm.uri.toUri()
                 putExtra(AlarmScheduler.EXTRA_PRAYER_NAME, alarm.prayerKey)
                 putExtra(AlarmScheduler.EXTRA_IS_PRE_REMINDER, alarm.isPreReminder)
                 putExtra(AlarmScheduler.EXTRA_ALARM_TIME, alarm.triggerAtMillis)
@@ -253,7 +254,7 @@ class SystemAlarmRegistrar : AlarmRegistrar {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager ?: return
         val intent = alarmReceiverIntent(context).apply {
             action = AlarmScheduler.ACTION_PRAYER_ALARM
-            data = android.net.Uri.parse(alarm.uri)
+            data = alarm.uri.toUri()
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
