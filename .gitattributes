@@ -1,0 +1,35 @@
+# Everything is stored with LF and checked out with LF, whatever core.autocrlf says
+# locally. The repository is already LF throughout, so this pins it rather than changing
+# it - four res files and both top-level Markdown files had drifted to CRLF on Windows.
+* text=auto eol=lf
+
+*.bat text eol=crlf
+
+*.kt   text diff=kotlin
+*.kts  text diff=kotlin
+*.java text diff=java
+*.xml  text
+*.html text
+*.css  text
+*.json text
+*.md   text
+*.pro  text
+
+*.mp3      binary
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.webp     binary
+*.aab      binary
+*.apk      binary
+*.jks      binary
+*.keystore binary
+
+# The hosted adhan catalogue is deployment payload, not source: keep it out of GitHub's
+# language statistics and out of diffs, where a binary comparison is worthless anyway.
+audio/** -diff linguist-vendored
+assets/** linguist-vendored
+docs/play-listing/** linguist-vendored
+
+# Generated, and not worth reviewing line by line.
+gradle/wrapper/gradle-wrapper.jar binary

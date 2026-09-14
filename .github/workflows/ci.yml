@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Tests, lint and debug build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the app
+        uses: actions/checkout@v4
+        with:
+          # The repository also hosts the adhan catalogue and the public site: ~75 MB of
+          # audio that no Gradle task reads. Cone mode always keeps the root files, so
+          # naming the two build directories is enough to leave all of that behind.
+          sparse-checkout: |
+            app
+            gradle
+
+      - name: Set up JDKs
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          # 17 compiles the app (jvmToolchain), 21 runs the unit tests.
+          java-version: |
+            17
+            21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit tests
+        run: ./gradlew testDebugUnitTest testReleaseUnitTest
+
+      - name: Lint
+        run: ./gradlew lint
+
+      - name: Debug build
+        run: ./gradlew assembleDebug
+
+      - name: Upload reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            app/build/reports/
+          if-no-files-found: ignore
+          retention-days: 14

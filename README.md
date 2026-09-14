@@ -1,5 +1,7 @@
 # Salati
 
+[![CI](https://github.com/Sulfur0o/Salati/actions/workflows/ci.yml/badge.svg)](https://github.com/Sulfur0o/Salati/actions/workflows/ci.yml)
+
 **Salati** is a private, accurate, and ad-free Android prayer companion application for Muslims worldwide. Licensed under the [MIT License](LICENSE).
 
 ---
@@ -51,6 +53,14 @@ Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.
 .\gradlew.bat assembleDebug
 ```
 
+### Instrumented tests (needs a connected device or emulator):
+```powershell
+.\gradlew.bat connectedDebugAndroidTest
+```
+
+Every push and pull request runs the unit tests, Android Lint and a debug build on GitHub
+Actions; the instrumented suite is run on a device before a release.
+
 ## Release specifications
 
 - **Package ID:** `com.sulfuro.salati`
@@ -66,3 +76,4 @@ Public privacy policy: [https://salati.sulfuro.xyz/privacy.html](https://salati.
 | `index.html`, `privacy.html`, `assets/` | Public site (GitHub Pages) |
 | `audio/`, `adhans.json` | Hosted adhan catalogue (`https://salati.sulfuro.xyz/`) |
 | `docs/` | Architecture, Play listing copy, screenshots, release checklist |
+| `.github/workflows/` | CI |

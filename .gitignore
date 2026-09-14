@@ -1,23 +1,33 @@
-*.iml
-.gradle
-/local.properties
-/.idea/
-/evidence/
-.DS_Store
+# Build output
 /build
-/captures
-.externalNativeBuild
+/app/build
+.gradle
+.kotlin
 .cxx
+.externalNativeBuild
+/captures
+
+# IDE and local machine
+*.iml
+/.idea/
 local.properties
+.DS_Store
+
+# Signing material. Never commit any of this: the upload key is the one thing that
+# cannot be reissued without losing the ability to update the Play listing.
 *.jks
 *.keystore
 *.p12
 signing.properties
 keystore.properties
 salati-signing.properties
+
+# Built artefacts and the local release archive
 *.apk
-.kotlin/
 *.aab
 *.apks
-.agents/
 /releases/
+
+# Working directories that are not part of the project
+/evidence/
+.agents/
