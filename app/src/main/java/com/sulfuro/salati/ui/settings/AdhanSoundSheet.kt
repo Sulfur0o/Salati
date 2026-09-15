@@ -93,7 +93,8 @@ fun AdhanSoundSheet(
     // What is actually playing, read from the service rather than tracked here. A
     // recording ends by itself when it finishes, and a local flag would go on claiming
     // that a finished adhan was still playing.
-    val playingId by AdhanPlaybackService.nowPlayingId.collectAsState()
+    val nowPlaying by AdhanPlaybackService.nowPlaying.collectAsState()
+    val playingId = nowPlaying?.adhanId
     val previewStartedId = remember { mutableStateOf<String?>(null) }
 
     // Bumped after a download or a delete, to re-read the directory off the main thread.
@@ -108,7 +109,7 @@ fun AdhanSoundSheet(
     DisposableEffect(Unit) {
         onDispose {
             val started = previewStartedId.value
-            if (started != null && AdhanPlaybackService.nowPlayingId.value == started) {
+            if (started != null && AdhanPlaybackService.nowPlaying.value?.adhanId == started) {
                 AdhanPlaybackService.stop(context)
             }
         }

@@ -15,11 +15,26 @@ object PrayerNotificationChannels {
     const val CHANNEL_ID_SOUND_ONLY = "salati_prayer_alerts_sound_only"
 
     /**
-     * Carries the ongoing notification while a downloaded adhan plays. Low importance and
-     * silent on purpose: the recording is the alert, so the notification must not add a
-     * second one on top of it.
+     * Carries the ongoing notification while a downloaded adhan plays.
+     *
+     * Silent on purpose - the recording is the alert, so the notification must not add a
+     * second one on top of it - but *high* importance, which is what puts it on screen
+     * rather than at the bottom of the shade. It holds the Stop button, and an adhan is
+     * loud: the one control that ends it has to be in front of whoever is holding the
+     * phone in a quiet room, not somewhere they have to go looking for it.
      */
-    const val CHANNEL_ID_ADHAN_PLAYBACK = "salati_adhan_playback"
+    const val CHANNEL_ID_ADHAN_PLAYBACK = "salati_adhan_playback_v2"
+
+    /**
+     * The first playback channel, registered at low importance.
+     *
+     * A channel's importance belongs to the user the moment it exists, so raising it is
+     * not something the app may do - the only way to change it is a new channel, and the
+     * old one is deleted here rather than left behind as a second, dead "Adhan playback"
+     * entry in Android's own settings.
+     */
+    private const val CHANNEL_ID_ADHAN_PLAYBACK_LOW = "salati_adhan_playback"
+
     val VIBRATION_PATTERN = longArrayOf(0, 500, 200, 500)
 
     /**
@@ -75,7 +90,7 @@ object PrayerNotificationChannels {
             id = CHANNEL_ID_ADHAN_PLAYBACK,
             nameRes = R.string.notification_channel_adhan_name,
             descriptionRes = R.string.notification_channel_adhan_description,
-            importance = NotificationManager.IMPORTANCE_LOW,
+            importance = NotificationManager.IMPORTANCE_HIGH,
             vibrate = false,
             sound = false
         )
@@ -123,6 +138,8 @@ object PrayerNotificationChannels {
                 }
             )
         }
+
+        manager.deleteNotificationChannel(CHANNEL_ID_ADHAN_PLAYBACK_LOW)
     }
 
     fun channelFor(vibrateEnabled: Boolean, soundEnabled: Boolean): String {

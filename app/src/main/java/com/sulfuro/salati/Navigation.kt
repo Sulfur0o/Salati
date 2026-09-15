@@ -25,6 +25,7 @@ import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import kotlinx.coroutines.launch
 import com.sulfuro.salati.ui.calendar.CalendarScreen
+import com.sulfuro.salati.ui.components.AdhanPlayingBanner
 import com.sulfuro.salati.ui.dashboard.DashboardScreen
 import com.sulfuro.salati.ui.qibla.QiblaScreen
 import com.sulfuro.salati.ui.settings.SettingsScreen
@@ -87,6 +88,10 @@ fun MainNavigation(
 
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
+        // Nothing at all unless an adhan is actually playing, in which case it is the
+        // first thing on screen and it can stop it. Opening the app is what people do
+        // when a recitation starts somewhere they cannot let it run.
+        topBar = { AdhanPlayingBanner() },
         bottomBar = {
             Surface(color = MaterialTheme.colorScheme.surfaceVariant) {
                 NavigationBar(

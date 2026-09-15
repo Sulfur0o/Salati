@@ -35,13 +35,33 @@ import kotlinx.coroutines.flow.asStateFlow
  * few seconds, which would clip a call to prayer mid-sentence. So the recording is played
  * by a foreground service instead, which also gives the user an ongoing notification with
  * a Stop button - important, because an adhan runs for minutes and someone in a meeting
- * needs to be able to end it in one tap.
+ * needs to be able to end it in one tap. That tap is offered three ways, because a
+ * recitation at alarm volume is not a thing to go looking for a control for: the
+ * notification arrives on screen rather than in the shade, swiping it away stops it too,
+ * and [nowPlaying] puts the same button across the top of the app itself.
  *
  * The service is started from [com.sulfuro.salati.core.alarms.AlarmReceiver]
  * while it is handling an exact alarm, which is one of the situations Android still allows
  * a background app to start a foreground service in.
  */
 class AdhanPlaybackService : Service() {
+
+    /**
+     * A recitation that is audible right now.
+     *
+     * @param adhanId the recording, so the settings picker can tell which row is the one
+     *   playing.
+     * @param prayerLabel the prayer being called, already in the user's language, or the
+     *   recording's name for an audition.
+     * @param isPreview true for a settings audition. The app-wide stop banner sits this
+     *   one out: the picker that started it has its own stop, right beside the row the
+     *   user tapped.
+     */
+    data class NowPlaying(
+        val adhanId: String,
+        val prayerLabel: String,
+        val isPreview: Boolean
+    )
 
     private var player: MediaPlayer? = null
     private var audioManager: AudioManager? = null
@@ -152,7 +172,7 @@ class AdhanPlaybackService : Service() {
                     // Audio is now actually coming out: the service's own notification is
                     // the alert, so the fallback is spent.
                     fallbackAlert = null
-                    playingId.value = adhanId
+                    playing.value = NowPlaying(adhanId, prayerLabel, isPreview)
                     prepared.start()
                     if (vibrateOnStart) {
                         vibrateOnStart = false
@@ -182,7 +202,7 @@ class AdhanPlaybackService : Service() {
     override fun onDestroy() {
         releasePlayer()
         abandonAudioFocus()
-        playingId.value = null
+        playing.value = null
         super.onDestroy()
     }
 
@@ -200,7 +220,7 @@ class AdhanPlaybackService : Service() {
 
     private fun stopSelfCleanly() {
         mainHandler.removeCallbacks(prepareTimeout)
-        playingId.value = null
+        playing.value = null
         fallbackAlert = null
         pausedForFocusLoss = false
         releasePlayer()
@@ -336,7 +356,15 @@ class AdhanPlaybackService : Service() {
         audioManager = null
     }
 
-    private fun buildNotification(prayerLabel: String): Notification {
+    /**
+     * The ongoing notification, and with it the only control that ends a recitation from
+     * outside the app.
+     *
+     * Internal rather than private so a test can read what is actually posted: the
+     * service tears itself down the moment playback fails, taking the notification with
+     * it, so there is no way to inspect it afterwards.
+     */
+    internal fun buildNotification(prayerLabel: String): Notification {
         PrayerNotificationChannels.create(this)
 
         val openApp = PendingIntent.getActivity(
@@ -372,9 +400,24 @@ class AdhanPlaybackService : Service() {
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
-            .setSilent(true)
+            // Deliberately *not* setSilent(true). It looks like the right call for a
+            // notification that must add nothing to the recitation, but it quietly files
+            // the notification under a group named "silent" with GROUP_ALERT_SUMMARY, and
+            // a grouped child that defers to its summary is never shown on screen - which
+            // is the one thing this notification has to do. Silence comes from the channel
+            // instead, which has no sound and no vibration; a notification that sets
+            // neither is silent before API 26 too.
+            //
+            // Nothing here is private - a prayer name and a stop button - and hiding it
+            // behind the lock screen would put the one control that ends the recitation
+            // behind an unlock, which is the worst moment to ask for one.
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(openApp)
             .addAction(0, getString(R.string.adhan_stop), stop)
+            // Android 14 lets the user swipe a foreground service's notification away.
+            // Without this the adhan would carry on with its only visible control gone,
+            // so the swipe is treated as what it plainly means: stop.
+            .setDeleteIntent(stop)
             .build()
     }
 
@@ -428,16 +471,16 @@ class AdhanPlaybackService : Service() {
         /** Gain to fall back to while another app holds duckable focus. */
         private const val DUCKED_VOLUME = 0.2f
 
-        private val playingId = MutableStateFlow<String?>(null)
+        private val playing = MutableStateFlow<NowPlaying?>(null)
 
         /**
-         * The recording currently playing, or null.
+         * What is coming out of the speaker, or null.
          *
-         * Playback ends on its own when the adhan finishes, and the settings picker has
-         * no other way to learn that - without this it would go on showing a stop button
-         * for a recording that ended minutes ago.
+         * Playback ends on its own when the adhan finishes, and the UI has no other way
+         * to learn that - without this the app would go on offering to stop a recording
+         * that ended minutes ago.
          */
-        val nowPlayingId: StateFlow<String?> = playingId.asStateFlow()
+        val nowPlaying: StateFlow<NowPlaying?> = playing.asStateFlow()
 
         const val ACTION_STOP = "com.sulfuro.salati.action.STOP_ADHAN"
         private const val ACTION_STOP_LEGACY = "io.github.sulfuro25.salati.action.STOP_ADHAN"

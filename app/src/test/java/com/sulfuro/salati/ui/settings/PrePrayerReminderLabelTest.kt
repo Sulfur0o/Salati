@@ -140,7 +140,7 @@ class PrePrayerReminderLabelTest {
         assertTrue("no teardown for the preview", sheet.contains("DisposableEffect"))
         assertTrue(sheet.contains("AdhanPlaybackService.stop(context)"))
         // Playback state is the service's, not the sheet's: a recording ends by itself.
-        assertTrue(sheet.contains("AdhanPlaybackService.nowPlayingId"))
+        assertTrue(sheet.contains("AdhanPlaybackService.nowPlaying"))
     }
 
     private fun source(relative: String): String {
