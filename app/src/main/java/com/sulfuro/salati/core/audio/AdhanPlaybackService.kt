@@ -15,6 +15,9 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.sulfuro.salati.MainActivity
@@ -67,6 +70,19 @@ class AdhanPlaybackService : Service() {
     /** Set while the player is paused for a transient focus loss, e.g. a phone call. */
     private var pausedForFocusLoss: Boolean = false
 
+    /**
+     * Whether to buzz once as the recitation begins.
+     *
+     * Taking over the alert means taking over all of it. The notification this service
+     * replaces would have vibrated through its channel, and this one cannot: the playback
+     * channel is deliberately silent so it adds nothing on top of the audio, and silent
+     * channels do not vibrate either. Someone who asked for sound *and* vibration was
+     * getting only the sound, which is the half you miss with the phone in a pocket.
+     *
+     * Read before [fallbackAlert] is spent, since that happens the moment audio starts.
+     */
+    private var vibrateOnStart: Boolean = false
+
     private val mainHandler = Handler(Looper.getMainLooper())
 
     /**
@@ -94,6 +110,7 @@ class AdhanPlaybackService : Service() {
         isPreview = intent?.getBooleanExtra(EXTRA_PREVIEW, false) == true
         pausedForFocusLoss = false
         fallbackAlert = PrayerAlertNotification.Content.readFrom(intent)
+        vibrateOnStart = shouldVibrateOnStart(isPreview, fallbackAlert)
 
         // The notification has to go up before anything else can fail, or the system
         // kills the service for starting foreground too slowly.
@@ -137,6 +154,10 @@ class AdhanPlaybackService : Service() {
                     fallbackAlert = null
                     playingId.value = adhanId
                     prepared.start()
+                    if (vibrateOnStart) {
+                        vibrateOnStart = false
+                        vibrateOnce()
+                    }
                 }
                 // Async: preparing reads and parses the file, and this runs on the main
                 // thread. A blocking prepare here would stall the UI of an app the user
@@ -196,6 +217,36 @@ class AdhanPlaybackService : Service() {
             }
         }
         player = null
+    }
+
+    /**
+     * One burst of the same pattern the notification channels use, as an alarm rather than
+     * a bare buzz, so the system applies whatever the user has decided alarms may do while
+     * Do Not Disturb is on - the same rule the audio already rides on.
+     */
+    private fun vibrateOnce() {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager)?.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        } ?: return
+
+        val pattern = PrayerNotificationChannels.VIBRATION_PATTERN
+        runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(
+                    VibrationEffect.createWaveform(pattern, NO_REPEAT),
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build()
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(pattern, NO_REPEAT)
+            }
+        }.onFailure { Log.w(TAG, "Could not vibrate for the adhan", it) }
     }
 
     /**
@@ -357,6 +408,18 @@ class AdhanPlaybackService : Service() {
 
     companion object {
         private const val TAG = "AdhanPlaybackService"
+
+        /** vibrate() takes the index to loop from; -1 means play the pattern once. */
+        private const val NO_REPEAT = -1
+
+        /**
+         * A recitation vibrates only when the alert it replaces would have. A settings
+         * audition never does: nothing is being announced.
+         */
+        internal fun shouldVibrateOnStart(
+            isPreview: Boolean,
+            alert: PrayerAlertNotification.Content?
+        ): Boolean = !isPreview && alert?.vibrateEnabled == true
         private const val NOTIFICATION_ID = 400
 
         /** Generous for reading a few megabytes off local storage; short of forever. */
