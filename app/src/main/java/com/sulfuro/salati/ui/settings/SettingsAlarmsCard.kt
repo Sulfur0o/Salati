@@ -9,6 +9,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.audio.AdhanAudioStore
+import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.core.alarms.PrayerSilentModeController
 import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
 import com.sulfuro.salati.data.settings.CalculationSettings
@@ -180,6 +181,13 @@ internal fun SettingsAlarmsCard(
             options = alertOptions,
             onSelect = { id ->
                 val (muted, sound, vibrate) = AlertStyle.toFlags(id)
+                // The alert style applies from the moment it is chosen, not from the next
+                // prayer. A recitation already playing is the loudest thing this app does,
+                // and someone reaching for Silent or Vibration only while it plays is
+                // asking for it to stop now - sparing them the next one is not an answer.
+                if (!AlertStyle.playsAudio(id)) {
+                    AdhanPlaybackService.stop(appContext)
+                }
                 saveSettings {
                     it.copy(
                         alarms = it.alarms.copy(
