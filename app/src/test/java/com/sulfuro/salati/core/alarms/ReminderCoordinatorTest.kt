@@ -370,7 +370,13 @@ class ReminderCoordinatorTest {
             preparationSource = FixedPreparationSource(AlarmPreparationResult.Success(alarms)),
             registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
             settingsSource = FixedSettingsSource(
-                CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "makkah_mullah", fajrAdhanSoundId = "fajr_makkah"))
+                CalculationSettings(
+                    alarms = AlarmPreferences(
+                        soundEnabled = true,
+                        adhanSoundId = "makkah_mullah",
+                        fajrAdhanSoundId = "fajr_makkah"
+                    )
+                )
             )
         )
 
@@ -397,11 +403,54 @@ class ReminderCoordinatorTest {
             ),
             registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
             settingsSource = FixedSettingsSource(
-                CalculationSettings(alarms = AlarmPreferences(adhanSoundId = "madinah", fajrAdhanSoundId = null))
+                CalculationSettings(
+                    alarms = AlarmPreferences(
+                        soundEnabled = true,
+                        adhanSoundId = "madinah",
+                        fajrAdhanSoundId = null
+                    )
+                )
             )
         )
 
         assertEquals(listOf("madinah", "madinah"), registrar.chosenAdhans.map { it.second })
+    }
+
+    /**
+     * An alert style with no sound must not schedule a recording, even though the user's
+     * choice of one is still stored: choosing "Vibration only" used to leave the id on the
+     * alarm, and the receiver played it at full volume. The receiver refuses it now too,
+     * but a silent alarm has no business carrying an adhan into the registry, which is
+     * what gets replayed after a reboot.
+     */
+    @Test
+    fun noRecordingIsScheduledWhenTheAlertStyleHasNoSound() = runBlocking {
+        val registrar = FakeAlarmRegistrar()
+
+        ReminderCoordinator.refreshAlarms(
+            context = context,
+            registrar = registrar,
+            clock = clock,
+            preparationSource = FixedPreparationSource(
+                AlarmPreparationResult.Success(
+                    listOf(preparedFor("fajr", 501, 7_000L), preparedFor("asr", 502, 8_000L))
+                )
+            ),
+            registry = FakeAlarmRegistry(AlarmRegistryReadResult.Valid(emptyList())),
+            settingsSource = FixedSettingsSource(
+                CalculationSettings(
+                    alarms = AlarmPreferences(
+                        // Vibration only: not muted, so the alarms are still scheduled.
+                        soundEnabled = false,
+                        vibrateEnabled = true,
+                        adhanSoundId = "madinah",
+                        fajrAdhanSoundId = "fajr_makkah"
+                    )
+                )
+            )
+        )
+
+        assertEquals(listOf(null, null), registrar.chosenAdhans.map { it.second })
     }
 
     private fun preparedFor(prayerKey: String, requestCode: Int, triggerAtMillis: Long) =

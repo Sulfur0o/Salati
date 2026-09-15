@@ -155,13 +155,22 @@ class AlarmReceiver : BroadcastReceiver() {
         // reminders and white-day nudges keep the short tone: they are a heads-up, not a
         // call to prayer, and a full recitation would misrepresent them.
         //
+        // soundEnabled is the deciding condition, not the presence of a recording. The two
+        // are separate settings, so switching the alert style to Vibration only or Silent
+        // leaves the chosen adhan stored - the user has not unchosen it, and should get it
+        // back when they turn sound on again. Without this check that stored id was enough
+        // to start playback, and asking for vibration got a recitation at full volume. The
+        // gate lives here rather than only where alarms are scheduled because an alarm
+        // registered before the style changed - or replayed from the registry after a
+        // reboot - still arrives carrying the id.
+        //
         // The alert travels with the request, and the service owns it from the moment it
         // accepts one: while the recitation plays it shows its own notification with a
         // stop button, and if playback never starts - focus denied, the file gone or
         // undecodable - it posts this one instead. Whether the audio works is not known
         // until long after this receiver has returned, so handing the alert over is the
         // only way the prayer cannot end up with no notification at all.
-        if (kind == AlarmScheduler.KIND_PRAYER && !adhanSoundId.isNullOrBlank()) {
+        if (kind == AlarmScheduler.KIND_PRAYER && soundEnabled && !adhanSoundId.isNullOrBlank()) {
             if (AdhanPlaybackService.start(context, adhanSoundId, displayPrayerName, alert)) {
                 return
             }
