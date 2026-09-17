@@ -1,5 +1,7 @@
 package com.sulfuro.salati.core.audio
 
+import com.sulfuro.salati.data.settings.withAlarms
+import com.sulfuro.salati.data.settings.CalculationSettings
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -244,6 +246,71 @@ class AdhanAudioTest {
         assertNull(cleaned.alarms.adhanSoundName)
         assertNull(cleaned.alarms.fajrAdhanSoundId)
         assertNull(cleaned.alarms.fajrAdhanSoundName)
+    }
+
+    /**
+     * A first takbir on its own says nothing that belongs to one time of day, so it is the
+     * one kind of recording that can be offered for dawn and for the other four prayers at
+     * once. Full recordings stay in exactly one list, which is what stops the dawn line
+     * being chosen for the four prayers it does not belong to.
+     */
+    @Test
+    fun aShortClipIsOfferedAtEveryPrayerWhileFullRecordingsStayInOneList() {
+        val takbir = option(id = "short_takbir").copy(servesAnyPrayer = true)
+        val dawn = option(id = "makkah_fajr").copy(isFajr = true)
+        val regular = option(id = "ali_mulla")
+
+        assertTrue(takbir.servesFajr)
+        assertTrue(takbir.servesOtherPrayers)
+
+        assertTrue(dawn.servesFajr)
+        assertFalse("the dawn line must never reach the other four", dawn.servesOtherPrayers)
+
+        assertFalse(regular.servesFajr)
+        assertTrue(regular.servesOtherPrayers)
+    }
+
+    /** Older manifests have no such field, and nothing about them may change. */
+    @Test
+    fun aManifestWithoutTheNewFieldBehavesExactlyAsBefore() {
+        val parsed = AdhanCatalog.parse(
+            """{"version":1,"adhans":[
+                {"id":"a","name":"A","url":"https://salati.sulfuro.xyz/audio/regular/a.mp3"},
+                {"id":"b","name":"B","url":"https://salati.sulfuro.xyz/audio/fajr/b.mp3","fajr":true}
+            ]}"""
+        )
+        val options = (parsed as AdhanCatalogResult.Available).options
+        assertEquals(listOf(false, false), options.map { it.servesAnyPrayer })
+        assertEquals(listOf(false, true), options.map { it.servesFajr })
+        assertEquals(listOf(true, false), options.map { it.servesOtherPrayers })
+    }
+
+    /**
+     * Deleting a recording has to clear every slot that named it, not just the picker it
+     * was deleted from - a short clip can be the choice in both.
+     */
+    @Test
+    fun deletingAShortClipClearsItFromBothSlots() {
+        val both = CalculationSettings(
+            alarms = AlarmPreferences(
+                adhanSoundId = "short_takbir",
+                adhanSoundName = "Short Takbir",
+                fajrAdhanSoundId = "short_takbir",
+                fajrAdhanSoundName = "Short Takbir"
+            )
+        )
+
+        val cleared = both.withoutAdhan("short_takbir")
+        assertNull(cleared.alarms.adhanSoundId)
+        assertNull(cleared.alarms.adhanSoundName)
+        assertNull(cleared.alarms.fajrAdhanSoundId)
+        assertNull(cleared.alarms.fajrAdhanSoundName)
+
+        // And leaves a slot alone when it names something else.
+        val onlyFajr = both.withAlarms { copy(adhanSoundId = "ali_mulla", adhanSoundName = "Ali") }
+        val partly = onlyFajr.withoutAdhan("short_takbir")
+        assertEquals("ali_mulla", partly.alarms.adhanSoundId)
+        assertNull(partly.alarms.fajrAdhanSoundId)
     }
 
     @Test

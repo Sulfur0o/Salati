@@ -64,11 +64,14 @@ private const val BYTES_PER_MEGABYTE = 1024.0 * 1024.0
  * fetched until it is asked for, the size is shown before the tap that spends the data,
  * and anything downloaded can be deleted again from the same row.
  *
- * @param fajr picks which half of the catalogue is on offer. A Fajr recording adds
+ * @param fajr picks which part of the catalogue is on offer. A Fajr recording adds
  *   "as-salatu khayrun min an-nawm", so it is right at dawn and wrong at the other four
- *   prayers - the two lists never overlap, which is what stops someone choosing one for
- *   the wrong slot. The Fajr sheet's first row clears the choice back to "same as the
- *   other prayers" rather than to the device tone.
+ *   prayers, and never appears here. A recording too short to contain that line - a first
+ *   takbir on its own - is right at every prayer and appears in both. The Fajr sheet's
+ *   first row clears the choice back to "same as the other prayers" rather than to the
+ *   device tone.
+ * @param onDeleted the recording has been removed from disk. Both slots may have been
+ *   pointing at it, so this clears more than this sheet's own choice.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +79,7 @@ fun AdhanSoundSheet(
     selectedId: String?,
     onSelect: (AdhanOption?) -> Unit,
     onDismiss: () -> Unit,
+    onDeleted: (String) -> Unit = {},
     fajr: Boolean = false
 ) {
     val context = LocalContext.current
@@ -152,7 +156,7 @@ fun AdhanSoundSheet(
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
         val offered = (catalog as? AdhanCatalogResult.Available)
             ?.options
-            ?.filter { it.isFajr == fajr }
+            ?.filter { if (fajr) it.servesFajr else it.servesOtherPrayers }
             .orEmpty()
 
         // A recording withdrawn from the catalogue leaves a stored id that matches no row.
@@ -277,8 +281,11 @@ fun AdhanSoundSheet(
                                                 AdhanPlaybackService.stop(context)
                                                 previewStartedId.value = null
                                                 // Never leave the app pointing at audio
-                                                // that is no longer on disk.
-                                                if (selectedId == option.id) onSelect(null)
+                                                // that is no longer on disk - and a short
+                                                // recording can be the choice for dawn and
+                                                // for the other four at once, so this is
+                                                // not only about the slot being shown.
+                                                onDeleted(option.id)
                                                 scope.launch {
                                                     withContext(Dispatchers.IO) {
                                                         AdhanAudioStore.delete(context, option.id)

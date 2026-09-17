@@ -286,7 +286,8 @@
       "bytes": 296869,
       "seconds": 15.0,
       "sha256": "707926709bcbc2d3f7517e5482d78fea0fab965e499b49ddea1660823e495592",
-      "reciter": "Ali Ahmad Mulla"
+      "reciter": "Ali Ahmad Mulla",
+      "anyPrayer": true
     }
   ]
 }

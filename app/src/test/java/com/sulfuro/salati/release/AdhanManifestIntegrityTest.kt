@@ -123,6 +123,39 @@ class AdhanManifestIntegrityTest {
     }
 
     /**
+     * A recording offered at every prayer must be one that has nothing dawn-specific in
+     * it, which a full adhan always has. Marking a Fajr recording that way would put
+     * "as-salatu khayrun min an-nawm" into the four prayers it does not belong to.
+     */
+    @Test
+    fun nothingIsBothAFajrRecordingAndOfferedAtEveryPrayer() {
+        for (option in options) {
+            assertFalse(
+                "${option.id} is a Fajr recording and offered at every prayer",
+                option.isFajr && option.servesAnyPrayer
+            )
+        }
+    }
+
+    /**
+     * Whatever is offered at every prayer has to be short enough to be exactly that: a
+     * takbir on its own, not a recitation that merely omits the dawn line.
+     */
+    @Test
+    fun anythingOfferedAtEveryPrayerIsAShortClip() {
+        val offeredEverywhere = options.filter { it.servesAnyPrayer }
+        assertTrue("nothing is offered at every prayer", offeredEverywhere.isNotEmpty())
+        for (option in offeredEverywhere) {
+            assertTrue(
+                "${option.id} runs ${option.seconds}s, too long to be a bare takbir",
+                option.seconds in 1.0..45.0
+            )
+            assertTrue("${option.id} must be reachable from the Fajr sheet", option.servesFajr)
+            assertTrue("${option.id} must stay in the other sheet too", option.servesOtherPrayers)
+        }
+    }
+
+    /**
      * An entry over the cap cannot be downloaded at all, and the user is only told that it
      * failed. Checked here so it is caught when the catalogue is built rather than by
      * whoever picks that row.

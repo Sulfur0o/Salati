@@ -255,6 +255,25 @@ object AdhanAudioStore {
     }
 }
 
+/**
+ * Forgets one recording, in whichever slots were pointing at it.
+ *
+ * A recording short enough to be right at every prayer can be the choice for dawn and for
+ * the other four at the same time, so deleting it from one picker has to clear the other
+ * as well. Left behind, the alarm would find no file and fall back to a plain notification
+ * while settings went on naming a recitation that is no longer there.
+ */
+fun CalculationSettings.withoutAdhan(id: String): CalculationSettings {
+    var next = this
+    if (alarms.adhanSoundId == id) {
+        next = next.withAlarms { copy(adhanSoundId = null, adhanSoundName = null) }
+    }
+    if (alarms.fajrAdhanSoundId == id) {
+        next = next.withAlarms { copy(fajrAdhanSoundId = null, fajrAdhanSoundName = null) }
+    }
+    return next
+}
+
 fun CalculationSettings.withoutRetiredAdhanChoices(): CalculationSettings {
     var next = this
     if (alarms.adhanSoundId in AdhanAudioStore.RETIRED_IDS) {

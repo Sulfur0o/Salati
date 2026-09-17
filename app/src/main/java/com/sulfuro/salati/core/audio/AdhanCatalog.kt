@@ -22,6 +22,10 @@ import kotlinx.serialization.json.Json
  * @param isFajr whether this is a Fajr recording. The Fajr adhan carries
  *   "as-salatu khayrun min an-nawm", which belongs at dawn only, so these are offered for
  *   the Fajr slot and kept out of the one that plays at the other four prayers.
+ * @param servesAnyPrayer whether the recording is short enough to carry no line that
+ *   distinguishes dawn from the rest of the day - a first takbir on its own, say. It is
+ *   then right at every prayer, and is offered in both slots rather than being arbitrarily
+ *   filed under one of them.
  */
 @Serializable
 data class AdhanOption(
@@ -33,6 +37,7 @@ data class AdhanOption(
     val reciter: String? = null,
     val sha256: String? = null,
     @SerialName("fajr") val isFajr: Boolean = false,
+    @SerialName("anyPrayer") val servesAnyPrayer: Boolean = false,
     val license: String? = null,
     val attribution: String? = null
 ) {
@@ -42,6 +47,19 @@ data class AdhanOption(
 
     val isDownloadable: Boolean
         get() = hasUsableId && name.isNotBlank() && url.startsWith("https://")
+
+    /** Offered at dawn: a Fajr recording, or one with nothing in it that is not. */
+    val servesFajr: Boolean
+        get() = isFajr || servesAnyPrayer
+
+    /**
+     * Offered at the other four.
+     *
+     * Unchanged from what the Fajr flag has always meant - a recording carrying the dawn
+     * line is wrong here whatever else is true of it.
+     */
+    val servesOtherPrayers: Boolean
+        get() = !isFajr
 }
 
 @Serializable

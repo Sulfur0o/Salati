@@ -19,6 +19,7 @@ import com.sulfuro.salati.core.audio.AdhanAudioStore
 import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.core.audio.withoutAdhan
 import com.sulfuro.salati.data.settings.withAlarms
 import com.sulfuro.salati.ui.components.SettingSection
 import com.sulfuro.salati.ui.components.SettingStepperRow
@@ -214,6 +215,7 @@ internal fun SettingsAlarmsCard(
             onSelect = { option ->
                 saveSettings { it.withAlarms { copy(adhanSoundId = option?.id, adhanSoundName = option?.name) } }
             },
+            onDeleted = { id -> saveSettings { it.withoutAdhan(id) } },
             onDismiss = { showAdhanSheet = false }
         )
     }
@@ -226,6 +228,7 @@ internal fun SettingsAlarmsCard(
                     it.withAlarms { copy(fajrAdhanSoundId = option?.id, fajrAdhanSoundName = option?.name) }
                 }
             },
+            onDeleted = { id -> saveSettings { it.withoutAdhan(id) } },
             onDismiss = { showFajrAdhanSheet = false },
             fajr = true
         )
