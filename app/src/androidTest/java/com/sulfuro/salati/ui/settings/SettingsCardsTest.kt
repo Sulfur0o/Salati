@@ -8,7 +8,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.permissions.AppPermissionState
+import com.sulfuro.salati.data.settings.AlarmPreferences
+import com.sulfuro.salati.data.settings.AppearanceSettings
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.LocationSettings
 import com.sulfuro.salati.data.settings.TimeFormatPreference
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -16,9 +19,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.sulfuro.salati.data.settings.AlarmPreferences
-import com.sulfuro.salati.data.settings.AppearanceSettings
-import com.sulfuro.salati.data.settings.LocationSettings
 
 /**
  * The settings cards, which were split out of one 1093-line screen and had no coverage of

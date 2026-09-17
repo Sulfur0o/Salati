@@ -6,11 +6,17 @@ import com.sulfuro.salati.core.computation.AladhanGregorianDate
 import com.sulfuro.salati.core.computation.AladhanHijriDate
 import com.sulfuro.salati.core.computation.AladhanMonth
 import com.sulfuro.salati.core.computation.AladhanTimings
-import com.sulfuro.salati.core.computation.SalatiPrayerTimeMapper
 import com.sulfuro.salati.core.computation.HijriCalendarHelper
 import com.sulfuro.salati.core.computation.HijriDateParts
+import com.sulfuro.salati.core.computation.SalatiPrayerTimeMapper
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -19,11 +25,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
-import com.sulfuro.salati.data.settings.PrayerMethodSettings
-import com.sulfuro.salati.data.settings.AlarmPreferences
 
 @RunWith(RobolectricTestRunner::class)
 @org.robolectric.annotation.Config(sdk = [33], instrumentedPackages = ["androidx.loader.content"])
@@ -252,7 +253,7 @@ class WhiteDaysReminderTest {
     }
 
     private fun createDayData(date: LocalDate, hijriDay: Int, hijriMonth: Int): AladhanDayData {
-        val dateStr = date.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+        val dateStr = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
         return AladhanDayData(
             timings = AladhanTimings("05:00", "06:00", "12:00", "15:00", "17:00", "17:00", "18:00", "23:00", "02:00"),
             date = AladhanDate(

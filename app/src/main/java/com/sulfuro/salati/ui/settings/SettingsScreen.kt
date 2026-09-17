@@ -2,6 +2,7 @@ package com.sulfuro.salati.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -34,6 +35,7 @@ import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.widget.SalatiAppWidgetProvider
+import java.util.Locale
 import kotlinx.coroutines.launch
 
 
@@ -73,13 +75,13 @@ internal fun wrapContextForLanguage(
 ): android.content.Context {
     attachedLanguageTag = localeTagsForLanguageCode(langCode)
     if (langCode.isNullOrEmpty()) {
-        java.util.Locale.setDefault(
+        Locale.setDefault(
             android.content.res.Resources.getSystem().configuration.locales[0]
         )
         return base
     }
-    val target = java.util.Locale.forLanguageTag(langCode)
-    java.util.Locale.setDefault(target)
+    val target = Locale.forLanguageTag(langCode)
+    Locale.setDefault(target)
     val config = android.content.res.Configuration(base.resources.configuration)
     config.setLocale(target)
     config.setLayoutDirection(target)
@@ -105,7 +107,7 @@ internal fun applyAppLanguage(context: android.content.Context, langCode: String
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(
     settings: CalculationSettings,

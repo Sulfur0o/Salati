@@ -6,6 +6,7 @@ import com.sulfuro.salati.Calendar
 import com.sulfuro.salati.Dashboard
 import com.sulfuro.salati.Settings
 import com.sulfuro.salati.Zakat
+import com.sulfuro.salati.core.alarms.RegisteredAlarm
 import com.sulfuro.salati.core.computation.AladhanDate
 import com.sulfuro.salati.core.computation.AladhanDayData
 import com.sulfuro.salati.core.computation.AladhanGregorianDate
@@ -16,16 +17,15 @@ import com.sulfuro.salati.core.work.AlarmCacheRestorationWorker
 import com.sulfuro.salati.core.work.AlarmMaintenanceWorker
 import com.sulfuro.salati.core.work.AlarmNetworkRefreshWorker
 import com.sulfuro.salati.core.work.AlarmSettingsRefreshDebounceWorker
-import com.sulfuro.salati.core.alarms.RegisteredAlarm
+import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
+import com.sulfuro.salati.data.settings.ZakatPreferences
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.sulfuro.salati.data.settings.PrayerMethodSettings
-import com.sulfuro.salati.data.settings.AlarmPreferences
-import com.sulfuro.salati.data.settings.ZakatPreferences
 
 class ReleaseSerializationCompatibilityTest {
     private val json = Json { encodeDefaults = true }

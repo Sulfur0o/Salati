@@ -1,8 +1,8 @@
 package com.sulfuro.salati.ui.zakat
 
-import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.core.zakat.ZakatGoldItem
 import com.sulfuro.salati.core.zakat.ZakatSilverItem
+import com.sulfuro.salati.data.settings.CalculationSettings
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

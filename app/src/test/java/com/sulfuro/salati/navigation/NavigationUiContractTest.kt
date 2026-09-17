@@ -4,10 +4,10 @@ import com.sulfuro.salati.Calendar
 import com.sulfuro.salati.Dashboard
 import com.sulfuro.salati.Settings
 import com.sulfuro.salati.Zakat
+import java.io.File
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.File
 
 class NavigationUiContractTest {
 

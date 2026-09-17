@@ -3,11 +3,12 @@ package com.sulfuro.salati.release
 import com.sulfuro.salati.core.audio.AdhanAudioStore
 import com.sulfuro.salati.core.audio.AdhanCatalog
 import com.sulfuro.salati.core.audio.AdhanCatalogResult
+import java.io.File
+import java.security.MessageDigest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.File
 
 /**
  * The published catalogue has to agree with the audio that is published beside it.
@@ -103,7 +104,7 @@ class AdhanManifestIntegrityTest {
     /** Every entry carries a digest, and it is the digest of the file that is published. */
     @Test
     fun everyRecordingCarriesTheDigestOfWhatIsActuallyHosted() {
-        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        val digest = MessageDigest.getInstance("SHA-256")
         for (option in options) {
             val folder = if (option.isFajr) "fajr" else "regular"
             val file = File(audioRoot, "$folder/${option.id}.mp3")

@@ -41,8 +41,6 @@ object LocalPrayerTimeCalculator {
     /** Days from 21 December back to 1 January, for the seasonal twilight rule. */
     private const val NORTHERN_SOLSTICE_OFFSET = 10
 
-    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-uuuu", Locale.ROOT)
 
     /**
      * Each time is found by evaluating the sun at an estimate of when that prayer falls,
@@ -373,7 +371,7 @@ object LocalPrayerTimeCalculator {
         val midnight = times.sunset + nightLength / 2.0
         val lastThird = times.sunset + nightLength * 2.0 / 3.0
         val hijriDate = HijrahDate.from(date)
-        val formattedDate = date.format(dateFormatter)
+        val formattedDate = date.format(AladhanFormats.date)
 
         return AladhanDayData(
             timings = AladhanTimings(
@@ -409,7 +407,7 @@ object LocalPrayerTimeCalculator {
     /** Rounds to the nearest minute, which is how Aladhan renders its own timings. */
     internal fun formatHour(hours: Double): String {
         val minuteOfDay = (fixHour(hours) * 60.0).roundToInt() % MINUTES_PER_DAY
-        return LocalTime.of(minuteOfDay / 60, minuteOfDay % 60).format(timeFormatter)
+        return LocalTime.of(minuteOfDay / 60, minuteOfDay % 60).format(AladhanFormats.time)
     }
 
     private const val MINUTES_PER_DAY = 24 * 60

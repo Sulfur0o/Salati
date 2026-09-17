@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.safeZoneId
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -16,6 +14,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 data class SalatiPrayerTimes(
     val date: LocalDate,
@@ -58,8 +58,6 @@ object PrayerRepository {
 
     /** Shared across the app so every screen and the widget warm the same entries. */
     private val monthsInMemory: PrayerMemoryCache = LruPrayerMemoryCache()
-    private val gregorianDateFormatter = DateTimeFormatter.ofPattern("dd-MM-uuuu", Locale.ROOT)
-        .withResolverStyle(ResolverStyle.STRICT)
 
     /**
      * Indexes a month's API rows by their own reported Gregorian date instead of
@@ -70,7 +68,7 @@ object PrayerRepository {
         val map = linkedMapOf<LocalDate, AladhanDayData>()
         for (dayData in data) {
             val parsedDate = runCatching {
-                LocalDate.parse(dayData.date.gregorian.date, gregorianDateFormatter)
+                LocalDate.parse(dayData.date.gregorian.date, AladhanFormats.date)
             }.getOrNull() ?: continue
             map[parsedDate] = dayData
         }

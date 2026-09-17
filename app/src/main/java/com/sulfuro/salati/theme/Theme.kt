@@ -1,6 +1,7 @@
 package com.sulfuro.salati.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -90,7 +91,7 @@ val SalatiLightColorScheme = lightColorScheme(
 /**
  * Whether the app is currently drawing its dark palette.
  *
- * Material's [androidx.compose.material3.ColorScheme] carries colours but not which of
+ * Material's [ColorScheme] carries colours but not which of
  * the two it is, and [SalatiAccents] needs to know: a few roles are deliberately not
  * mirror images of each other between the themes.
  */

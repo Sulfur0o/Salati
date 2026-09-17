@@ -1,6 +1,7 @@
 package com.sulfuro.salati.data.settings
 
 import androidx.compose.runtime.Immutable
+import java.time.ZoneId
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -106,7 +107,7 @@ fun CalculationSettings.adhanSoundIdFor(prayerKey: String): String? {
     }
 }
 
-fun CalculationSettings.safeZoneId(): java.time.ZoneId {
+fun CalculationSettings.safeZoneId(): ZoneId {
     return safeZoneId(location.timezoneId)
 }
 
@@ -126,9 +127,9 @@ fun CalculationSettings.hasConfiguredLocation(): Boolean {
     return latitude != 0.0 || longitude != 0.0
 }
 
-fun safeZoneId(timezoneId: String?): java.time.ZoneId {
-    if (timezoneId.isNullOrBlank()) return java.time.ZoneId.systemDefault()
-    return runCatching { java.time.ZoneId.of(timezoneId) }.getOrElse { java.time.ZoneId.systemDefault() }
+fun safeZoneId(timezoneId: String?): ZoneId {
+    if (timezoneId.isNullOrBlank()) return ZoneId.systemDefault()
+    return runCatching { ZoneId.of(timezoneId) }.getOrElse { ZoneId.systemDefault() }
 }
 
 /**

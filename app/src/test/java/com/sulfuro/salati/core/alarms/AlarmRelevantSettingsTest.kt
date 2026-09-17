@@ -1,11 +1,12 @@
 package com.sulfuro.salati.core.alarms
 
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.LocationSettings
+import java.time.ZoneId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.sulfuro.salati.data.settings.LocationSettings
 
 class AlarmRelevantSettingsTest {
     private val base = CalculationSettings()
@@ -101,12 +102,12 @@ class AlarmRelevantSettingsTest {
     @Test
     fun safeZoneIdFallsBackToSystemDefaultOnInvalidOrEmptyTimezone() {
         val valid = CalculationSettings(location = LocationSettings(timezoneId = "Europe/Brussels"))
-        assertEquals(java.time.ZoneId.of("Europe/Brussels"), com.sulfuro.salati.data.settings.safeZoneId(valid.location.timezoneId))
+        assertEquals(ZoneId.of("Europe/Brussels"), com.sulfuro.salati.data.settings.safeZoneId(valid.location.timezoneId))
 
         val invalid = CalculationSettings(location = LocationSettings(timezoneId = "Invalid/Timezone_Name"))
-        assertEquals(java.time.ZoneId.systemDefault(), com.sulfuro.salati.data.settings.safeZoneId(invalid.location.timezoneId))
+        assertEquals(ZoneId.systemDefault(), com.sulfuro.salati.data.settings.safeZoneId(invalid.location.timezoneId))
 
         val empty = CalculationSettings(location = LocationSettings(timezoneId = ""))
-        assertEquals(java.time.ZoneId.systemDefault(), com.sulfuro.salati.data.settings.safeZoneId(empty.location.timezoneId))
+        assertEquals(ZoneId.systemDefault(), com.sulfuro.salati.data.settings.safeZoneId(empty.location.timezoneId))
     }
 }

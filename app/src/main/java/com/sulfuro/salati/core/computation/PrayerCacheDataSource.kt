@@ -4,6 +4,7 @@ import android.util.AtomicFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 
 sealed interface PrayerCacheReadResult {
@@ -187,7 +188,7 @@ class AtomicFilePrayerCacheDataSource internal constructor(
 }
 
 internal fun locationCacheKey(latitude: Double, longitude: Double): String {
-    fun fixed(value: Double) = String.format(java.util.Locale.ROOT, "%.3f", value)
+    fun fixed(value: Double) = String.format(Locale.ROOT, "%.3f", value)
         .replace('-', 'n')
         .replace('.', 'p')
     return "lat${fixed(latitude)}_lon${fixed(longitude)}"

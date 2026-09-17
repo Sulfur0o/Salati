@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,10 +50,10 @@ import com.sulfuro.salati.R
 import com.sulfuro.salati.core.location.DeviceLocationProvider
 import com.sulfuro.salati.core.location.DeviceLocationResult
 import com.sulfuro.salati.core.location.PrayerLocationResolver
-import com.sulfuro.salati.ui.settings.CitySearchSheet
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
+import com.sulfuro.salati.ui.settings.CitySearchSheet
 import kotlinx.coroutines.launch
 
 /**

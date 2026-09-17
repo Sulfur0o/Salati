@@ -10,18 +10,19 @@ import androidx.work.NetworkType
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.testing.WorkManagerTestInitHelper
+import com.sulfuro.salati.core.alarms.AlarmRefreshResult
+import com.sulfuro.salati.core.alarms.AlarmSettingsRefreshTrigger
+import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
+import java.io.IOException
+import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlinx.coroutines.runBlocking
 import org.robolectric.annotation.Config
-import java.util.concurrent.TimeUnit
-import com.sulfuro.salati.core.alarms.AlarmRefreshResult
-import com.sulfuro.salati.core.alarms.AlarmSettingsRefreshTrigger
-import com.sulfuro.salati.data.settings.AlarmPreferences
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33], manifest = Config.NONE)
@@ -40,7 +41,7 @@ class AlarmWorkersTest {
     @Test
     fun temporaryFailureMapsToNetworkWorkerRetry() {
         val actual = mapNetworkRefreshResult(
-            AlarmRefreshResult.TemporaryFailure(java.io.IOException("offline"))
+            AlarmRefreshResult.TemporaryFailure(IOException("offline"))
         )
 
         assertEquals(ListenableWorker.Result.retry().javaClass, actual.javaClass)

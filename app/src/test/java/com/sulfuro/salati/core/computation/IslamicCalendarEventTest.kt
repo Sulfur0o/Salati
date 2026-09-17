@@ -1,10 +1,10 @@
 package com.sulfuro.salati.core.computation
 
+import com.sulfuro.salati.core.zakat.zakatHawlDueDate
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.LocalDate
-import com.sulfuro.salati.core.zakat.zakatHawlDueDate
 
 class IslamicCalendarEventTest {
 

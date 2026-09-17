@@ -1,6 +1,8 @@
 package com.sulfuro.salati.core.computation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.io.IOException
+import java.time.ZoneId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
@@ -8,7 +10,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.time.ZoneId
 
 /**
  * Switching tabs tears a screen down and re-runs its loader, so without a memory cache
@@ -126,7 +127,7 @@ class PrayerMemoryCacheTest {
             override fun invalidate(request: PrayerMonthRequest) =
                 PrayerCacheInvalidationResult.Success
         }
-        val offline = PrayerRemoteDataSource { throw java.io.IOException("offline") }
+        val offline = PrayerRemoteDataSource { throw IOException("offline") }
 
         val result = PrayerRepository.getMonthlyPrayers(
             request = request,

@@ -1,9 +1,9 @@
 package com.sulfuro.salati.core.work
 
 import android.content.Context
-import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.core.alarms.AlarmSettingsRefreshTrigger
 import com.sulfuro.salati.core.alarms.getAlarmSettingsRefreshTrigger
+import com.sulfuro.salati.data.settings.CalculationSettings
 
 fun enqueueAlarmSettingsRefreshIfNeeded(
     context: Context,

@@ -1,13 +1,13 @@
 package com.sulfuro.salati.core.alarms
 
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
+import java.time.Instant
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
-import java.time.Instant
-import java.time.LocalDate
-import com.sulfuro.salati.data.settings.AlarmPreferences
 
 class AlarmDateTimeCompatibilityTest {
     @Test

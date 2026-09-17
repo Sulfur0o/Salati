@@ -1,5 +1,9 @@
 package com.sulfuro.salati.core.audio
 
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -135,7 +139,7 @@ object AdhanCatalogFetcher {
 
     suspend fun fetch(
         url: String = AdhanCatalog.MANIFEST_URL,
-        openConnection: (String) -> java.net.HttpURLConnection = ::defaultConnection,
+        openConnection: (String) -> HttpURLConnection = ::defaultConnection,
         nowMillis: () -> Long = System::currentTimeMillis
     ): AdhanCatalogResult {
         cached?.let { held ->
@@ -152,22 +156,22 @@ object AdhanCatalogFetcher {
 
     private suspend fun fetchFromNetwork(
         url: String,
-        openConnection: (String) -> java.net.HttpURLConnection
+        openConnection: (String) -> HttpURLConnection
     ): AdhanCatalogResult = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
         val connection = try {
             openConnection(url)
-        } catch (cause: java.io.IOException) {
+        } catch (cause: IOException) {
             return@withContext AdhanCatalogResult.Unreachable
         }
         try {
-            if (connection.responseCode != java.net.HttpURLConnection.HTTP_OK) {
+            if (connection.responseCode != HttpURLConnection.HTTP_OK) {
                 return@withContext AdhanCatalogResult.Unreachable
             }
             val body = connection.inputStream.use { stream ->
                 // Bounded read: a manifest is a short list and the reply is untrusted.
                 // Written out rather than using readNBytes, which is Java 9 and not one
                 // of the APIs core library desugaring back-fills for minSdk 24.
-                val buffer = java.io.ByteArrayOutputStream()
+                val buffer = ByteArrayOutputStream()
                 val chunk = ByteArray(8 * 1024)
                 while (buffer.size() < AdhanCatalog.MAX_MANIFEST_BYTES) {
                     val read = stream.read(chunk)
@@ -177,15 +181,15 @@ object AdhanCatalogFetcher {
                 String(buffer.toByteArray(), Charsets.UTF_8)
             }
             AdhanCatalog.parse(body)
-        } catch (cause: java.io.IOException) {
+        } catch (cause: IOException) {
             AdhanCatalogResult.Unreachable
         } finally {
             connection.disconnect()
         }
     }
 
-    private fun defaultConnection(url: String): java.net.HttpURLConnection {
-        return (java.net.URL(url).openConnection() as java.net.HttpURLConnection).apply {
+    private fun defaultConnection(url: String): HttpURLConnection {
+        return (URL(url).openConnection() as HttpURLConnection).apply {
             connectTimeout = CONNECT_TIMEOUT_MILLIS
             readTimeout = READ_TIMEOUT_MILLIS
             requestMethod = "GET"

@@ -1,11 +1,11 @@
 package com.sulfuro.salati.widget
 
+import com.sulfuro.salati.core.prayer.Prayer
+import java.time.LocalTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.sulfuro.salati.core.prayer.Prayer
-import java.time.LocalTime
 
 class SalatiWidgetDataTest {
 

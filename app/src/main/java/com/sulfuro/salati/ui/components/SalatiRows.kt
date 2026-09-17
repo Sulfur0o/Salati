@@ -1,28 +1,31 @@
 package com.sulfuro.salati.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +33,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
 import com.sulfuro.salati.theme.SalatiShapeTokens
@@ -54,7 +59,7 @@ fun StatusPill(
             text = text,
             color = contentColor,
             style = MaterialTheme.typography.labelLarge,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+            fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(
                 horizontal = SalatiSpacing.sm,
                 vertical = SalatiSpacing.xxs
@@ -96,7 +101,7 @@ fun PrayerTimeRow(
         color = containerColor,
         contentColor = contentColor,
         shape = SalatiShapeTokens.Control,
-        border = androidx.compose.foundation.BorderStroke(1.dp, borderColor)
+        border = BorderStroke(1.dp, borderColor)
     ) {
         Row(
             modifier = Modifier
@@ -117,7 +122,7 @@ fun PrayerTimeRow(
                             modifier = Modifier
                                 .height(16.dp)
                                 .width(3.5.dp),
-                            shape = androidx.compose.foundation.shape.CircleShape
+                            shape = CircleShape
                         ) {}
                         Spacer(modifier = Modifier.width(5.dp))
                     }
@@ -126,18 +131,18 @@ fun PrayerTimeRow(
                     text = name,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis
                 )
                 if (isCurrent) {
                     Surface(
-                        shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp),
+                        shape = RoundedCornerShape(4.dp),
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ) {
                         Text(
                             text = stringResource(R.string.badge_next),
                             style = MaterialTheme.typography.labelSmall,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.5.dp)
                         )
                     }
@@ -216,7 +221,7 @@ fun ValueSelectionRow(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1.2f).padding(top = SalatiSpacing.xs, bottom = SalatiSpacing.xs, end = SalatiSpacing.xs),
                 maxLines = 2,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis
             )
             Row(
                 modifier = Modifier.weight(0.8f, fill = false),
@@ -228,8 +233,8 @@ fun ValueSelectionRow(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.End
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.End
                 )
                 Spacer(modifier = Modifier.width(SalatiSpacing.xs))
                 Icon(
@@ -368,7 +373,7 @@ fun SettingStepperRow(
                 .weight(1f)
                 .padding(top = SalatiSpacing.xs, bottom = SalatiSpacing.xs, end = SalatiSpacing.xs),
             maxLines = 2,
-            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {

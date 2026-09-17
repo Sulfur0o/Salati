@@ -17,13 +17,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
 import com.sulfuro.salati.theme.SalatiTheme
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import java.time.Instant
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.ZoneOffset
 
 class MonthlyComponentsTest {
     @get:Rule

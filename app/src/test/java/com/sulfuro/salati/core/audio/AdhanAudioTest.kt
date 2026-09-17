@@ -3,6 +3,14 @@ package com.sulfuro.salati.core.audio
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sulfuro.salati.data.settings.AlarmPreferences
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.security.MessageDigest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -12,13 +20,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
-import java.security.MessageDigest
-import com.sulfuro.salati.data.settings.AlarmPreferences
 
 /**
  * Downloaded audio is several megabytes of opaque bytes from the network that later gets
@@ -248,8 +249,8 @@ class AdhanAudioTest {
     @Test
     fun hostedCatalogueOnlyOffersHttpsRecordingsWithUsableIds() {
         val file = listOf(
-            java.io.File("adhans.json"),
-            java.io.File("..", "adhans.json")
+            File("adhans.json"),
+            File("..", "adhans.json")
         ).firstOrNull { it.isFile } ?: error("adhans.json missing")
         val result = AdhanCatalog.parse(file.readText())
         assertTrue(result is AdhanCatalogResult.Available)

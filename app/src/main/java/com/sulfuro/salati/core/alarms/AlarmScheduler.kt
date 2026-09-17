@@ -10,14 +10,14 @@ import com.sulfuro.salati.core.prayer.get
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.hasConfiguredLocation
 import com.sulfuro.salati.data.settings.safeZoneId
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 data class PreparedAlarm(
     val requestCode: Int,

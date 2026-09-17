@@ -2,12 +2,12 @@ package com.sulfuro.salati.ui.dashboard
 
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
 import com.sulfuro.salati.core.prayer.Prayer
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Test
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Test
 
 /**
  * "Is there still time to pray Asr" is the question the prayer list does not answer, and

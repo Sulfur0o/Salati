@@ -1,12 +1,12 @@
 package com.sulfuro.salati.core.computation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.time.LocalDate
+import java.util.TimeZone
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.time.LocalDate
-import java.util.TimeZone
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [24], manifest = Config.NONE)

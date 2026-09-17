@@ -4,17 +4,18 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sulfuro.salati.R
+import com.sulfuro.salati.data.settings.AlarmPreferences
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.Locale
+import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
-import com.sulfuro.salati.data.settings.AlarmPreferences
-import kotlinx.serialization.json.Json
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * The pre-prayer slider runs 0 to 30 in steps of five, and zero is not a five-minute
@@ -51,7 +52,7 @@ class PrePrayerReminderLabelTest {
 
     private fun localized(language: String): Context {
         val configuration = android.content.res.Configuration(context.resources.configuration)
-        configuration.setLocale(java.util.Locale.forLanguageTag(language))
+        configuration.setLocale(Locale.forLanguageTag(language))
         return context.createConfigurationContext(configuration)
     }
 

@@ -17,17 +17,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.theme.SalatiAccents
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.theme.SalatiTypeTokens
-import kotlinx.coroutines.delay
 import java.time.Instant
+import kotlinx.coroutines.delay
 
 @Composable
 fun SalatiHeroCard(
@@ -83,7 +86,7 @@ fun SalatiHeroCard(
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.secondary,
                     maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false)
                 )
                 Text(
@@ -107,7 +110,7 @@ fun SalatiHeroCard(
 fun SalatiSectionCard(
     title: String,
     modifier: Modifier = Modifier,
-    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit
 ) {
     SalatiSectionCard(modifier = modifier, containerColor = containerColor) {
@@ -123,13 +126,13 @@ fun SalatiSectionCard(
 @Composable
 fun SalatiSectionCard(
     modifier: Modifier = Modifier,
-    containerColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Transparent,
+    containerColor: Color = Color.Transparent,
     bordered: Boolean = false,
     content: @Composable () -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = if (bordered) SalatiShapeTokens.Card else androidx.compose.ui.graphics.RectangleShape,
+        shape = if (bordered) SalatiShapeTokens.Card else RectangleShape,
         color = containerColor,
         contentColor = MaterialTheme.colorScheme.onBackground,
         border = if (bordered) BorderStroke(1.dp, MaterialTheme.colorScheme.outline) else null
@@ -152,7 +155,7 @@ fun SalatiHeroCard(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = androidx.compose.ui.graphics.Color.Transparent,
+        color = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
         content()

@@ -14,14 +14,15 @@ import com.sulfuro.salati.core.computation.MonthlyPrayerResult
 import com.sulfuro.salati.core.computation.PrayerRepository
 import com.sulfuro.salati.core.prayer.Prayer
 import com.sulfuro.salati.data.settings.SalatiPreferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /** The five prayer times a widget shows, ready to draw. */
 @JvmInline
@@ -41,7 +42,7 @@ data class WidgetDataSnapshot(
 
 object SalatiWidgetData {
     private val TIME_FORMATTER =
-        DateTimeFormatter.ofPattern("HH:mm", java.util.Locale.ROOT)
+        DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)
 
     fun cleanTime(raw: String): String {
         return raw.trim().substringBefore(" ").trim()
@@ -58,7 +59,7 @@ object SalatiWidgetData {
             android.text.format.DateFormat.is24HourFormat(context)
         )
         val pattern = if (uses24Hour) "HH:mm" else "h:mm a"
-        return DateTimeFormatter.ofPattern(pattern, java.util.Locale.getDefault()).format(parsed)
+        return DateTimeFormatter.ofPattern(pattern, Locale.getDefault()).format(parsed)
     }
 
     fun isUpcomingPrayer(

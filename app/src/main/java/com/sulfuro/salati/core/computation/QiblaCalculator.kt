@@ -1,9 +1,9 @@
 package com.sulfuro.salati.core.computation
 
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.math.abs
 
 /**
  * Direction of the Kaaba from an arbitrary point on Earth.

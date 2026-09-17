@@ -429,7 +429,7 @@ private fun durationLabel(option: AdhanOption): String? {
     if (option.seconds <= 0) return null
     val locale = LocalConfiguration.current.locales[0]
     val total = option.seconds.toInt()
-    return java.lang.String.format(locale, "%d:%02d", total / 60, total % 60)
+    return String.format(locale, "%d:%02d", total / 60, total % 60)
 }
 
 /** Renders a download size the way a person would say it, or nothing when unknown. */
@@ -440,6 +440,6 @@ private fun sizeLabel(option: AdhanOption): String? {
     val locale = LocalConfiguration.current.locales[0]
     return stringResource(
         R.string.settings_adhan_size,
-        java.lang.String.format(locale, "%.1f", megabytes)
+        String.format(locale, "%.1f", megabytes)
     )
 }

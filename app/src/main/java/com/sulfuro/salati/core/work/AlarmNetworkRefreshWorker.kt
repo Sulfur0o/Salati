@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.sulfuro.salati.data.settings.SalatiPreferences
-import kotlinx.coroutines.flow.first
 import com.sulfuro.salati.core.alarms.AlarmRefreshResult
 import com.sulfuro.salati.core.alarms.ReminderCoordinator
 import com.sulfuro.salati.core.alarms.alarmRelevantFingerprint
 import com.sulfuro.salati.core.alarms.enqueueOneReconciliationIfChanged
+import com.sulfuro.salati.data.settings.SalatiPreferences
+import kotlinx.coroutines.flow.first
 
 class AlarmNetworkRefreshWorker(
     appContext: Context,

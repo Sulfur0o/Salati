@@ -1,12 +1,13 @@
 package com.sulfuro.salati.core.computation
 
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.LocationSettings
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
+import java.time.ZoneId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.sulfuro.salati.data.settings.LocationSettings
-import com.sulfuro.salati.data.settings.PrayerMethodSettings
 
 class PrayerTimesCalculatorTest {
 
@@ -61,7 +62,7 @@ class PrayerTimesCalculatorTest {
         assertTrue("Isha is before Midnight", parsedTimes.isha.isBefore(parsedTimes.middleOfTheNight))
         assertTrue("Midnight is before Last Third", parsedTimes.middleOfTheNight.isBefore(parsedTimes.lastThirdOfTheNight))
 
-        val zone = java.time.ZoneId.of(settings.location.timezoneId)
+        val zone = ZoneId.of(settings.location.timezoneId)
         val nextDay = parsedTimes.date.plusDays(1)
         assertEquals(nextDay, parsedTimes.isha.atZone(zone).toLocalDate())
         assertEquals(nextDay, parsedTimes.middleOfTheNight.atZone(zone).toLocalDate())

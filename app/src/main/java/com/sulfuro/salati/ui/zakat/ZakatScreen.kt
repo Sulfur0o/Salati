@@ -129,7 +129,7 @@ fun ZakatScreen(
     val formatAmount = remember(displayLocale, currencySymbol) {
         { amount: Double, grouping: Boolean ->
             val pattern = if (grouping) "%,.2f" else "%.2f"
-            currencySymbol + " " + java.lang.String.format(displayLocale, pattern, amount)
+            currencySymbol + " " + String.format(displayLocale, pattern, amount)
         }
     }
 

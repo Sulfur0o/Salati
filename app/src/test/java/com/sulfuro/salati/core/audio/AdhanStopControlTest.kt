@@ -6,6 +6,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
+import java.nio.file.Files
+import java.nio.file.Path
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -15,8 +17,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * An adhan must be stoppable in one gesture, wherever the user is when it starts.

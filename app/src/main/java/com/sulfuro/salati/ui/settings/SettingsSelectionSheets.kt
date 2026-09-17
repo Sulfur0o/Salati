@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import com.sulfuro.salati.R
 import com.sulfuro.salati.core.zakat.zakatCurrencyOptions
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
+import java.util.Currency
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,9 +152,9 @@ fun CurrencySelectionSheet(
                         Spacer(modifier = Modifier.width(SalatiSpacing.md))
 
                         Column(modifier = Modifier.weight(1f)) {
-                            val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+                            val locale = LocalConfiguration.current.locales[0]
                             val localizedName = remember(option.code, locale) {
-                                runCatching { java.util.Currency.getInstance(option.code).getDisplayName(locale) }
+                                runCatching { Currency.getInstance(option.code).getDisplayName(locale) }
                                     .getOrDefault(option.displayName)
                             }
                             Text(

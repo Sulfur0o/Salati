@@ -8,14 +8,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explore
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -23,34 +25,41 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
 import com.sulfuro.salati.core.computation.AladhanDayData
 import com.sulfuro.salati.core.computation.HijriCalendarHelper
+import com.sulfuro.salati.core.computation.HijriDateParts
 import com.sulfuro.salati.core.computation.MonthlyPrayerResult
+import com.sulfuro.salati.core.computation.PrayerDataOrigin
 import com.sulfuro.salati.core.computation.PrayerRepository
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
 import com.sulfuro.salati.core.prayer.Prayer
 import com.sulfuro.salati.core.prayer.byEvent
 import com.sulfuro.salati.core.prayer.plusExactDay
-import com.sulfuro.salati.core.computation.HijriDateParts
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.safeZoneId
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.theme.SalatiTypeTokens
 import com.sulfuro.salati.ui.components.PrayerTimeRow
-import com.sulfuro.salati.core.computation.PrayerDataOrigin
 import com.sulfuro.salati.ui.components.SalatiComputedLocallyNotice
 import com.sulfuro.salati.ui.components.SalatiErrorState
 import com.sulfuro.salati.ui.components.SalatiHeroCard
 import com.sulfuro.salati.ui.components.SalatiLoadingState
-import kotlinx.coroutines.delay
+import com.sulfuro.salati.ui.format.longDateFormatter
+import com.sulfuro.salati.ui.format.prayerTimeFormatter
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -58,6 +67,7 @@ import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlinx.coroutines.delay
 
 @Composable
 fun DashboardScreen(
@@ -138,8 +148,8 @@ fun DashboardScreen(
         settings.appearance.timeFormat,
         android.text.format.DateFormat.is24HourFormat(context)
     )
-    val timeFormat = remember(displayLocale, zoneId, is24Hour) { dashboardTimeFormatter(displayLocale, zoneId, is24Hour) }
-    val dateFormat = remember(displayLocale) { dashboardDateFormatter(displayLocale) }
+    val timeFormat = remember(displayLocale, zoneId, is24Hour) { prayerTimeFormatter(displayLocale, zoneId, is24Hour) }
+    val dateFormat = remember(displayLocale) { longDateFormatter(displayLocale) }
 
     val isAfterMaghrib = rememberIsAfterMaghrib(prayerTimes?.maghrib, zoneId)
     val hijriDate = remember(today, settings.prayer.hijriOffset, isAfterMaghrib, hijriMetadata) {
@@ -280,7 +290,7 @@ fun DashboardScreen(
                 PrayerWindowCard(window = prayerWindow, timeFormat = timeFormat)
 
                 // Compact inline night calculations row at the bottom
-                androidx.compose.material3.Surface(
+                Surface(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = SalatiSpacing.xs),
@@ -293,39 +303,39 @@ fun DashboardScreen(
                             .fillMaxWidth()
                             .padding(horizontal = SalatiSpacing.md, vertical = SalatiSpacing.xs),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(0.95f)) {
                             Text(
                                 text = stringResource(R.string.daily_middle_of_night),
                                 style = MaterialTheme.typography.bodySmall,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                                fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
-                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis
                             )
                             Text(
                                 text = timeFormat.format(prayerTimes.middleOfTheNight),
-                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(15f, androidx.compose.ui.unit.TextUnitType.Sp)),
+                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = TextUnit(15f, TextUnitType.Sp)),
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
                         Column(
                             modifier = Modifier.weight(1.05f),
-                            horizontalAlignment = androidx.compose.ui.Alignment.End
+                            horizontalAlignment = Alignment.End
                         ) {
                             Text(
                                 text = stringResource(R.string.daily_last_third_of_night),
                                 style = MaterialTheme.typography.bodySmall,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                                fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.End,
                                 maxLines = 1,
-                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis
                             )
                             Text(
                                 text = timeFormat.format(prayerTimes.lastThirdOfTheNight),
-                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(15f, androidx.compose.ui.unit.TextUnitType.Sp)),
+                                style = SalatiTypeTokens.PrayerTime.copy(fontSize = TextUnit(15f, TextUnitType.Sp)),
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.End
                             )
@@ -349,14 +359,14 @@ internal fun DailyScreenHeader(
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             modifier = Modifier.weight(1.1f),
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
@@ -365,14 +375,14 @@ internal fun DailyScreenHeader(
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.semantics { heading() },
                     maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis
                 )
-                androidx.compose.material3.IconButton(
+                IconButton(
                     onClick = onOpenQibla,
                     modifier = Modifier.size(36.dp)
                 ) {
-                    androidx.compose.material3.Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.Explore,
+                    Icon(
+                        imageVector = Icons.Default.Explore,
                         contentDescription = stringResource(R.string.qibla_open),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(22.dp)
@@ -384,12 +394,12 @@ internal fun DailyScreenHeader(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis
             )
         }
         Column(
             modifier = Modifier.weight(0.9f),
-            horizontalAlignment = androidx.compose.ui.Alignment.End,
+            horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             Text(
@@ -397,7 +407,7 @@ internal fun DailyScreenHeader(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.End
             )
             Text(
@@ -405,7 +415,7 @@ internal fun DailyScreenHeader(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.End
             )
         }
@@ -453,22 +463,6 @@ internal fun formatCountdown(ms: Long): String {
     val minutes = (totalSecs % 3600) / 60
     val seconds = totalSecs % 60
     return String.format(Locale.ROOT, "%02dh %02dm %02ds", hours, minutes, seconds)
-}
-
-internal fun zonedDateAt(epochMillis: Long, zoneId: ZoneId): LocalDate {
-    return Instant.ofEpochMilli(epochMillis)
-        .atZone(zoneId)
-        .toLocalDate()
-}
-
-internal fun dashboardTimeFormatter(locale: Locale, zoneId: ZoneId, is24Hour: Boolean = true): DateTimeFormatter {
-    val pattern = if (is24Hour) "HH:mm" else "h:mm a"
-    return DateTimeFormatter.ofPattern(pattern, locale)
-        .withZone(zoneId)
-}
-
-internal fun dashboardDateFormatter(locale: Locale): DateTimeFormatter {
-    return DateTimeFormatter.ofPattern("EEEE, d MMMM uuuu", locale)
 }
 
 @Composable

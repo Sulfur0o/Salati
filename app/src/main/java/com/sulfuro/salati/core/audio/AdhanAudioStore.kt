@@ -2,14 +2,14 @@ package com.sulfuro.salati.core.audio
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.sulfuro.salati.data.settings.CalculationSettings
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import com.sulfuro.salati.data.settings.CalculationSettings
 import java.security.MessageDigest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 sealed interface AdhanDownloadResult {
     data class Success(val file: File) : AdhanDownloadResult

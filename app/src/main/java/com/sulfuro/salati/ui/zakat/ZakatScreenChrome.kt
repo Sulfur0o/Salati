@@ -45,8 +45,11 @@ import com.sulfuro.salati.core.zakat.zakatCurrencyOptions
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
+import java.text.DateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Currency
+import java.util.Date
 
 /**
  * The step you are on, and what you owe.
@@ -312,15 +315,15 @@ internal fun CurrencyMismatchWarning(settings: CalculationSettings) {
 internal fun currencyLabelFor(code: String): String {
     val option = zakatCurrencyOptions.firstOrNull { it.code == code } ?: return code
     val localized = runCatching {
-        java.util.Currency.getInstance(option.code).getDisplayName()
+        Currency.getInstance(option.code).getDisplayName()
     }.getOrDefault(option.displayName)
     return "${option.code} (${option.symbol}) — $localized"
 }
 
 private fun formatPriceTimestamp(epochMillis: Long): String {
-    val formatter = java.text.DateFormat.getDateTimeInstance(
-        java.text.DateFormat.MEDIUM,
-        java.text.DateFormat.SHORT
+    val formatter = DateFormat.getDateTimeInstance(
+        DateFormat.MEDIUM,
+        DateFormat.SHORT
     )
-    return formatter.format(java.util.Date(epochMillis))
+    return formatter.format(Date(epochMillis))
 }

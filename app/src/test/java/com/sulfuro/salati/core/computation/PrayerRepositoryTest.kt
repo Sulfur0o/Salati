@@ -4,6 +4,12 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.LocationSettings
+import com.sulfuro.salati.data.settings.PrayerMethodSettings
+import java.io.IOException
+import java.net.URI
+import java.time.LocalDate
+import java.time.ZoneId
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -11,9 +17,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.io.IOException
-import com.sulfuro.salati.data.settings.LocationSettings
-import com.sulfuro.salati.data.settings.PrayerMethodSettings
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33], manifest = Config.NONE)
@@ -38,7 +41,7 @@ class PrayerRepositoryTest {
     @Test
     fun apiUrlUsesRequestedCoordinatesMadhabAndHighLatitudeParameters() {
         val url = PrayerRepository.buildApiUrl(2026, 7, 5, 1, "3", 33.5731, -7.5898)
-        val query = java.net.URI(url).query
+        val query = URI(url).query
             .split("&")
             .associate { part -> part.substringBefore("=") to part.substringAfter("=") }
 
@@ -224,7 +227,7 @@ class PrayerRepositoryTest {
             dayData,
             CalculationSettings(location = LocationSettings(timezoneId = "Europe/Brussels"))
         )
-        val viaExplicitZone = SalatiPrayerTimeMapper.map(dayData, java.time.ZoneId.of("Europe/Brussels"))
+        val viaExplicitZone = SalatiPrayerTimeMapper.map(dayData, ZoneId.of("Europe/Brussels"))
 
         assertEquals(viaExplicitZone, viaMeta)
     }
@@ -243,10 +246,10 @@ class PrayerRepositoryTest {
         val indexed = PrayerRepository.indexPrayerDataByDate(outOfOrderWithDuplicate)
 
         assertEquals(3, indexed.size)
-        assertEquals(day1, indexed[java.time.LocalDate.of(2026, 7, 1)])
-        assertEquals(day2, indexed[java.time.LocalDate.of(2026, 7, 2)])
-        assertEquals(day3, indexed[java.time.LocalDate.of(2026, 7, 3)])
-        assertEquals(null, indexed[java.time.LocalDate.of(2026, 7, 4)])
+        assertEquals(day1, indexed[LocalDate.of(2026, 7, 1)])
+        assertEquals(day2, indexed[LocalDate.of(2026, 7, 2)])
+        assertEquals(day3, indexed[LocalDate.of(2026, 7, 3)])
+        assertEquals(null, indexed[LocalDate.of(2026, 7, 4)])
     }
 
     @Test
@@ -257,7 +260,7 @@ class PrayerRepositoryTest {
         val indexed = PrayerRepository.indexPrayerDataByDate(listOf(valid, malformed))
 
         assertEquals(1, indexed.size)
-        assertEquals(valid, indexed[java.time.LocalDate.of(2026, 7, 1)])
+        assertEquals(valid, indexed[LocalDate.of(2026, 7, 1)])
     }
 
     private fun deleteDefaultCache(year: Int, month: Int) {

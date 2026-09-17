@@ -2,7 +2,15 @@ package com.sulfuro.salati.core.alarms
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.core.prayer.Prayer
+import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
+import java.time.Clock
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.YearMonth
+import java.time.ZoneId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -10,14 +18,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.time.Clock
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.YearMonth
-import java.time.ZoneId
-import com.sulfuro.salati.core.prayer.Prayer
-import java.time.Instant
-import com.sulfuro.salati.data.settings.AlarmPreferences
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [24], manifest = Config.NONE)

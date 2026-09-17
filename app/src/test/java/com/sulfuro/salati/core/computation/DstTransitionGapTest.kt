@@ -1,8 +1,8 @@
 package com.sulfuro.salati.core.computation
 
+import java.time.ZoneId
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.time.ZoneId
 
 class DstTransitionGapTest {
 

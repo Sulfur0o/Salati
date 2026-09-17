@@ -1,12 +1,12 @@
 package com.sulfuro.salati.core.computation
 
 import com.sulfuro.salati.data.settings.CalculationSettings
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import com.sulfuro.salati.data.settings.LocationSettings
 import java.time.Instant
 import java.time.ZoneId
 import java.util.TimeZone
-import com.sulfuro.salati.data.settings.LocationSettings
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class PrayerTimeMapperTest {
     @Test

@@ -1,12 +1,12 @@
 package com.sulfuro.salati.core.computation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.io.IOException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33], manifest = Config.NONE)

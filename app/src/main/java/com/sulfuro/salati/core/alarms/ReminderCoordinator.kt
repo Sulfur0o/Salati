@@ -3,14 +3,14 @@ package com.sulfuro.salati.core.alarms
 import android.content.Context
 import android.util.Log
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.data.settings.adhanSoundIdFor
 import com.sulfuro.salati.data.settings.safeZoneId
-import com.sulfuro.salati.data.settings.SalatiPreferences
+import java.time.Clock
+import java.time.ZoneId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.time.Clock
-import java.time.ZoneId
 
 interface AlarmPreparationSource {
     suspend fun prepare(

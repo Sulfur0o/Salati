@@ -1,16 +1,16 @@
 package com.sulfuro.salati.ui.zakat
 
+import com.sulfuro.salati.core.zakat.zakatHawlDueDate
+import com.sulfuro.salati.core.zakat.zakatHawlStartDate
+import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.ZakatPreferences
+import java.nio.file.Files
+import java.nio.file.Path
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.sulfuro.salati.core.zakat.zakatHawlDueDate
-import com.sulfuro.salati.core.zakat.zakatHawlStartDate
-import com.sulfuro.salati.data.settings.CalculationSettings
-import java.time.LocalDate
-import java.nio.file.Files
-import java.nio.file.Path
-import com.sulfuro.salati.data.settings.ZakatPreferences
 
 class ZakatUiContractTest {
 

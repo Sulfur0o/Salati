@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,6 +56,7 @@ import com.sulfuro.salati.core.zakat.GoldPurity
 import com.sulfuro.salati.core.zakat.SilverPurity
 import com.sulfuro.salati.core.zakat.ZakatCalculator
 import com.sulfuro.salati.theme.SalatiSpacing
+import java.util.Locale
 
 /**
  * One piece of jewellery: a line when it is not being edited, five controls when it is.
@@ -186,7 +188,7 @@ internal fun MetalItem(
                         weightText = raw
                         onWeightChange(ZakatCalculator.parseAmount(raw) ?: 0.0)
                     },
-                    placeholder = java.lang.String.format(displayLocale, "%.2f", 0.0),
+                    placeholder = String.format(displayLocale, "%.2f", 0.0),
                     contentDescription = stringResource(R.string.zakat_item_weight),
                     textStyle = MaterialTheme.typography.headlineMedium,
                     keyboardType = KeyboardType.Decimal,
@@ -214,9 +216,9 @@ internal fun MetalItem(
 
 /** The weight as it reads on a collapsed row: "22.00 g", or nothing at all while unset. */
 @Composable
-private fun weightWithUnit(weightText: String, locale: java.util.Locale): String {
+private fun weightWithUnit(weightText: String, locale: Locale): String {
     val unit = stringResource(R.string.zakat_item_weight_unit)
-    val shown = weightText.ifBlank { java.lang.String.format(locale, "%.2f", 0.0) }
+    val shown = weightText.ifBlank { String.format(locale, "%.2f", 0.0) }
     return "$shown $unit"
 }
 
@@ -230,7 +232,7 @@ private fun UnderlinedField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     contentDescription: String,
-    textStyle: androidx.compose.ui.text.TextStyle,
+    textStyle: TextStyle,
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next
@@ -325,7 +327,7 @@ internal fun silverPurityLabel(purity: SilverPurity): String = when (purity) {
 @Composable
 internal fun formatGrams(value: Double): String {
     val locale = LocalConfiguration.current.locales[0]
-    return java.lang.String.format(locale, "%.2f", value)
+    return String.format(locale, "%.2f", value)
 }
 
 // ---------------------------------------------------------------------------

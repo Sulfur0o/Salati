@@ -4,12 +4,13 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
+import androidx.annotation.RequiresApi
 import java.io.IOException
 import java.util.Locale
 import kotlin.coroutines.resume
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 
 /** One geocoded place the user can pick, already reduced to what Salati needs. */
 data class CitySuggestion(
@@ -82,7 +83,7 @@ object CityGeocoder {
         }
     }
 
-    @androidx.annotation.RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private suspend fun geocodeAsync(
         geocoder: Geocoder,
         query: String,

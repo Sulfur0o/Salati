@@ -50,9 +50,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.prayer.byEvent
 import com.sulfuro.salati.core.computation.AladhanDayData
 import com.sulfuro.salati.core.computation.HijriCalendarHelper
 import com.sulfuro.salati.core.computation.HijriDateParts
@@ -62,6 +63,7 @@ import com.sulfuro.salati.core.computation.PrayerDataOrigin
 import com.sulfuro.salati.core.computation.PrayerRepository
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
 import com.sulfuro.salati.core.computation.eventsForCalendarDate
+import com.sulfuro.salati.core.prayer.byEvent
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.safeZoneId
 import com.sulfuro.salati.theme.SalatiShapeTokens
@@ -70,6 +72,10 @@ import com.sulfuro.salati.ui.components.SalatiComputedLocallyNotice
 import com.sulfuro.salati.ui.components.SalatiErrorState
 import com.sulfuro.salati.ui.components.SalatiLoadingState
 import com.sulfuro.salati.ui.components.SalatiSectionCard
+import com.sulfuro.salati.ui.format.localDateAt
+import com.sulfuro.salati.ui.format.longDateFormatter
+import com.sulfuro.salati.ui.format.monthHeading
+import com.sulfuro.salati.ui.format.prayerTimeFormatter
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
@@ -89,7 +95,7 @@ fun CalendarScreen(
         settings.appearance.timeFormat,
         android.text.format.DateFormat.is24HourFormat(context)
     )
-    val today = remember(zoneId) { calendarDateAt(System.currentTimeMillis(), zoneId) }
+    val today = remember(zoneId) { localDateAt(System.currentTimeMillis(), zoneId) }
     var currentYearMonth by remember { mutableStateOf(YearMonth.from(today)) }
     var monthlyData by remember { mutableStateOf<List<AladhanDayData>>(emptyList()) }
     var hijriMetadata by remember { mutableStateOf<Map<LocalDate, HijriDateParts>>(emptyMap()) }
@@ -157,7 +163,7 @@ fun CalendarScreen(
         map
     }
     val monthName = remember(currentYearMonth) {
-        calendarMonthHeading(currentYearMonth, displayLocale)
+        monthHeading(currentYearMonth, displayLocale)
     }
 
     Column(
@@ -213,13 +219,13 @@ fun CalendarScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 selectedDayTimes?.let { times ->
                     SelectedDayPrayerDetails(
-                        gregorianDate = calendarSelectedDateHeading(selectedDate, displayLocale),
+                        gregorianDate = longDateFormatter(displayLocale).format(selectedDate),
                         hijriDate = selectedDayHijri.format(),
                         events = dayEvents[selectedDayIndex] ?: emptyList(),
                         locationContext = stringResource(R.string.daily_location_context, settings.location.cityName),
                         prayerTimes = times,
                         timeFormatter = remember(displayLocale, zoneId, is24Hour) {
-                            calendarTimeFormatter(displayLocale, zoneId, is24Hour)
+                            prayerTimeFormatter(displayLocale, zoneId, is24Hour)
                         }
                     )
                 }
@@ -380,7 +386,7 @@ internal fun CalendarDateCell(
     }
 
     val gregorianFormatter = remember(displayLocale) {
-        java.time.format.DateTimeFormatter.ofPattern("d MMMM yyyy", displayLocale)
+        DateTimeFormatter.ofPattern("d MMMM yyyy", displayLocale)
     }
     val gregorianDateStr = remember(date, gregorianFormatter) { date.format(gregorianFormatter) }
     val hijriDateStr = remember(date, hijriOffset, apiLookup) {
@@ -478,7 +484,7 @@ internal fun SelectedDayPrayerDetails(
                 )
                 Text(
                     text = "$hijriDate  ·  $locationContext",
-                    style = MaterialTheme.typography.labelMedium.copy(letterSpacing = androidx.compose.ui.unit.TextUnit(0.3f, androidx.compose.ui.unit.TextUnitType.Sp)),
+                    style = MaterialTheme.typography.labelMedium.copy(letterSpacing = TextUnit(0.3f, TextUnitType.Sp)),
                     color = MaterialTheme.colorScheme.tertiary
                 )
                 if (events.isNotEmpty()) {
@@ -557,7 +563,7 @@ internal fun CompactPrayerTimeItem(
         }
         Text(
             text = time,
-            style = com.sulfuro.salati.theme.SalatiTypeTokens.PrayerTime.copy(fontSize = androidx.compose.ui.unit.TextUnit(16f, androidx.compose.ui.unit.TextUnitType.Sp)),
+            style = com.sulfuro.salati.theme.SalatiTypeTokens.PrayerTime.copy(fontSize = TextUnit(16f, TextUnitType.Sp)),
             color = timeColor
         )
     }
@@ -581,21 +587,5 @@ internal fun monthlyWeekdayDescriptions(): List<Int> = listOf(
 
 internal fun initialCalendarDay(yearMonth: YearMonth, today: LocalDate): Int =
     if (yearMonth == YearMonth.from(today)) today.dayOfMonth else 1
-
-internal fun calendarDateAt(epochMillis: Long, zoneId: ZoneId): LocalDate =
-    Instant.ofEpochMilli(epochMillis).atZone(zoneId).toLocalDate()
-
-internal fun calendarTimeFormatter(
-    locale: Locale,
-    zoneId: ZoneId,
-    is24Hour: Boolean = true
-): DateTimeFormatter =
-    DateTimeFormatter.ofPattern(if (is24Hour) "HH:mm" else "h:mm a", locale).withZone(zoneId)
-
-internal fun calendarMonthHeading(yearMonth: YearMonth, locale: Locale): String =
-    DateTimeFormatter.ofPattern("MMMM uuuu", locale).format(yearMonth.atDay(1))
-
-internal fun calendarSelectedDateHeading(date: LocalDate, locale: Locale): String =
-    DateTimeFormatter.ofPattern("EEEE, d MMMM uuuu", locale).format(date)
 
 internal fun mondayFirstOffset(yearMonth: YearMonth): Int = yearMonth.atDay(1).dayOfWeek.value - 1

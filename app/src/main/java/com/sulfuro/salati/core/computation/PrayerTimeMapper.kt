@@ -5,28 +5,20 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.ResolverStyle
-import java.util.Locale
 
 fun interface PrayerTimeMapper {
     fun map(dayData: AladhanDayData, fallbackZoneId: ZoneId): SalatiPrayerTimes
 }
 
 object SalatiPrayerTimeMapper : PrayerTimeMapper {
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-uuuu", Locale.ROOT)
-        .withResolverStyle(ResolverStyle.STRICT)
-    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)
-        .withResolverStyle(ResolverStyle.STRICT)
-
     override fun map(dayData: AladhanDayData, fallbackZoneId: ZoneId): SalatiPrayerTimes {
         val zoneId = dayData.meta?.timezone?.let(ZoneId::of) ?: fallbackZoneId
         val dateText = dayData.date.gregorian.date
-        val date = LocalDate.parse(dateText, dateFormatter)
+        val date = LocalDate.parse(dateText, AladhanFormats.date)
 
         fun parseLocalTime(rawTime: String): LocalTime {
             val cleanTime = rawTime.substringBefore(" ").trim()
-            return LocalTime.parse(cleanTime, timeFormatter)
+            return LocalTime.parse(cleanTime, AladhanFormats.time)
         }
 
         val maghribTime = parseLocalTime(dayData.timings.Maghrib)

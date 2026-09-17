@@ -21,9 +21,9 @@ import com.sulfuro.salati.R
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.theme.SalatiTypeTokens
-import kotlinx.coroutines.delay
 import java.time.Instant
 import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.delay
 
 /** Below this, the card turns the colour of a deadline rather than of a fact. */
 private const val URGENT_MINUTES = 15L

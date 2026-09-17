@@ -1,11 +1,11 @@
 package com.sulfuro.salati.core.prayer
 
+import java.nio.file.Files
+import java.nio.file.Path
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * The app's list of prayers, and the promise that it is written down once.

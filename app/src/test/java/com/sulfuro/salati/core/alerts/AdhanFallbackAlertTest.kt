@@ -2,14 +2,14 @@ package com.sulfuro.salati.core.alerts
 
 import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.nio.file.Files
+import java.nio.file.Path
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * A prayer must always notify, even when its adhan does not play.

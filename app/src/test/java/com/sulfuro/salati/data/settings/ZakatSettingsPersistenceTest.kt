@@ -1,8 +1,8 @@
 package com.sulfuro.salati.data.settings
 
+import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import android.content.Context
 import com.sulfuro.salati.core.zakat.ZakatGoldItem
 import com.sulfuro.salati.core.zakat.ZakatSilverItem
 import kotlinx.coroutines.flow.first

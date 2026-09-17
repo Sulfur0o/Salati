@@ -1,13 +1,14 @@
 package com.sulfuro.salati.core.location
 
 import android.location.Address
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.util.Locale
 
 /**
  * The geocoder itself is a platform service, so what is pinned here is the reduction
@@ -86,7 +87,7 @@ class CityGeocoderTest {
 
     @Test
     fun blankQueriesNeverReachTheGeocoder() = kotlinx.coroutines.runBlocking {
-        val context = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         // Below the minimum length the search short-circuits rather than matching half the world.
         assertEquals(CitySearchResult.NoMatches, CityGeocoder.search(context, ""))
         assertEquals(CitySearchResult.NoMatches, CityGeocoder.search(context, " b "))

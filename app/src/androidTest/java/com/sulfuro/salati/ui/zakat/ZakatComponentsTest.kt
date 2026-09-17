@@ -1,7 +1,9 @@
 package com.sulfuro.salati.ui.zakat
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,9 +47,9 @@ class ZakatComponentsTest {
         InstrumentationRegistry.getInstrumentation().targetContext.getString(id, arg)
 
     /** Every amount row carries its label as the field's own description. */
-    private fun scrolled(content: @androidx.compose.runtime.Composable () -> Unit) {
+    private fun scrolled(content: @Composable () -> Unit) {
         composeTestRule.setContent {
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 content()
@@ -148,7 +150,7 @@ class ZakatComponentsTest {
             var items by remember {
                 mutableStateOf(listOf(ZakatGoldItem(id = "g1", label = "Ring", weightGrams = 12.5)))
             }
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 ZakatMetalsStep(

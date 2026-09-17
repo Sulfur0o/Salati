@@ -1,8 +1,8 @@
 package com.sulfuro.salati.data.settings
 
+import com.sulfuro.salati.core.alarms.alarmRelevantFingerprint
 import com.sulfuro.salati.core.audio.AdhanCatalog
 import com.sulfuro.salati.core.audio.AdhanCatalogResult
-import com.sulfuro.salati.core.alarms.alarmRelevantFingerprint
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals

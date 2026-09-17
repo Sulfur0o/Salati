@@ -3,27 +3,27 @@ package com.sulfuro.salati
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.LaunchedEffect
 import androidx.activity.enableEdgeToEdge
-import androidx.core.view.WindowCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
-import com.sulfuro.salati.core.work.AlarmWorkScheduler
-import com.sulfuro.salati.core.permissions.PermissionStateRefreshController
-import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
+import androidx.core.view.WindowCompat
 import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
+import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
+import com.sulfuro.salati.core.audio.withoutRetiredAdhanChoices
+import com.sulfuro.salati.core.permissions.PermissionStateRefreshController
 import com.sulfuro.salati.core.permissions.readAppPermissionState
+import com.sulfuro.salati.core.work.AlarmWorkScheduler
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiTheme
 import com.sulfuro.salati.ui.settings.LoadedSettingsCache
 import com.sulfuro.salati.ui.settings.applyAppLanguage
-import com.sulfuro.salati.core.audio.withoutRetiredAdhanChoices
 import com.sulfuro.salati.ui.settings.wrapContextForLanguage
 
 class MainActivity : ComponentActivity() {

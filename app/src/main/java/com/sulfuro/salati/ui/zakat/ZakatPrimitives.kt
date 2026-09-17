@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.core.zakat.ZakatCalculator
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 /** Nisab standards, in the order they are shown. */
 internal const val STANDARD_GOLD = 0
@@ -112,9 +114,9 @@ internal fun ZakatRowDivider() {
     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 }
 
-internal fun trimTrailingZeros(value: Double, locale: java.util.Locale): String {
-    val text = java.lang.String.format(locale, "%.2f", value)
-    val separator = java.text.DecimalFormatSymbols.getInstance(locale).decimalSeparator
+internal fun trimTrailingZeros(value: Double, locale: Locale): String {
+    val text = String.format(locale, "%.2f", value)
+    val separator = DecimalFormatSymbols.getInstance(locale).decimalSeparator
     if (!text.contains(separator)) return text.ifEmpty { "0" }
     return text.trimEnd('0').trimEnd(separator).ifEmpty { "0" }
 }
@@ -154,7 +156,7 @@ internal fun MoneyRow(
     var focused by rememberSaveable(label) { mutableStateOf(false) }
 
     val accent = MaterialTheme.colorScheme.primary
-    val zero = remember(displayLocale) { java.lang.String.format(displayLocale, "%.2f", 0.0) }
+    val zero = remember(displayLocale) { String.format(displayLocale, "%.2f", 0.0) }
     val valueColor = when {
         focused -> accent
         text.isBlank() -> MaterialTheme.colorScheme.onSurfaceVariant

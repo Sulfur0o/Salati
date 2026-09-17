@@ -3,7 +3,12 @@ package com.sulfuro.salati.core.alarms
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -16,11 +21,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
-import java.util.concurrent.atomic.AtomicInteger
-import com.sulfuro.salati.data.settings.AlarmPreferences
 
 private class FakeAlarmRegistry(
     var readResult: AlarmRegistryReadResult,

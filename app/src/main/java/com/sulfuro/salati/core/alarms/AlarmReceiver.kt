@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.prayer.Prayer
-import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.core.alerts.PrayerAlertNotification
 import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
+import com.sulfuro.salati.core.audio.AdhanPlaybackService
+import com.sulfuro.salati.core.prayer.Prayer
+import java.util.Locale
 
 class AlarmReceiver : BroadcastReceiver() {
     
@@ -90,7 +92,7 @@ class AlarmReceiver : BroadcastReceiver() {
         return if (resId != null) {
             context.getString(resId)
         } else {
-            key.replaceFirstChar { it.uppercase(java.util.Locale.ROOT) }
+            key.replaceFirstChar { it.uppercase(Locale.ROOT) }
         }
     }
 
@@ -182,7 +184,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     internal fun canPostNotifications(context: Context): Boolean {
         val runtimePermissionGranted = if (android.os.Build.VERSION.SDK_INT >= 33) {
-            androidx.core.content.ContextCompat.checkSelfPermission(
+            ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == android.content.pm.PackageManager.PERMISSION_GRANTED

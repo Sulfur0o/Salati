@@ -1,8 +1,8 @@
 package com.sulfuro.salati.core.computation
 
+import java.net.URI
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.URI
 
 class PrayerRemoteDataSourceTest {
     @Test

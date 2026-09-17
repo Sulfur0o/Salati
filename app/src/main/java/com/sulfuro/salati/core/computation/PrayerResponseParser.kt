@@ -1,5 +1,6 @@
 package com.sulfuro.salati.core.computation
 
+import java.time.ZoneOffset
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -27,7 +28,7 @@ object AladhanPrayerResponseParser : PrayerResponseParser {
                 // if a single malformed item occurs.
                 val validDays = response.data.filter { day ->
                     runCatching {
-                        SalatiPrayerTimeMapper.map(day, java.time.ZoneOffset.UTC)
+                        SalatiPrayerTimeMapper.map(day, ZoneOffset.UTC)
                     }.isSuccess
                 }
                 if (validDays.isEmpty()) {

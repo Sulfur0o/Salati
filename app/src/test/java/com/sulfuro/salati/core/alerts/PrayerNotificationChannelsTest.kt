@@ -8,6 +8,8 @@ import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sulfuro.salati.R
+import com.sulfuro.salati.core.alarms.AlarmReceiver
+import com.sulfuro.salati.core.alarms.AlarmScheduler
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -17,8 +19,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
-import com.sulfuro.salati.core.alarms.AlarmReceiver
-import com.sulfuro.salati.core.alarms.AlarmScheduler
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [28], manifest = Config.NONE)

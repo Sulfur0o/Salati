@@ -2,18 +2,12 @@ package com.sulfuro.salati.ui
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
-import com.sulfuro.salati.ui.calendar.calendarDateAt
-import com.sulfuro.salati.ui.calendar.calendarMonthHeading
-import com.sulfuro.salati.ui.calendar.calendarTimeFormatter
-import com.sulfuro.salati.ui.calendar.mondayFirstOffset
 import com.sulfuro.salati.core.prayer.plusExactDay
-import com.sulfuro.salati.ui.dashboard.zonedDateAt
-import com.sulfuro.salati.ui.dashboard.dashboardDateFormatter
-import com.sulfuro.salati.ui.dashboard.dashboardTimeFormatter
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
+import com.sulfuro.salati.ui.calendar.mondayFirstOffset
+import com.sulfuro.salati.ui.format.localDateAt
+import com.sulfuro.salati.ui.format.longDateFormatter
+import com.sulfuro.salati.ui.format.monthHeading
+import com.sulfuro.salati.ui.format.prayerTimeFormatter
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -21,6 +15,10 @@ import java.time.YearMonth
 import java.time.ZoneId
 import java.util.Locale
 import java.util.TimeZone
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [24], manifest = Config.NONE)
@@ -34,11 +32,11 @@ class PrayerUiDateTimeTest {
         val original = TimeZone.getDefault()
         try {
             TimeZone.setDefault(TimeZone.getTimeZone("Pacific/Honolulu"))
-            assertEquals(expected, zonedDateAt(epoch, brusselsZone))
-            assertEquals(expected, calendarDateAt(epoch, brusselsZone))
+            assertEquals(expected, localDateAt(epoch, brusselsZone))
+            assertEquals(expected, localDateAt(epoch, brusselsZone))
             TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tokyo"))
-            assertEquals(expected, zonedDateAt(epoch, brusselsZone))
-            assertEquals(expected, calendarDateAt(epoch, brusselsZone))
+            assertEquals(expected, localDateAt(epoch, brusselsZone))
+            assertEquals(expected, localDateAt(epoch, brusselsZone))
         } finally {
             TimeZone.setDefault(original)
         }
@@ -49,13 +47,13 @@ class PrayerUiDateTimeTest {
         val summer = Instant.parse("2026-07-15T01:23:00Z")
         val winter = Instant.parse("2026-01-15T02:23:00Z")
 
-        assertEquals("03:23", dashboardTimeFormatter(Locale.US, brusselsZone).format(summer))
-        assertEquals("03:23", calendarTimeFormatter(Locale.US, brusselsZone).format(winter))
+        assertEquals("03:23", prayerTimeFormatter(Locale.US, brusselsZone).format(summer))
+        assertEquals("03:23", prayerTimeFormatter(Locale.US, brusselsZone).format(winter))
         assertEquals(
             "Wednesday, 15 July 2026",
-            dashboardDateFormatter(Locale.US).format(LocalDate.of(2026, 7, 15))
+            longDateFormatter(Locale.US).format(LocalDate.of(2026, 7, 15))
         )
-        assertEquals("July 2026", calendarMonthHeading(YearMonth.of(2026, 7), Locale.US))
+        assertEquals("July 2026", monthHeading(YearMonth.of(2026, 7), Locale.US))
     }
 
     @Test
@@ -63,9 +61,9 @@ class PrayerUiDateTimeTest {
         val afternoon = Instant.parse("2026-07-15T13:23:00Z")
         val morning = Instant.parse("2026-07-15T07:05:00Z")
 
-        assertEquals("3:23 PM", dashboardTimeFormatter(Locale.US, brusselsZone, is24Hour = false).format(afternoon))
-        assertEquals("9:05 AM", dashboardTimeFormatter(Locale.US, brusselsZone, is24Hour = false).format(morning))
-        assertEquals("15:23", dashboardTimeFormatter(Locale.US, brusselsZone, is24Hour = true).format(afternoon))
+        assertEquals("3:23 PM", prayerTimeFormatter(Locale.US, brusselsZone, is24Hour = false).format(afternoon))
+        assertEquals("9:05 AM", prayerTimeFormatter(Locale.US, brusselsZone, is24Hour = false).format(morning))
+        assertEquals("15:23", prayerTimeFormatter(Locale.US, brusselsZone, is24Hour = true).format(afternoon))
     }
 
     @Test

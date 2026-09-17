@@ -1,14 +1,19 @@
 package com.sulfuro.salati.ui.calendar
 
 import com.sulfuro.salati.R
+import com.sulfuro.salati.ui.format.localDateAt
+import com.sulfuro.salati.ui.format.longDateFormatter
+import java.nio.file.Files
+import java.nio.file.Path
+import java.time.Instant
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.ZoneId
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.nio.file.Files
-import java.nio.file.Path
-import java.time.LocalDate
-import java.time.YearMonth
 
 class MonthlyUiContractTest {
     @Test
@@ -40,13 +45,13 @@ class MonthlyUiContractTest {
     fun selectedDateHeadingIsEnglishAndBrusselsDateIsDeviceTimezoneIndependent() {
         assertEquals(
             "Wednesday, 15 July 2026",
-            calendarSelectedDateHeading(LocalDate.of(2026, 7, 15), java.util.Locale.ENGLISH)
+            longDateFormatter(Locale.ENGLISH).format(LocalDate.of(2026, 7, 15))
         )
         assertEquals(
             LocalDate.of(2026, 7, 15),
-            calendarDateAt(
-                java.time.Instant.parse("2026-07-14T22:30:00Z").toEpochMilli(),
-                java.time.ZoneId.of("Europe/Brussels")
+            localDateAt(
+                Instant.parse("2026-07-14T22:30:00Z").toEpochMilli(),
+                ZoneId.of("Europe/Brussels")
             )
         )
     }
