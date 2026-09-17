@@ -108,6 +108,12 @@ android {
         // has nothing left to tell us, and silencing it per-attribute in the XML would say
         // less than this does.
         disable += "UnusedAttribute"
+        // UnusedTranslation compares locales_config against the res folders without
+        // rewriting the language codes Java rewrites, so it reads values-in as an
+        // Indonesian translation nobody declared - when "id" in the config is exactly
+        // what reaches it. LanguageCatalogueTest makes the same comparison correctly,
+        // and also checks the in-app picker, which this never looked at.
+        disable += "UnusedTranslation"
     }
 }
 
