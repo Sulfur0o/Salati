@@ -1,6 +1,9 @@
 package com.sulfuro.salati.ui.dashboard
 
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.core.prayer.Prayer
+import com.sulfuro.salati.core.prayer.get
+import com.sulfuro.salati.core.prayer.windowCloser
 import java.time.Duration
 import java.time.Instant
 import java.util.Locale
@@ -18,7 +21,7 @@ import kotlin.math.ceil
  * @param closesAt when it can no longer be prayed on time.
  */
 internal data class PrayerWindow(
-    val event: DailyEvent,
+    val event: Prayer,
     val opensAt: Instant,
     val closesAt: Instant
 ) {
@@ -52,15 +55,15 @@ internal fun currentPrayerWindow(
     now: Instant
 ): PrayerWindow? {
     val aDay = Duration.ofDays(1)
-    val windows = listOf(
+    val windows = buildList {
         // Last night's Isha, still open until this morning's Fajr.
-        PrayerWindow(DailyEvent.ISHA, times.isha.minus(aDay), times.fajr),
-        PrayerWindow(DailyEvent.FAJR, times.fajr, times.sunrise),
-        PrayerWindow(DailyEvent.DHUHR, times.dhuhr, times.asr),
-        PrayerWindow(DailyEvent.ASR, times.asr, times.maghrib),
-        PrayerWindow(DailyEvent.MAGHRIB, times.maghrib, times.isha),
-        PrayerWindow(DailyEvent.ISHA, times.isha, tomorrowFajr)
-    )
+        add(PrayerWindow(Prayer.ISHA, times[Prayer.ISHA].minus(aDay), times[Prayer.FAJR]))
+        // Then today's, each closing where the next event of the day opens. Sunrise is not
+        // in this list because nothing is due between it and Dhuhr.
+        Prayer.prayed.forEach { prayer ->
+            add(PrayerWindow(prayer, times[prayer], times.windowCloser(prayer, tomorrowFajr)))
+        }
+    }
     return windows.firstOrNull { now >= it.opensAt && now < it.closesAt }
 }
 

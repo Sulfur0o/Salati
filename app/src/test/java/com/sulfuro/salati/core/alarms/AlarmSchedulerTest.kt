@@ -15,6 +15,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.ZoneId
+import com.sulfuro.salati.core.prayer.Prayer
 import java.time.Instant
 import com.sulfuro.salati.data.settings.AlarmPreferences
 
@@ -30,7 +31,7 @@ class AlarmSchedulerTest {
         assertEquals(3, AlarmScheduler.getPrayerBaseId("Asr"))
         assertEquals(4, AlarmScheduler.getPrayerBaseId("Maghrib"))
         assertEquals(5, AlarmScheduler.getPrayerBaseId("Isha"))
-        assertFalse(AlarmScheduler.supportedNotificationPrayers.any { it.first == "Sunrise" })
+        assertFalse(Prayer.prayed.any { it == Prayer.SUNRISE })
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -186,15 +187,19 @@ class AlarmSchedulerTest {
         val uris = mutableSetOf<String>()
 
         for (date in dates) {
-            for ((prayerName, prayerId) in AlarmScheduler.supportedNotificationPrayers) {
+            for (prayer in Prayer.prayed) {
                 for (preReminder in listOf(false, true)) {
                     assertTrue(
                         requestCodes.add(
-                            AlarmScheduler.createAlarmRequestCode(date, prayerId, preReminder)
+                            AlarmScheduler.createAlarmRequestCode(
+                                date,
+                                AlarmScheduler.getPrayerBaseId(prayer.key),
+                                preReminder
+                            )
                         )
                     )
                     assertTrue(
-                        uris.add(AlarmScheduler.getAlarmUriString(date, prayerName, preReminder))
+                        uris.add(AlarmScheduler.getAlarmUriString(date, prayer.key, preReminder))
                     )
                 }
             }

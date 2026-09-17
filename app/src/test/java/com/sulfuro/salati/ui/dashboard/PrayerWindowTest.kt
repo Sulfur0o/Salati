@@ -1,6 +1,7 @@
 package com.sulfuro.salati.ui.dashboard
 
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.core.prayer.Prayer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -39,7 +40,7 @@ class PrayerWindowTest {
     fun theAfternoonBelongsToAsrUntilMaghrib() {
         val window = requireNotNull(windowAt(18, 45))
 
-        assertEquals(DailyEvent.ASR, window.event)
+        assertEquals(Prayer.ASR, window.event)
         assertEquals(times.asr, window.opensAt)
         assertEquals(times.maghrib, window.closesAt)
     }
@@ -57,8 +58,8 @@ class PrayerWindowTest {
     /** A prayer's window opens the moment it comes in, and the previous one ends there. */
     @Test
     fun aWindowOpensOnItsOwnPrayerAndNotAMomentLater() {
-        assertEquals(DailyEvent.MAGHRIB, requireNotNull(windowAt(20, 0)).event)
-        assertEquals(DailyEvent.ASR, requireNotNull(windowAt(19, 59)).event)
+        assertEquals(Prayer.MAGHRIB, requireNotNull(windowAt(20, 0)).event)
+        assertEquals(Prayer.ASR, requireNotNull(windowAt(19, 59)).event)
     }
 
     /**
@@ -68,11 +69,11 @@ class PrayerWindowTest {
     @Test
     fun ishaIsStillOpenOnBothSidesOfMidnight() {
         val tonight = requireNotNull(windowAt(22, 30))
-        assertEquals(DailyEvent.ISHA, tonight.event)
+        assertEquals(Prayer.ISHA, tonight.event)
         assertEquals(tomorrowFajr, tonight.closesAt)
 
         val beforeDawn = requireNotNull(windowAt(3, 0))
-        assertEquals(DailyEvent.ISHA, beforeDawn.event)
+        assertEquals(Prayer.ISHA, beforeDawn.event)
         assertEquals(times.fajr, beforeDawn.closesAt)
         assertEquals(times.isha.minus(Duration.ofDays(1)), beforeDawn.opensAt)
     }

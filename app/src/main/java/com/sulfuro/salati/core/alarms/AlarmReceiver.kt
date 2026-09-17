@@ -7,6 +7,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.sulfuro.salati.R
+import com.sulfuro.salati.core.prayer.Prayer
 import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.core.alerts.PrayerAlertNotification
 import com.sulfuro.salati.core.alerts.PrayerNotificationChannels
@@ -84,16 +85,8 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     internal fun localizedPrayerName(context: Context, key: String): String {
-        val resId = when (key.lowercase(java.util.Locale.ROOT)) {
-            "fajr" -> R.string.prayer_fajr
-            "sunrise" -> R.string.prayer_sunrise
-            "dhuhr" -> R.string.prayer_dhuhr
-            "asr" -> R.string.prayer_asr
-            "maghrib" -> R.string.prayer_maghrib
-            "isha" -> R.string.prayer_isha
-            "white_days" -> R.string.event_white_day
-            else -> null
-        }
+        val resId = Prayer.byKey(key)?.labelRes
+            ?: if (key.equals("white_days", ignoreCase = true)) R.string.event_white_day else null
         return if (resId != null) {
             context.getString(resId)
         } else {

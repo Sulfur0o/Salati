@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
+import com.sulfuro.salati.core.prayer.byEvent
 import com.sulfuro.salati.core.computation.AladhanDayData
 import com.sulfuro.salati.core.computation.HijriCalendarHelper
 import com.sulfuro.salati.core.computation.HijriDateParts
@@ -495,28 +496,19 @@ internal fun SelectedDayPrayerDetails(
             }
             Spacer(modifier = Modifier.height(2.dp))
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        CompactPrayerTimeItem(name = stringResource(R.string.prayer_fajr), time = timeFormatter.format(prayerTimes.fajr), isDisplayOnly = false)
-                    }
-                    Box(modifier = Modifier.weight(1f)) {
-                        CompactPrayerTimeItem(name = stringResource(R.string.prayer_sunrise), time = timeFormatter.format(prayerTimes.sunrise), isDisplayOnly = true)
-                    }
-                }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        CompactPrayerTimeItem(name = stringResource(R.string.prayer_dhuhr), time = timeFormatter.format(prayerTimes.dhuhr), isDisplayOnly = false)
-                    }
-                    Box(modifier = Modifier.weight(1f)) {
-                        CompactPrayerTimeItem(name = stringResource(R.string.prayer_asr), time = timeFormatter.format(prayerTimes.asr), isDisplayOnly = false)
-                    }
-                }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        CompactPrayerTimeItem(name = stringResource(R.string.prayer_maghrib), time = timeFormatter.format(prayerTimes.maghrib), isDisplayOnly = false)
-                    }
-                    Box(modifier = Modifier.weight(1f)) {
-                        CompactPrayerTimeItem(name = stringResource(R.string.prayer_isha), time = timeFormatter.format(prayerTimes.isha), isDisplayOnly = false)
+                // Two to a row, in the order of the day: Fajr and sunrise, Dhuhr and Asr,
+                // Maghrib and Isha.
+                prayerTimes.byEvent().chunked(2).forEach { pair ->
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        pair.forEach { (event, instant) ->
+                            Box(modifier = Modifier.weight(1f)) {
+                                CompactPrayerTimeItem(
+                                    name = stringResource(event.labelRes),
+                                    time = timeFormatter.format(instant),
+                                    isDisplayOnly = !event.isPrayer
+                                )
+                            }
+                        }
                     }
                 }
             }

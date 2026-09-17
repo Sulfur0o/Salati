@@ -5,6 +5,8 @@ import android.util.Log
 import com.sulfuro.salati.core.computation.MonthlyPrayerResult
 import com.sulfuro.salati.core.computation.PrayerRepository
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.core.prayer.Prayer
+import com.sulfuro.salati.core.prayer.get
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.hasConfiguredLocation
 import com.sulfuro.salati.data.settings.safeZoneId
@@ -49,26 +51,23 @@ object AlarmScheduler {
     const val KIND_PRE_PRAYER = "KIND_PRE_PRAYER"
     const val KIND_WHITE_DAYS = "KIND_WHITE_DAYS"
 
-    internal val supportedNotificationPrayers = listOf(
-        "Fajr" to 1,
-        "Dhuhr" to 2,
-        "Asr" to 3,
-        "Maghrib" to 4,
-        "Isha" to 5
-    )
-
     internal fun isSupportedNotificationPrayer(name: String): Boolean {
-        return supportedNotificationPrayers.any { it.first.equals(name, ignoreCase = true) }
+        return Prayer.byKey(name)?.isPrayer == true
     }
 
     internal fun isSupportedAlarmEvent(key: String): Boolean {
         return isSupportedNotificationPrayer(key) || key == "white_days"
     }
 
+    /**
+     * The id this prayer's [android.app.PendingIntent] request codes are built from.
+     *
+     * Takes a name rather than a [Prayer] because it also answers for a name read back off
+     * an alarm scheduled by an older version of the app, which may not be one we still
+     * recognise - hence the throw rather than a null.
+     */
     fun getPrayerBaseId(name: String): Int {
-        return supportedNotificationPrayers
-            .firstOrNull { it.first.equals(name, ignoreCase = true) }
-            ?.second
+        return Prayer.byKey(name)?.alarmId
             ?: throw IllegalArgumentException("Unsupported notification prayer: $name")
     }
 
@@ -168,15 +167,15 @@ object AlarmScheduler {
     ): AlarmPreparationResult.Success {
         val preparedAlarms = mutableListOf<PreparedAlarm>()
 
-        fun addAlarm(name: String, time: Instant, prayerDate: LocalDate) {
+        fun addAlarm(prayer: Prayer, time: Instant, prayerDate: LocalDate) {
             val timeMillis = time.toEpochMilli()
             if (timeMillis <= nowMillis) return
 
-            val prayerKey = name.lowercase(Locale.ROOT)
-            val prayerId = getPrayerBaseId(name)
+            val prayerKey = prayer.key
+            val prayerId = getPrayerBaseId(prayerKey)
             preparedAlarms += PreparedAlarm(
                 requestCode = createAlarmRequestCode(prayerDate, prayerId, isPreReminder = false),
-                uri = getAlarmUriString(prayerDate, name, isPreReminder = false),
+                uri = getAlarmUriString(prayerDate, prayerKey, isPreReminder = false),
                 prayerKey = prayerKey,
                 isPreReminder = false,
                 triggerAtMillis = timeMillis,
@@ -190,7 +189,7 @@ object AlarmScheduler {
                 if (preTimeMillis > nowMillis) {
                     preparedAlarms += PreparedAlarm(
                         requestCode = createAlarmRequestCode(prayerDate, prayerId, isPreReminder = true),
-                        uri = getAlarmUriString(prayerDate, name, isPreReminder = true),
+                        uri = getAlarmUriString(prayerDate, prayerKey, isPreReminder = true),
                         prayerKey = prayerKey,
                         isPreReminder = true,
                         triggerAtMillis = preTimeMillis
@@ -200,11 +199,9 @@ object AlarmScheduler {
         }
 
         for ((date, times) in timesByDate) {
-            addAlarm("Fajr", times.fajr, date)
-            addAlarm("Dhuhr", times.dhuhr, date)
-            addAlarm("Asr", times.asr, date)
-            addAlarm("Maghrib", times.maghrib, date)
-            addAlarm("Isha", times.isha, date)
+            for (prayer in Prayer.prayed) {
+                addAlarm(prayer, times[prayer], date)
+            }
         }
 
         if (settings.alarms.whiteDaysReminder) {
@@ -247,12 +244,12 @@ object AlarmScheduler {
     internal fun getKnownAlarmIdentities(clock: Clock, zoneId: ZoneId): List<RegisteredAlarm> {
         val dates = getSchedulingDates(clock, zoneId)
         val prayerIdentities = dates.flatMap { date ->
-            supportedNotificationPrayers.flatMap { (name, prayerId) ->
+            Prayer.prayed.flatMap { prayer ->
                 listOf(false, true).map { isPreReminder ->
                     RegisteredAlarm(
-                        requestCode = createAlarmRequestCode(date, prayerId, isPreReminder),
-                        uri = getAlarmUriString(date, name, isPreReminder),
-                        prayerKey = name.lowercase(Locale.ROOT),
+                        requestCode = createAlarmRequestCode(date, getPrayerBaseId(prayer.key), isPreReminder),
+                        uri = getAlarmUriString(date, prayer.key, isPreReminder),
+                        prayerKey = prayer.key,
                         isPreReminder = isPreReminder,
                         triggerAtMillis = 0L,
                         vibrateEnabled = false

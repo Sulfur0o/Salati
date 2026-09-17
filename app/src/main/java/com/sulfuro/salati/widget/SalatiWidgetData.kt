@@ -12,6 +12,7 @@ import com.sulfuro.salati.core.computation.HijriCalendarHelper
 import com.sulfuro.salati.core.computation.HijriDateParts
 import com.sulfuro.salati.core.computation.MonthlyPrayerResult
 import com.sulfuro.salati.core.computation.PrayerRepository
+import com.sulfuro.salati.core.prayer.Prayer
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,13 +23,11 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
-data class WidgetPrayerTimes(
-    val fajr: String,
-    val dhuhr: String,
-    val asr: String,
-    val maghrib: String,
-    val isha: String
-)
+/** The five prayer times a widget shows, ready to draw. */
+@JvmInline
+value class WidgetPrayerTimes(private val byPrayer: Map<Prayer, String>) {
+    operator fun get(prayer: Prayer): String? = byPrayer[prayer]
+}
 
 data class WidgetDataSnapshot(
     val city: String,
@@ -36,7 +35,8 @@ data class WidgetDataSnapshot(
     val times: WidgetPrayerTimes?,
     val nextPrayerName: String,
     val nextPrayerTime: String,
-    val activePrayerIndex: Int // 0=Fajr, 1=Dhuhr, 2=Asr, 3=Maghrib, 4=Isha
+    /** The prayer to light up: the next one due. */
+    val activePrayer: Prayer
 )
 
 object SalatiWidgetData {
@@ -62,12 +62,12 @@ object SalatiWidgetData {
     }
 
     fun isUpcomingPrayer(
-        prayerKey: String,
+        prayer: Prayer,
         prayerTime: LocalTime,
         currentTime: LocalTime,
         maghribTime: LocalTime?
     ): Boolean {
-        val rollsPastMidnight = prayerKey == "Isha" &&
+        val rollsPastMidnight = prayer == Prayer.ISHA &&
             maghribTime != null &&
             !prayerTime.isAfter(maghribTime)
         return if (rollsPastMidnight) {
@@ -143,43 +143,38 @@ object SalatiWidgetData {
                     times = null,
                     nextPrayerName = context.getString(R.string.prayer_fajr),
                     nextPrayerTime = "--:--",
-                    activePrayerIndex = 0
+                    activePrayer = Prayer.FAJR
                 )
             }
 
-            val fajrRaw = cleanTime(timings.Fajr)
-            val dhuhrRaw = cleanTime(timings.Dhuhr)
-            val asrRaw = cleanTime(timings.Asr)
-            val maghribRaw = cleanTime(timings.Maghrib)
-            val ishaRaw = cleanTime(timings.Isha)
+            // The one place the API's own field names are matched to ours. Everything
+            // below works off Prayer, so a change to the set of prayers lands here alone.
+            val rawTimes = mapOf(
+                Prayer.FAJR to cleanTime(timings.Fajr),
+                Prayer.DHUHR to cleanTime(timings.Dhuhr),
+                Prayer.ASR to cleanTime(timings.Asr),
+                Prayer.MAGHRIB to cleanTime(timings.Maghrib),
+                Prayer.ISHA to cleanTime(timings.Isha)
+            )
+            val fajrRaw = rawTimes.getValue(Prayer.FAJR)
 
             val times = WidgetPrayerTimes(
-                fajr = displayTime(context, fajrRaw, settings.appearance.timeFormat),
-                dhuhr = displayTime(context, dhuhrRaw, settings.appearance.timeFormat),
-                asr = displayTime(context, asrRaw, settings.appearance.timeFormat),
-                maghrib = displayTime(context, maghribRaw, settings.appearance.timeFormat),
-                isha = displayTime(context, ishaRaw, settings.appearance.timeFormat)
+                rawTimes.mapValues { (_, raw) ->
+                    displayTime(context, raw, settings.appearance.timeFormat)
+                }
             )
 
-            val prayerEntries = listOf(
-                PrayerInfo(0, "Fajr", context.getString(R.string.prayer_fajr), fajrRaw, parseTime(fajrRaw)),
-                PrayerInfo(1, "Dhuhr", context.getString(R.string.prayer_dhuhr), dhuhrRaw, parseTime(dhuhrRaw)),
-                PrayerInfo(2, "Asr", context.getString(R.string.prayer_asr), asrRaw, parseTime(asrRaw)),
-                PrayerInfo(3, "Maghrib", context.getString(R.string.prayer_maghrib), maghribRaw, parseTime(maghribRaw)),
-                PrayerInfo(4, "Isha", context.getString(R.string.prayer_isha), ishaRaw, parseTime(ishaRaw))
-            )
-
-            val maghribLocal = parseTime(maghribRaw)
-            val nextUpcoming = prayerEntries.firstOrNull { entry ->
-                val pTime = entry.parsedTime ?: return@firstOrNull false
-                isUpcomingPrayer(entry.key, pTime, currentTime, maghribLocal)
+            val maghribLocal = parseTime(rawTimes.getValue(Prayer.MAGHRIB))
+            val nextUpcoming = Prayer.prayed.firstOrNull { prayer ->
+                val pTime = parseTime(rawTimes.getValue(prayer)) ?: return@firstOrNull false
+                isUpcomingPrayer(prayer, pTime, currentTime, maghribLocal)
             }
 
-            val (nextName, nextTime, activeIdx) = if (nextUpcoming != null) {
+            val (nextName, nextTime, activePrayer) = if (nextUpcoming != null) {
                 Triple(
-                    nextUpcoming.displayName,
-                    displayTime(context, nextUpcoming.rawTime, settings.appearance.timeFormat),
-                    nextUpcoming.index
+                    context.getString(nextUpcoming.labelRes),
+                    displayTime(context, rawTimes.getValue(nextUpcoming), settings.appearance.timeFormat),
+                    nextUpcoming
                 )
             } else {
                 // If all prayers today have passed, upcoming is tomorrow's Fajr
@@ -204,7 +199,7 @@ object SalatiWidgetData {
                 Triple(
                     context.getString(R.string.prayer_fajr),
                     displayTime(context, tomorrowFajr, settings.appearance.timeFormat),
-                    0 // Fajr
+                    Prayer.FAJR
                 )
             }
 
@@ -214,21 +209,13 @@ object SalatiWidgetData {
                 times = times,
                 nextPrayerName = nextName,
                 nextPrayerTime = nextTime,
-                activePrayerIndex = activeIdx
+                activePrayer = activePrayer
             )
         } catch (e: Exception) {
             android.util.Log.e("SalatiWidget", "Failed to load widget snapshot", e)
             null
         }
     }
-
-    private data class PrayerInfo(
-        val index: Int,
-        val key: String,
-        val displayName: String,
-        val rawTime: String,
-        val parsedTime: LocalTime?
-    )
 
     /**
      * Redraws one provider's own widgets.

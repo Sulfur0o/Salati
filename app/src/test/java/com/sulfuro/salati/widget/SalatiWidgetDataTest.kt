@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import com.sulfuro.salati.core.prayer.Prayer
 import java.time.LocalTime
 
 class SalatiWidgetDataTest {
@@ -28,8 +29,8 @@ class SalatiWidgetDataTest {
         val maghrib = LocalTime.of(20, 15)
 
         // At 10:00, Fajr has passed, Dhuhr is upcoming
-        assertFalse(SalatiWidgetData.isUpcomingPrayer("Fajr", fajr, LocalTime.of(10, 0), maghrib))
-        assertTrue(SalatiWidgetData.isUpcomingPrayer("Dhuhr", dhuhr, LocalTime.of(10, 0), maghrib))
+        assertFalse(SalatiWidgetData.isUpcomingPrayer(Prayer.FAJR, fajr, LocalTime.of(10, 0), maghrib))
+        assertTrue(SalatiWidgetData.isUpcomingPrayer(Prayer.DHUHR, dhuhr, LocalTime.of(10, 0), maghrib))
     }
 
     @Test
@@ -39,12 +40,12 @@ class SalatiWidgetDataTest {
         val maghrib = LocalTime.of(23, 30)
 
         // At 23:45, it is after Maghrib, so Isha is upcoming
-        assertTrue(SalatiWidgetData.isUpcomingPrayer("Isha", isha, LocalTime.of(23, 45), maghrib))
+        assertTrue(SalatiWidgetData.isUpcomingPrayer(Prayer.ISHA, isha, LocalTime.of(23, 45), maghrib))
 
         // At 00:30, it is before Isha (rolls past midnight), so Isha is upcoming
-        assertTrue(SalatiWidgetData.isUpcomingPrayer("Isha", isha, LocalTime.of(0, 30), maghrib))
+        assertTrue(SalatiWidgetData.isUpcomingPrayer(Prayer.ISHA, isha, LocalTime.of(0, 30), maghrib))
 
         // At 01:00, Isha has passed
-        assertFalse(SalatiWidgetData.isUpcomingPrayer("Isha", isha, LocalTime.of(1, 0), maghrib))
+        assertFalse(SalatiWidgetData.isUpcomingPrayer(Prayer.ISHA, isha, LocalTime.of(1, 0), maghrib))
     }
 }

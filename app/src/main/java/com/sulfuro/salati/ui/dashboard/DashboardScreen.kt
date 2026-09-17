@@ -36,6 +36,9 @@ import com.sulfuro.salati.core.computation.HijriCalendarHelper
 import com.sulfuro.salati.core.computation.MonthlyPrayerResult
 import com.sulfuro.salati.core.computation.PrayerRepository
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.core.prayer.Prayer
+import com.sulfuro.salati.core.prayer.byEvent
+import com.sulfuro.salati.core.prayer.plusExactDay
 import com.sulfuro.salati.core.computation.HijriDateParts
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.safeZoneId
@@ -126,7 +129,7 @@ fun DashboardScreen(
         if (tomorrowData != null) {
             runCatching { PrayerRepository.parsePrayerTimes(tomorrowData, settings) }.getOrNull()
         } else {
-            prayerTimes?.let(::addExactDashboardFallbackDay)
+            prayerTimes?.plusExactDay()
         }
     }
 
@@ -178,7 +181,7 @@ fun DashboardScreen(
             val activeNextPrayer = nextPrayerInfo
             val nextEventName = stringResource(activeNextPrayer.event.labelRes)
             val nextEventTime = timeFormat.format(activeNextPrayer.eventInstant)
-            val nextEventIsDisplayOnly = activeNextPrayer.event == DailyEvent.SUNRISE
+            val nextEventIsDisplayOnly = activeNextPrayer.event == Prayer.SUNRISE
             val heroAccessibility = if (nextEventIsDisplayOnly) {
                 stringResource(
                     R.string.daily_event_display_only_accessibility,
@@ -232,19 +235,11 @@ fun DashboardScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(SalatiSpacing.xxs)
                 ) {
-                    val entries = listOf(
-                        DailyEvent.FAJR to prayerTimes.fajr,
-                        DailyEvent.SUNRISE to prayerTimes.sunrise,
-                        DailyEvent.DHUHR to prayerTimes.dhuhr,
-                        DailyEvent.ASR to prayerTimes.asr,
-                        DailyEvent.MAGHRIB to prayerTimes.maghrib,
-                        DailyEvent.ISHA to prayerTimes.isha
-                    )
-                    entries.forEach { (event, instant) ->
+                    prayerTimes.byEvent().forEach { (event, instant) ->
                         val name = stringResource(event.labelRes)
                         val time = timeFormat.format(instant)
                         val isNext = event == activeNextPrayer.event
-                        val isDisplayOnly = event == DailyEvent.SUNRISE
+                        val isDisplayOnly = event == Prayer.SUNRISE
                         val semanticState = when {
                             isNext && isDisplayOnly -> stringResource(
                                 R.string.daily_prayer_current_display_only_accessibility,
@@ -417,20 +412,11 @@ internal fun DailyScreenHeader(
     }
 }
 
-internal enum class DailyEvent(@param:StringRes val labelRes: Int) {
-    FAJR(R.string.prayer_fajr),
-    SUNRISE(R.string.prayer_sunrise),
-    DHUHR(R.string.prayer_dhuhr),
-    ASR(R.string.prayer_asr),
-    MAGHRIB(R.string.prayer_maghrib),
-    ISHA(R.string.prayer_isha)
-}
-
 internal data class NextPrayerInfo(
-    val event: DailyEvent,
+    val event: Prayer,
     val eventInstant: Instant,
     val remainingMs: Long,
-    val currentEvent: DailyEvent
+    val currentEvent: Prayer
 )
 
 internal fun getNextPrayer(
@@ -438,19 +424,12 @@ internal fun getNextPrayer(
     tomorrowFajr: Instant,
     now: Instant
 ): NextPrayerInfo {
-    val prayers = listOf(
-        DailyEvent.FAJR to times.fajr,
-        DailyEvent.SUNRISE to times.sunrise,
-        DailyEvent.DHUHR to times.dhuhr,
-        DailyEvent.ASR to times.asr,
-        DailyEvent.MAGHRIB to times.maghrib,
-        DailyEvent.ISHA to times.isha
-    )
+    val prayers = times.byEvent()
 
     for (index in prayers.indices) {
         val (event, prayerInstant) = prayers[index]
         if (prayerInstant > now) {
-            val currentEvent = if (index == 0) DailyEvent.ISHA else prayers[index - 1].first
+            val currentEvent = if (index == 0) Prayer.ISHA else prayers[index - 1].first
             return NextPrayerInfo(
                 event = event,
                 eventInstant = prayerInstant,
@@ -461,10 +440,10 @@ internal fun getNextPrayer(
     }
 
     return NextPrayerInfo(
-        event = DailyEvent.FAJR,
+        event = Prayer.FAJR,
         eventInstant = tomorrowFajr,
         remainingMs = Duration.between(now, tomorrowFajr).toMillis(),
-        currentEvent = DailyEvent.ISHA
+        currentEvent = Prayer.ISHA
     )
 }
 
@@ -490,18 +469,6 @@ internal fun dashboardTimeFormatter(locale: Locale, zoneId: ZoneId, is24Hour: Bo
 
 internal fun dashboardDateFormatter(locale: Locale): DateTimeFormatter {
     return DateTimeFormatter.ofPattern("EEEE, d MMMM uuuu", locale)
-}
-
-internal fun addExactDashboardFallbackDay(times: SalatiPrayerTimes): SalatiPrayerTimes {
-    val elapsedDay = Duration.ofHours(24)
-    return times.copy(
-        fajr = times.fajr.plus(elapsedDay),
-        sunrise = times.sunrise.plus(elapsedDay),
-        dhuhr = times.dhuhr.plus(elapsedDay),
-        asr = times.asr.plus(elapsedDay),
-        maghrib = times.maghrib.plus(elapsedDay),
-        isha = times.isha.plus(elapsedDay)
-    )
 }
 
 @Composable

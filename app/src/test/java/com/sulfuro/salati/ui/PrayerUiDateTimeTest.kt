@@ -6,7 +6,7 @@ import com.sulfuro.salati.ui.calendar.calendarDateAt
 import com.sulfuro.salati.ui.calendar.calendarMonthHeading
 import com.sulfuro.salati.ui.calendar.calendarTimeFormatter
 import com.sulfuro.salati.ui.calendar.mondayFirstOffset
-import com.sulfuro.salati.ui.dashboard.addExactDashboardFallbackDay
+import com.sulfuro.salati.core.prayer.plusExactDay
 import com.sulfuro.salati.ui.dashboard.zonedDateAt
 import com.sulfuro.salati.ui.dashboard.dashboardDateFormatter
 import com.sulfuro.salati.ui.dashboard.dashboardTimeFormatter
@@ -74,7 +74,7 @@ class PrayerUiDateTimeTest {
         val autumn = prayerTimes(LocalDate.of(2026, 10, 24), Instant.parse("2026-10-24T18:00:00Z"))
 
         for (source in listOf(spring, autumn)) {
-            val fallback = addExactDashboardFallbackDay(source)
+            val fallback = source.plusExactDay()
             assertEquals(Duration.ofHours(24), Duration.between(source.fajr, fallback.fajr))
             assertEquals(Duration.ofHours(24), Duration.between(source.sunrise, fallback.sunrise))
             assertEquals(Duration.ofHours(24), Duration.between(source.dhuhr, fallback.dhuhr))

@@ -1,6 +1,8 @@
 package com.sulfuro.salati.ui.dashboard
 
 import com.sulfuro.salati.core.computation.SalatiPrayerTimes
+import com.sulfuro.salati.core.prayer.Prayer
+import com.sulfuro.salati.core.prayer.byEvent
 import java.io.File
 import java.time.Instant
 import java.time.LocalDate
@@ -17,25 +19,18 @@ class DailyUiContractTest {
         val beforeSunrise = getNextPrayer(times, tomorrowFajr(), times.fajr.plusSeconds(1))
         val beforeDhuhr = getNextPrayer(times, tomorrowFajr(), times.sunrise.plusSeconds(1))
 
-        assertEquals(DailyEvent.FAJR, beforeFajr.event)
+        assertEquals(Prayer.FAJR, beforeFajr.event)
         assertEquals(times.fajr, beforeFajr.eventInstant)
-        assertEquals(DailyEvent.SUNRISE, beforeSunrise.event)
+        assertEquals(Prayer.SUNRISE, beforeSunrise.event)
         assertEquals(times.sunrise, beforeSunrise.eventInstant)
-        assertEquals(DailyEvent.DHUHR, beforeDhuhr.event)
+        assertEquals(Prayer.DHUHR, beforeDhuhr.event)
         assertEquals(times.dhuhr, beforeDhuhr.eventInstant)
     }
 
     @Test
     fun everyDisplayedEventKeepsItsOriginalInstant() {
         val times = prayerTimes()
-        val expected = listOf(
-            DailyEvent.FAJR to times.fajr,
-            DailyEvent.SUNRISE to times.sunrise,
-            DailyEvent.DHUHR to times.dhuhr,
-            DailyEvent.ASR to times.asr,
-            DailyEvent.MAGHRIB to times.maghrib,
-            DailyEvent.ISHA to times.isha
-        )
+        val expected = times.byEvent()
 
         expected.forEachIndexed { index, (event, instant) ->
             val now = if (index == 0) instant.minusSeconds(1) else expected[index - 1].second.plusSeconds(1)
