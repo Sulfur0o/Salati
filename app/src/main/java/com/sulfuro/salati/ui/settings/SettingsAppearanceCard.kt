@@ -51,7 +51,9 @@ internal fun SettingsAppearanceCard(
         "en" to stringResource(R.string.settings_language_en),
         "ar" to stringResource(R.string.settings_language_ar),
         "fr" to stringResource(R.string.settings_language_fr),
-        "nl" to stringResource(R.string.settings_language_nl)
+        "nl" to stringResource(R.string.settings_language_nl),
+        "de" to stringResource(R.string.settings_language_de),
+        "es" to stringResource(R.string.settings_language_es)
     )
     val clockOptions = listOf(
         TimeFormatPreference.SYSTEM to stringResource(R.string.settings_time_format_system),

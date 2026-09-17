@@ -264,6 +264,8 @@
     <string name="settings_language_ar">العربية (Arabic)</string>
     <string name="settings_language_fr">Français (French)</string>
     <string name="settings_language_nl">Nederlands (Dutch)</string>
+    <string name="settings_language_es">Español (Spanish)</string>
+    <string name="settings_language_de">Deutsch (German)</string>
     <string name="badge_next">NEXT</string>
     <string name="currency_sheet_title">Zakat currency</string>
     <string name="currency_sheet_subtitle">Used for Nisab threshold and asset valuation</string>

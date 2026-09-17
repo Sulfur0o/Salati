@@ -271,6 +271,8 @@
     <string name="settings_language_ar">العربية</string>
     <string name="settings_language_fr">الفرنسية (Français)</string>
     <string name="settings_language_nl">الهولندية (Nederlands)</string>
+    <string name="settings_language_es">الإسبانية (Español)</string>
+    <string name="settings_language_de">الألمانية (Deutsch)</string>
     <string name="badge_next">التالي</string>
     <string name="currency_sheet_title">عملة الزكاة</string>
     <string name="currency_sheet_subtitle">تُستخدم لتحديد نصاب الزكاة وتقييم الأصول</string>

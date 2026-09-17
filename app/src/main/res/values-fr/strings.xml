@@ -177,6 +177,8 @@
     <string name="settings_language_ar">العربية (Arabe)</string>
     <string name="settings_language_fr">Français</string>
     <string name="settings_language_nl">Nederlands (Néerlandais)</string>
+    <string name="settings_language_es">Español (Espagnol)</string>
+    <string name="settings_language_de">Deutsch (Allemand)</string>
 
     <!-- Privacy -->
     <string name="settings_privacy_policy">Politique de confidentialité</string>
