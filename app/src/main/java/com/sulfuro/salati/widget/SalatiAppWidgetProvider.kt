@@ -25,6 +25,15 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        /** This layout's three views for each prayer, in the order of the day. */
+        internal val cells = listOf(
+            PrayerCell(Prayer.FAJR, R.id.widget_cell_fajr, R.id.widget_label_fajr, R.id.widget_time_fajr),
+            PrayerCell(Prayer.DHUHR, R.id.widget_cell_dhuhr, R.id.widget_label_dhuhr, R.id.widget_time_dhuhr),
+            PrayerCell(Prayer.ASR, R.id.widget_cell_asr, R.id.widget_label_asr, R.id.widget_time_asr),
+            PrayerCell(Prayer.MAGHRIB, R.id.widget_cell_maghrib, R.id.widget_label_maghrib, R.id.widget_time_maghrib),
+            PrayerCell(Prayer.ISHA, R.id.widget_cell_isha, R.id.widget_label_isha, R.id.widget_time_isha)
+        )
+
         fun updateAllWidgets(context: Context, pendingResult: BroadcastReceiver.PendingResult? = null) {
             SalatiWidgetData.updateAllWidgets(context, pendingResult)
         }
@@ -36,14 +45,6 @@ class SalatiAppWidgetProvider : AppWidgetProvider() {
             snapshot: WidgetDataSnapshot,
             pendingIntent: PendingIntent
         ) {
-            val cells = listOf(
-                PrayerCell(Prayer.FAJR, R.id.widget_cell_fajr, R.id.widget_label_fajr, R.id.widget_time_fajr),
-                PrayerCell(Prayer.DHUHR, R.id.widget_cell_dhuhr, R.id.widget_label_dhuhr, R.id.widget_time_dhuhr),
-                PrayerCell(Prayer.ASR, R.id.widget_cell_asr, R.id.widget_label_asr, R.id.widget_time_asr),
-                PrayerCell(Prayer.MAGHRIB, R.id.widget_cell_maghrib, R.id.widget_label_maghrib, R.id.widget_time_maghrib),
-                PrayerCell(Prayer.ISHA, R.id.widget_cell_isha, R.id.widget_label_isha, R.id.widget_time_isha)
-            )
-
             for (appWidgetId in appWidgetIds) {
                 val views = RemoteViews(context.packageName, R.layout.salati_widget_layout)
                 views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
