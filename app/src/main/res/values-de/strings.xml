@@ -248,6 +248,17 @@
     <string name="settings_language_nl">Nederlands (Niederländisch)</string>
     <string name="settings_language_es">Español (Spanisch)</string>
     <string name="settings_language_de">Deutsch</string>
+    <string name="settings_language_id">Bahasa Indonesia (Indonesisch)</string>
+    <string name="settings_language_ms">Bahasa Melayu (Malaiisch)</string>
+    <string name="settings_language_tr">Türkçe (Türkisch)</string>
+    <string name="settings_language_ur">اردو (Urdu)</string>
+    <string name="settings_language_fa">فارسی (Persisch)</string>
+    <string name="settings_language_hi">हिन्दी (Hindi)</string>
+    <string name="settings_language_bn">বাংলা (Bengalisch)</string>
+    <string name="settings_language_ru">Русский (Russisch)</string>
+    <string name="settings_language_so">Soomaali (Somali)</string>
+    <string name="settings_language_sw">Kiswahili (Swahili)</string>
+    <string name="settings_language_ha">Hausa</string>
     <string name="badge_next">NÄCHSTES</string>
     <string name="currency_sheet_title">Zakat-Währung</string>
     <string name="currency_sheet_subtitle">Wird für die Nisab-Schwelle und die Bewertung des Vermögens verwendet</string>

@@ -273,6 +273,17 @@
     <string name="settings_language_nl">الهولندية (Nederlands)</string>
     <string name="settings_language_es">الإسبانية (Español)</string>
     <string name="settings_language_de">الألمانية (Deutsch)</string>
+    <string name="settings_language_id">الإندونيسية (Bahasa Indonesia)</string>
+    <string name="settings_language_ms">الملايوية (Bahasa Melayu)</string>
+    <string name="settings_language_tr">التركية (Türkçe)</string>
+    <string name="settings_language_ur">الأردية (اردو)</string>
+    <string name="settings_language_fa">الفارسية (فارسی)</string>
+    <string name="settings_language_hi">الهندية (हिन्दी)</string>
+    <string name="settings_language_bn">البنغالية (বাংলা)</string>
+    <string name="settings_language_ru">الروسية (Русский)</string>
+    <string name="settings_language_so">الصومالية (Soomaali)</string>
+    <string name="settings_language_sw">السواحلية (Kiswahili)</string>
+    <string name="settings_language_ha">الهوسا (Hausa)</string>
     <string name="badge_next">التالي</string>
     <string name="currency_sheet_title">عملة الزكاة</string>
     <string name="currency_sheet_subtitle">تُستخدم لتحديد نصاب الزكاة وتقييم الأصول</string>

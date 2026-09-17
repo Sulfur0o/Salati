@@ -24,7 +24,7 @@ class AppLanguageContextTest {
 
     @Test
     fun attachingALanguageRecordsTheTagApplyAppLanguageComparesAgainst() {
-        for (code in listOf(null, "", "en", "ar", "fr", "nl")) {
+        for (code in listOf(null, "", "en", "ar", "fr", "nl", "es", "de", "id", "ms", "tr", "ur", "fa", "hi", "bn", "ru", "so", "sw", "ha")) {
             wrapContextForLanguage(context, code)
             assertEquals(
                 "attached tag must match the guard for code=$code",

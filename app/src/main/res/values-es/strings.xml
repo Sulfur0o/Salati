@@ -250,6 +250,17 @@
     <string name="settings_language_nl">Nederlands (Neerlandés)</string>
     <string name="settings_language_es">Español</string>
     <string name="settings_language_de">Deutsch (Alemán)</string>
+    <string name="settings_language_id">Bahasa Indonesia (Indonesio)</string>
+    <string name="settings_language_ms">Bahasa Melayu (Malayo)</string>
+    <string name="settings_language_tr">Türkçe (Turco)</string>
+    <string name="settings_language_ur">اردو (Urdu)</string>
+    <string name="settings_language_fa">فارسی (Persa)</string>
+    <string name="settings_language_hi">हिन्दी (Hindi)</string>
+    <string name="settings_language_bn">বাংলা (Bengalí)</string>
+    <string name="settings_language_ru">Русский (Ruso)</string>
+    <string name="settings_language_so">Soomaali (Somalí)</string>
+    <string name="settings_language_sw">Kiswahili (Suajili)</string>
+    <string name="settings_language_ha">Hausa</string>
     <string name="badge_next">SIGUIENTE</string>
     <string name="currency_sheet_title">Moneda del Zakat</string>
     <string name="currency_sheet_subtitle">Se usa para el umbral del Nisab y la valoración de bienes</string>

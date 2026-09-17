@@ -266,6 +266,17 @@
     <string name="settings_language_nl">Nederlands (Dutch)</string>
     <string name="settings_language_es">Español (Spanish)</string>
     <string name="settings_language_de">Deutsch (German)</string>
+    <string name="settings_language_id">Bahasa Indonesia</string>
+    <string name="settings_language_ms">Bahasa Melayu</string>
+    <string name="settings_language_tr">Türkçe (Turkish)</string>
+    <string name="settings_language_ur">اردو (Urdu)</string>
+    <string name="settings_language_fa">فارسی (Persian)</string>
+    <string name="settings_language_hi">हिन्दी (Hindi)</string>
+    <string name="settings_language_bn">বাংলা (Bengali)</string>
+    <string name="settings_language_ru">Русский (Russian)</string>
+    <string name="settings_language_so">Soomaali (Somali)</string>
+    <string name="settings_language_sw">Kiswahili (Swahili)</string>
+    <string name="settings_language_ha">Hausa</string>
     <string name="badge_next">NEXT</string>
     <string name="currency_sheet_title">Zakat currency</string>
     <string name="currency_sheet_subtitle">Used for Nisab threshold and asset valuation</string>

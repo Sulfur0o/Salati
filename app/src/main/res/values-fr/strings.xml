@@ -179,6 +179,17 @@
     <string name="settings_language_nl">Nederlands (Néerlandais)</string>
     <string name="settings_language_es">Español (Espagnol)</string>
     <string name="settings_language_de">Deutsch (Allemand)</string>
+    <string name="settings_language_id">Bahasa Indonesia (Indonésien)</string>
+    <string name="settings_language_ms">Bahasa Melayu (Malais)</string>
+    <string name="settings_language_tr">Türkçe (Turc)</string>
+    <string name="settings_language_ur">اردو (Ourdou)</string>
+    <string name="settings_language_fa">فارسی (Persan)</string>
+    <string name="settings_language_hi">हिन्दी (Hindi)</string>
+    <string name="settings_language_bn">বাংলা (Bengali)</string>
+    <string name="settings_language_ru">Русский (Russe)</string>
+    <string name="settings_language_so">Soomaali (Somali)</string>
+    <string name="settings_language_sw">Kiswahili (Swahili)</string>
+    <string name="settings_language_ha">Hausa</string>
 
     <!-- Privacy -->
     <string name="settings_privacy_policy">Politique de confidentialité</string>
