@@ -29,6 +29,7 @@ import com.sulfuro.salati.core.location.DeviceLocationProvider
 import com.sulfuro.salati.core.location.DeviceLocationResult
 import com.sulfuro.salati.core.location.PrayerLocationResolver
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.withPrayer
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.components.SettingRow
 import com.sulfuro.salati.ui.components.SettingSection
@@ -251,7 +252,7 @@ internal fun SettingsLocationCard(
         MethodSelectionSheet(
             selectedMethodId = settings.prayer.calculationMethod,
             methods = methods,
-            onSelect = { methodId -> saveSettings { it.copy(prayer = it.prayer.copy(calculationMethod = methodId)) } },
+            onSelect = { methodId -> saveSettings { it.withPrayer { copy(calculationMethod = methodId) } } },
             onDismiss = { showMethodSheet = false }
         )
     }
@@ -261,7 +262,7 @@ internal fun SettingsLocationCard(
             title = stringResource(R.string.settings_high_latitudes_label),
             selectedId = settings.prayer.highLatitudeRule,
             options = highLatRules,
-            onSelect = { ruleId -> saveSettings { it.copy(prayer = it.prayer.copy(highLatitudeRule = ruleId)) } },
+            onSelect = { ruleId -> saveSettings { it.withPrayer { copy(highLatitudeRule = ruleId) } } },
             onDismiss = { showHighLatSheet = false }
         )
     }
@@ -271,7 +272,7 @@ internal fun SettingsLocationCard(
             title = stringResource(R.string.settings_madhab_label),
             selectedId = settings.prayer.madhab,
             options = madhabs,
-            onSelect = { madhabId -> saveSettings { it.copy(prayer = it.prayer.copy(madhab = madhabId)) } },
+            onSelect = { madhabId -> saveSettings { it.withPrayer { copy(madhab = madhabId) } } },
             onDismiss = { showMadhabSheet = false }
         )
     }

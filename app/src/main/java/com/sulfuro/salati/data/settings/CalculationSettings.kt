@@ -1,6 +1,7 @@
 package com.sulfuro.salati.data.settings
 
 import androidx.compose.runtime.Immutable
+import com.sulfuro.salati.core.prayer.Prayer
 import java.time.ZoneId
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -90,7 +91,35 @@ data class CalculationSettings(
     }
 }
 
-private const val FAJR_KEY = "fajr"
+/**
+ * Changes one group of settings and leaves every other group alone.
+ *
+ * Settings are nested one deep, so every edit used to be written twice over:
+ * `it.copy(alarms = it.alarms.copy(whiteDaysReminder = on))` names the receiver three times
+ * to change one field, and reads as though something is being assigned to `alarms`. These
+ * say what is happening instead - `it.withAlarms { copy(whiteDaysReminder = on) }` - and
+ * make it impossible to nest the wrong group inside the wrong field.
+ */
+inline fun CalculationSettings.withAlarms(change: AlarmPreferences.() -> AlarmPreferences): CalculationSettings =
+    copy(alarms = alarms.change())
+
+/** @see withAlarms */
+inline fun CalculationSettings.withAppearance(change: AppearanceSettings.() -> AppearanceSettings): CalculationSettings =
+    copy(appearance = appearance.change())
+
+/** @see withAlarms */
+inline fun CalculationSettings.withLocation(change: LocationSettings.() -> LocationSettings): CalculationSettings =
+    copy(location = location.change())
+
+/** @see withAlarms */
+inline fun CalculationSettings.withPrayer(change: PrayerMethodSettings.() -> PrayerMethodSettings): CalculationSettings =
+    copy(prayer = prayer.change())
+
+/** @see withAlarms */
+inline fun CalculationSettings.withZakat(change: ZakatPreferences.() -> ZakatPreferences): CalculationSettings =
+    copy(zakat = zakat.change())
+
+private val FAJR_KEY = Prayer.FAJR.key
 
 /**
  * The recitation to play for one prayer.

@@ -4,6 +4,7 @@ import com.sulfuro.salati.core.zakat.zakatHawlDueDate
 import com.sulfuro.salati.core.zakat.zakatHawlStartDate
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.ZakatPreferences
+import com.sulfuro.salati.data.settings.withZakat
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDate
@@ -101,11 +102,11 @@ class ZakatUiContractTest {
     @Test
     fun theDebtsLineOnlySubtractsWhenThereIsSomethingToSubtract() {
         val noDebts = computeAssessment(
-            CalculationSettings().let { it.copy(zakat = it.zakat.copy(cashOnHand = 10_000.0)) }
+            CalculationSettings().let { it.withZakat { copy(cashOnHand = 10_000.0) } }
         )
         val withDebts = computeAssessment(
             CalculationSettings().let {
-                it.copy(zakat = it.zakat.copy(cashOnHand = 10_000.0, liabilities = 400.0))
+                it.withZakat { copy(cashOnHand = 10_000.0, liabilities = 400.0) }
             }
         )
 

@@ -33,6 +33,7 @@ import com.sulfuro.salati.R
 import com.sulfuro.salati.core.permissions.readAppPermissionState
 import com.sulfuro.salati.core.permissions.rememberNotificationPermissionRequest
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.withAlarms
 import com.sulfuro.salati.theme.SalatiShapeTokens
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.battery.BatteryOptimizationHelpDialog
@@ -183,7 +184,7 @@ internal fun NotificationsStep(
                     checked = draftSettings.alarms.vibrateEnabled,
                     onCheckedChange = {
                         onSettingsChanged(
-                            draftSettings.copy(alarms = draftSettings.alarms.copy(vibrateEnabled = it))
+                            draftSettings.withAlarms { copy(vibrateEnabled = it) }
                         )
                     }
                 )
@@ -196,7 +197,7 @@ internal fun NotificationsStep(
                     checked = draftSettings.alarms.whiteDaysReminder,
                     onCheckedChange = {
                         onSettingsChanged(
-                            draftSettings.copy(alarms = draftSettings.alarms.copy(whiteDaysReminder = it))
+                            draftSettings.withAlarms { copy(whiteDaysReminder = it) }
                         )
                     }
                 )

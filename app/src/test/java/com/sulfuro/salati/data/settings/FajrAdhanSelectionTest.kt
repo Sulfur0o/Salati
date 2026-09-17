@@ -66,7 +66,7 @@ class FajrAdhanSelectionTest {
     @Test
     fun changingTheFajrAdhanIsAnAlarmRelevantChange() {
         val before = settings.alarmRelevantFingerprint()
-        val after = settings.copy(alarms = settings.alarms.copy(fajrAdhanSoundId = "fajr_madinah")).alarmRelevantFingerprint()
+        val after = settings.withAlarms { copy(fajrAdhanSoundId = "fajr_madinah") }.alarmRelevantFingerprint()
 
         assertNotEquals(before, after)
     }
@@ -75,7 +75,7 @@ class FajrAdhanSelectionTest {
     @Test
     fun renamingTheStoredLabelIsNotAnAlarmRelevantChange() {
         val before = settings.alarmRelevantFingerprint()
-        val after = settings.copy(alarms = settings.alarms.copy(fajrAdhanSoundName = "Something else")).alarmRelevantFingerprint()
+        val after = settings.withAlarms { copy(fajrAdhanSoundName = "Something else") }.alarmRelevantFingerprint()
 
         assertEquals(before, after)
     }

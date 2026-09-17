@@ -3,6 +3,7 @@ package com.sulfuro.salati.ui.zakat
 import com.sulfuro.salati.core.zakat.ZakatGoldItem
 import com.sulfuro.salati.core.zakat.ZakatSilverItem
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.withZakat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -155,7 +156,7 @@ class ZakatAssessmentTest {
         val onGold = computeAssessment(settings())
         val onSilver = computeAssessment(
             CalculationSettings().let {
-                it.copy(zakat = it.zakat.copy(standard = STANDARD_SILVER, cashOnHand = 10_000.0))
+                it.withZakat { copy(standard = STANDARD_SILVER, cashOnHand = 10_000.0) }
             }
         )
 

@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.TimeFormatPreference
+import com.sulfuro.salati.data.settings.withAppearance
+import com.sulfuro.salati.data.settings.withPrayer
 import com.sulfuro.salati.ui.components.SettingSection
 import com.sulfuro.salati.ui.components.SettingStepperRow
 import com.sulfuro.salati.ui.components.ValueSelectionRow
@@ -106,10 +108,10 @@ internal fun SettingsAppearanceCard(
             canDecrease = hijriIndex > 0,
             canIncrease = hijriIndex < hijriStops.lastIndex,
             onDecrease = {
-                saveSettings { it.copy(prayer = it.prayer.copy(hijriOffset = hijriStops[hijriIndex - 1])) }
+                saveSettings { it.withPrayer { copy(hijriOffset = hijriStops[hijriIndex - 1]) } }
             },
             onIncrease = {
-                saveSettings { it.copy(prayer = it.prayer.copy(hijriOffset = hijriStops[hijriIndex + 1])) }
+                saveSettings { it.withPrayer { copy(hijriOffset = hijriStops[hijriIndex + 1]) } }
             }
         )
     }
@@ -126,7 +128,7 @@ internal fun SettingsAppearanceCard(
                     "dark" -> true
                     else -> null
                 }
-                saveSettings { it.copy(appearance = it.appearance.copy(isDarkMode = isDark)) }
+                saveSettings { it.withAppearance { copy(isDarkMode = isDark) } }
             },
             onDismiss = { showThemeSheet = false }
         )
@@ -139,7 +141,7 @@ internal fun SettingsAppearanceCard(
             options = clockOptions,
             onSelect = { id ->
                 saveSettings {
-                    it.copy(appearance = it.appearance.copy(timeFormat = id))
+                    it.withAppearance { copy(timeFormat = id) }
                 }
             },
             onDismiss = { showClockSheet = false }
@@ -153,11 +155,11 @@ internal fun SettingsAppearanceCard(
             options = languageOptions,
             onSelect = { langCode ->
                 val codeOrNull: String? = if (langCode.isEmpty()) null else langCode
-                LoadedSettingsCache.latest = settings.copy(appearance = settings.appearance.copy(appLanguageCode = codeOrNull))
+                LoadedSettingsCache.latest = settings.withAppearance { copy(appLanguageCode = codeOrNull) }
                 val appContext = context.applicationContext
                 CoroutineScope(Dispatchers.IO).launch {
                     val prefs = com.sulfuro.salati.data.settings.SalatiPreferences(appContext)
-                    prefs.updateSettings { it.copy(appearance = it.appearance.copy(appLanguageCode = codeOrNull)) }
+                    prefs.updateSettings { it.withAppearance { copy(appLanguageCode = codeOrNull) } }
                     withContext(Dispatchers.Main) {
                         applyAppLanguage(context, codeOrNull)
                     }

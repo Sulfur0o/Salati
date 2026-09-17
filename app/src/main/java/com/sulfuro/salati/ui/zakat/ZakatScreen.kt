@@ -43,6 +43,7 @@ import com.sulfuro.salati.core.zakat.zakatHawlDueDate
 import com.sulfuro.salati.core.zakat.zakatHawlStartDate
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
+import com.sulfuro.salati.data.settings.withZakat
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.ui.settings.CurrencySelectionSheet
 import java.time.LocalDate
@@ -89,10 +90,10 @@ internal fun metalPricesAreStale(
 }
 
 private fun CalculationSettings.withGoldItem(edited: ZakatGoldItem): CalculationSettings =
-    copy(zakat = zakat.copy(goldItems = zakat.goldItems.map { if (it.id == edited.id) edited else it }))
+    withZakat { copy(goldItems = goldItems.map { if (it.id == edited.id) edited else it }) }
 
 private fun CalculationSettings.withSilverItem(edited: ZakatSilverItem): CalculationSettings =
-    copy(zakat = zakat.copy(silverItems = zakat.silverItems.map { if (it.id == edited.id) edited else it }))
+    withZakat { copy(silverItems = silverItems.map { if (it.id == edited.id) edited else it }) }
 
 /**
  * Four-step Zakat walkthrough.
@@ -190,7 +191,7 @@ fun ZakatScreen(
         priceRefreshFailed = false
         when (val result = MetalsPriceRepository.fetchLatestPrices(settings.zakat.currencyCode)) {
             is MetalPricesResult.Success -> update {
-                it.copy(zakat = it.zakat.copy(goldPrice = result.prices.goldPricePerGram, silverPrice = result.prices.silverPricePerGram, pricesUpdatedAt = result.prices.fetchedAtMillis, pricesCurrencyCode = result.prices.currencyCode, pricesRateDate = result.prices.rateDate))
+                it.withZakat { copy(goldPrice = result.prices.goldPricePerGram, silverPrice = result.prices.silverPricePerGram, pricesUpdatedAt = result.prices.fetchedAtMillis, pricesCurrencyCode = result.prices.currencyCode, pricesRateDate = result.prices.rateDate) }
             }
             MetalPricesResult.Unavailable -> priceRefreshFailed = true
         }
@@ -283,7 +284,7 @@ fun ZakatScreen(
                     when (targetStep) {
                         0 -> ZakatStandardStep(
                             selectedStandard = assessment.standard,
-                            onSelectStandard = { value -> update { it.copy(zakat = it.zakat.copy(standard = value)) } },
+                            onSelectStandard = { value -> update { it.withZakat { copy(standard = value) } } },
                             currencyLabel = currencyLabelFor(settings.zakat.currencyCode),
                             onOpenCurrency = { showCurrencySheet = true },
                             goldThresholdText = formatAmount(assessment.goldThreshold, true),
@@ -312,19 +313,19 @@ fun ZakatScreen(
                             businessInventory = settings.zakat.businessInventory,
                             liabilities = settings.zakat.liabilities,
                             subtotalText = formatAmount(assessment.liquidAssets, true),
-                            onCashOnHandChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(cashOnHand = v)) } },
-                            onBankBalanceChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(bankBalance = v)) } },
-                            onInvestmentsChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(investments = v)) } },
-                            onReceivablesChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(receivables = v)) } },
-                            onBusinessInventoryChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(businessInventory = v)) } },
-                            onLiabilitiesChange = { v -> updateWhileTyping { it.copy(zakat = it.zakat.copy(liabilities = v)) } }
+                            onCashOnHandChange = { v -> updateWhileTyping { it.withZakat { copy(cashOnHand = v) } } },
+                            onBankBalanceChange = { v -> updateWhileTyping { it.withZakat { copy(bankBalance = v) } } },
+                            onInvestmentsChange = { v -> updateWhileTyping { it.withZakat { copy(investments = v) } } },
+                            onReceivablesChange = { v -> updateWhileTyping { it.withZakat { copy(receivables = v) } } },
+                            onBusinessInventoryChange = { v -> updateWhileTyping { it.withZakat { copy(businessInventory = v) } } },
+                            onLiabilitiesChange = { v -> updateWhileTyping { it.withZakat { copy(liabilities = v) } } }
                         )
 
                         2 -> ZakatMetalsStep(
                             declaresMetals = settings.zakat.declaresMetals
                                 ?: if (declaresMetalsOrDefault(settings)) true else null,
                             onDeclaresMetalsChange = { declaring ->
-                                update { it.copy(zakat = it.zakat.copy(declaresMetals = declaring)) }
+                                update { it.withZakat { copy(declaresMetals = declaring) } }
                             },
                             goldItems = settings.zakat.goldItems,
                             silverItems = settings.zakat.silverItems,
@@ -338,8 +339,8 @@ fun ZakatScreen(
                             ),
                             onAddGoldItem = {
                                 update {
-                                    it.copy(zakat = it.zakat.copy(goldItems = it.zakat.goldItems +
-                                            ZakatGoldItem(id = UUID.randomUUID().toString())))
+                                    it.withZakat { copy(goldItems = goldItems +
+                                            ZakatGoldItem(id = UUID.randomUUID().toString())) }
                                 }
                             },
                             onUpdateGoldItem = { edited ->
@@ -350,13 +351,13 @@ fun ZakatScreen(
                             },
                             onRemoveGoldItem = { id ->
                                 update { current ->
-                                    current.copy(zakat = current.zakat.copy(goldItems = current.zakat.goldItems.filterNot { it.id == id }))
+                                    current.withZakat { copy(goldItems = goldItems.filterNot { it.id == id }) }
                                 }
                             },
                             onAddSilverItem = {
                                 update {
-                                    it.copy(zakat = it.zakat.copy(silverItems = it.zakat.silverItems +
-                                            ZakatSilverItem(id = UUID.randomUUID().toString())))
+                                    it.withZakat { copy(silverItems = silverItems +
+                                            ZakatSilverItem(id = UUID.randomUUID().toString())) }
                                 }
                             },
                             onUpdateSilverItem = { edited ->
@@ -367,7 +368,7 @@ fun ZakatScreen(
                             },
                             onRemoveSilverItem = { id ->
                                 update { current ->
-                                    current.copy(zakat = current.zakat.copy(silverItems = current.zakat.silverItems.filterNot { it.id == id }))
+                                    current.withZakat { copy(silverItems = silverItems.filterNot { it.id == id }) }
                                 }
                             }
                         )
@@ -404,7 +405,7 @@ fun ZakatScreen(
     if (showCurrencySheet) {
         CurrencySelectionSheet(
             selectedCode = settings.zakat.currencyCode,
-            onSelect = { code -> update { it.copy(zakat = it.zakat.copy(currencyCode = code)) } },
+            onSelect = { code -> update { it.withZakat { copy(currencyCode = code) } } },
             onDismiss = { showCurrencySheet = false }
         )
     }

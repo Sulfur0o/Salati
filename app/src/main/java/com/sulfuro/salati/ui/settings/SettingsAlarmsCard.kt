@@ -19,6 +19,7 @@ import com.sulfuro.salati.core.audio.AdhanAudioStore
 import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.withAlarms
 import com.sulfuro.salati.ui.components.SettingSection
 import com.sulfuro.salati.ui.components.SettingStepperRow
 import com.sulfuro.salati.ui.components.ValueSelectionRow
@@ -158,10 +159,10 @@ internal fun SettingsAlarmsCard(
                 canDecrease = prePrayerIndex > 0,
                 canIncrease = prePrayerIndex < prePrayerStops.lastIndex,
                 onDecrease = {
-                    saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerStops[prePrayerIndex - 1])) }
+                    saveSettings { it.withAlarms { copy(prePrayerMinutes = prePrayerStops[prePrayerIndex - 1]) } }
                 },
                 onIncrease = {
-                    saveSettings { it.copy(alarms = it.alarms.copy(prePrayerMinutes = prePrayerStops[prePrayerIndex + 1])) }
+                    saveSettings { it.withAlarms { copy(prePrayerMinutes = prePrayerStops[prePrayerIndex + 1]) } }
                 }
             )
 
@@ -173,7 +174,7 @@ internal fun SettingsAlarmsCard(
                 supportingText = stringResource(R.string.settings_reminders_white_days_description),
                 checked = settings.alarms.whiteDaysReminder,
                 onCheckedChange = { isChecked ->
-                    saveSettings { it.copy(alarms = it.alarms.copy(whiteDaysReminder = isChecked)) }
+                    saveSettings { it.withAlarms { copy(whiteDaysReminder = isChecked) } }
                 }
             )
         }
@@ -211,7 +212,7 @@ internal fun SettingsAlarmsCard(
         AdhanSoundSheet(
             selectedId = settings.alarms.adhanSoundId,
             onSelect = { option ->
-                saveSettings { it.copy(alarms = it.alarms.copy(adhanSoundId = option?.id, adhanSoundName = option?.name)) }
+                saveSettings { it.withAlarms { copy(adhanSoundId = option?.id, adhanSoundName = option?.name) } }
             },
             onDismiss = { showAdhanSheet = false }
         )
@@ -222,7 +223,7 @@ internal fun SettingsAlarmsCard(
             selectedId = settings.alarms.fajrAdhanSoundId,
             onSelect = { option ->
                 saveSettings {
-                    it.copy(alarms = it.alarms.copy(fajrAdhanSoundId = option?.id, fajrAdhanSoundName = option?.name))
+                    it.withAlarms { copy(fajrAdhanSoundId = option?.id, fajrAdhanSoundName = option?.name) }
                 }
             },
             onDismiss = { showFajrAdhanSheet = false },
@@ -286,7 +287,7 @@ internal fun SettingsDuringPrayerCard(
             checked = settings.alarms.silentModeAutomationEnabled,
             onCheckedChange = { isChecked ->
                 PrayerSilentModeScheduler.setAutomationEnabled(appContext, isChecked)
-                saveSettings { it.copy(alarms = it.alarms.copy(silentModeAutomationEnabled = isChecked)) }
+                saveSettings { it.withAlarms { copy(silentModeAutomationEnabled = isChecked) } }
                 if (isChecked && !permissionState.notificationPolicyAccess) {
                     runCatching {
                         context.startActivity(
@@ -311,10 +312,10 @@ internal fun SettingsDuringPrayerCard(
                 canDecrease = offsetIndex > 0,
                 canIncrease = offsetIndex < offsetStops.lastIndex,
                 onDecrease = {
-                    saveSettings { it.copy(alarms = it.alarms.copy(silentModeMinutesAfterAdhan = offsetStops[offsetIndex - 1])) }
+                    saveSettings { it.withAlarms { copy(silentModeMinutesAfterAdhan = offsetStops[offsetIndex - 1]) } }
                 },
                 onIncrease = {
-                    saveSettings { it.copy(alarms = it.alarms.copy(silentModeMinutesAfterAdhan = offsetStops[offsetIndex + 1])) }
+                    saveSettings { it.withAlarms { copy(silentModeMinutesAfterAdhan = offsetStops[offsetIndex + 1]) } }
                 }
             )
             SettingsDivider()
@@ -324,10 +325,10 @@ internal fun SettingsDuringPrayerCard(
                 canDecrease = durationIndex > 0,
                 canIncrease = durationIndex < durationStops.lastIndex,
                 onDecrease = {
-                    saveSettings { it.copy(alarms = it.alarms.copy(silentModeDurationMinutes = durationStops[durationIndex - 1])) }
+                    saveSettings { it.withAlarms { copy(silentModeDurationMinutes = durationStops[durationIndex - 1]) } }
                 },
                 onIncrease = {
-                    saveSettings { it.copy(alarms = it.alarms.copy(silentModeDurationMinutes = durationStops[durationIndex + 1])) }
+                    saveSettings { it.withAlarms { copy(silentModeDurationMinutes = durationStops[durationIndex + 1]) } }
                 }
             )
         }

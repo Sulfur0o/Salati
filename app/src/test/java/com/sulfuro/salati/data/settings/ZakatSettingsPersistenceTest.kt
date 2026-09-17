@@ -77,9 +77,9 @@ class ZakatSettingsPersistenceTest {
         val preferences = SalatiPreferences(context)
 
         preferences.updateSettings {
-            it.copy(zakat = it.zakat.copy(goldItems = listOf(
+            it.withZakat { copy(goldItems = listOf(
                     ZakatGoldItem(id = "ring", label = "Ring", karat = 21, weightGrams = 6.0)
-                ), cashOnHand = 500.0, standard = 1))
+                ), cashOnHand = 500.0, standard = 1) }
         }
 
         val reloaded = SalatiPreferences(context).settings.first()
@@ -95,14 +95,14 @@ class ZakatSettingsPersistenceTest {
     fun removingAnItemIsPersistedRatherThanLeftBehind() = runBlocking {
         val preferences = SalatiPreferences(context)
         preferences.updateSettings {
-            it.copy(zakat = it.zakat.copy(goldItems = listOf(
+            it.withZakat { copy(goldItems = listOf(
                     ZakatGoldItem(id = "a", karat = 24, weightGrams = 1.0),
                     ZakatGoldItem(id = "b", karat = 18, weightGrams = 2.0)
-                )))
+                )) }
         }
 
         preferences.updateSettings { current ->
-            current.copy(zakat = current.zakat.copy(goldItems = current.zakat.goldItems.filterNot { it.id == "a" }))
+            current.withZakat { copy(goldItems = goldItems.filterNot { it.id == "a" }) }
         }
 
         val reloaded = preferences.settings.first()

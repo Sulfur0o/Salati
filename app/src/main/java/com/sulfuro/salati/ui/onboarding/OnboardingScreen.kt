@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.withPrayer
 import com.sulfuro.salati.theme.SalatiSpacing
 import kotlinx.serialization.json.Json
 
@@ -100,7 +101,7 @@ fun OnboardingScreen(
                 3 -> CalculationMethodStep(
                     currentMethod = draftSettings.prayer.calculationMethod,
                     onMethodSelected = { method ->
-                        draftSettings = draftSettings.copy(prayer = draftSettings.prayer.copy(calculationMethod = method))
+                        draftSettings = draftSettings.withPrayer { copy(calculationMethod = method) }
                         step = 4
                     },
                     onBack = { step = 2 }

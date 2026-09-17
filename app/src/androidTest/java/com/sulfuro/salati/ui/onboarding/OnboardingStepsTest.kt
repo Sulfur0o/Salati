@@ -22,6 +22,7 @@ import com.sulfuro.salati.R
 import com.sulfuro.salati.data.settings.AlarmPreferences
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.LocationSettings
+import com.sulfuro.salati.data.settings.withAlarms
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -184,7 +185,7 @@ class OnboardingStepsTest {
 
         assertFalse(current.alarms.vibrateEnabled)
         assertEquals(
-            notificationStart.copy(alarms = notificationStart.alarms.copy(vibrateEnabled = false)),
+            notificationStart.withAlarms { copy(vibrateEnabled = false) },
             current
         )
     }
@@ -207,7 +208,7 @@ class OnboardingStepsTest {
             .performClick()
 
         assertEquals(
-            notificationStart.copy(alarms = notificationStart.alarms.copy(whiteDaysReminder = true)),
+            notificationStart.withAlarms { copy(whiteDaysReminder = true) },
             current
         )
     }

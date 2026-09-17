@@ -3,6 +3,7 @@ package com.sulfuro.salati.core.audio
 import android.content.Context
 import android.util.Log
 import com.sulfuro.salati.data.settings.CalculationSettings
+import com.sulfuro.salati.data.settings.withAlarms
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -257,10 +258,10 @@ object AdhanAudioStore {
 fun CalculationSettings.withoutRetiredAdhanChoices(): CalculationSettings {
     var next = this
     if (alarms.adhanSoundId in AdhanAudioStore.RETIRED_IDS) {
-        next = next.copy(alarms = next.alarms.copy(adhanSoundId = null, adhanSoundName = null))
+        next = next.withAlarms { copy(adhanSoundId = null, adhanSoundName = null) }
     }
     if (alarms.fajrAdhanSoundId in AdhanAudioStore.RETIRED_IDS) {
-        next = next.copy(alarms = next.alarms.copy(fajrAdhanSoundId = null, fajrAdhanSoundName = null))
+        next = next.withAlarms { copy(fajrAdhanSoundId = null, fajrAdhanSoundName = null) }
     }
     return next
 }
