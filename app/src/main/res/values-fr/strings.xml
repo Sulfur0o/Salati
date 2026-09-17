@@ -456,5 +456,9 @@
     <string name="zakat_hawl_reached">Nisab atteint le %1$s</string>
     <string name="zakat_hawl_change">Modifier</string>
     <string name="zakat_hawl_remind">Me le rappeler</string>
+    <string name="daily_window_label">Temps restant pour prier %1$s</string>
+    <string name="daily_window_until">Jusqu\'à %1$s</string>
+    <string name="daily_window_none">Aucune prière n\'est due pour le moment</string>
+    <string name="daily_window_accessibility">Il reste %1$s pour prier %2$s, jusqu\'à %3$s</string>
     <string name="settings_silent_mode_paused">En pause — aucune alarme de prière ne se déclenche tant que les alertes sont sur Aucune notification</string>
 </resources>

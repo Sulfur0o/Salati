@@ -474,5 +474,9 @@
     <string name="zakat_hawl_reached">بلغ النصاب في %1$s</string>
     <string name="zakat_hawl_change">تغيير</string>
     <string name="zakat_hawl_remind">ذكّرني</string>
+    <string name="daily_window_label">الوقت المتبقي لصلاة %1$s</string>
+    <string name="daily_window_until">حتى %1$s</string>
+    <string name="daily_window_none">لا توجد صلاة مستحقة الآن</string>
+    <string name="daily_window_accessibility">بقي %1$s لصلاة %2$s، حتى %3$s</string>
     <string name="settings_silent_mode_paused">متوقف مؤقتًا — لا ينطلق أي منبّه صلاة ما دامت التنبيهات على بدون إشعارات</string>
 </resources>

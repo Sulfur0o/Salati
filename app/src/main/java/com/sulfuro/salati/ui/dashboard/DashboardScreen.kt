@@ -145,9 +145,14 @@ fun DashboardScreen(
         }
     }
 
-    val nextPrayerInfo = if (prayerTimes != null) {
-        val effectiveTomorrowFajr = tomorrowTimes?.fajr ?: prayerTimes.fajr.plus(java.time.Duration.ofDays(1))
-        rememberNextPrayerInfo(prayerTimes, effectiveTomorrowFajr)
+    // The next dawn both ends the Isha window and closes the countdown, so it is worked
+    // out once here rather than twice further down.
+    val tomorrowFajr = remember(tomorrowTimes, prayerTimes) {
+        tomorrowTimes?.fajr ?: prayerTimes?.fajr?.plus(Duration.ofDays(1))
+    }
+
+    val nextPrayerInfo = if (prayerTimes != null && tomorrowFajr != null) {
+        rememberNextPrayerInfo(prayerTimes, tomorrowFajr)
     } else {
         null
     }
@@ -157,7 +162,9 @@ fun DashboardScreen(
             label = stringResource(R.string.daily_loading),
             modifier = modifier
         )
-        prayerTimes == null || nextPrayerInfo == null -> SalatiErrorState(
+        // tomorrowFajr is never null while prayerTimes is not; naming it here is what lets
+        // the branch below treat the next dawn as the certainty it already is.
+        prayerTimes == null || nextPrayerInfo == null || tomorrowFajr == null -> SalatiErrorState(
             title = stringResource(R.string.daily_error_title),
             message = stringResource(R.string.daily_error_message),
             retryLabel = stringResource(R.string.daily_retry),
@@ -269,6 +276,13 @@ fun DashboardScreen(
                         )
                     }
                 }
+
+                // Recomputed when the next event changes, which is exactly when one
+                // window closes and the next opens; the card ticks down inside it.
+                val prayerWindow = remember(prayerTimes, activeNextPrayer) {
+                    currentPrayerWindow(prayerTimes, tomorrowFajr, Instant.now())
+                }
+                PrayerWindowCard(window = prayerWindow, timeFormat = timeFormat)
 
                 // Compact inline night calculations row at the bottom
                 androidx.compose.material3.Surface(
