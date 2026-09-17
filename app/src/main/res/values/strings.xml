@@ -463,4 +463,5 @@
     <string name="zakat_hawl_reached">Nisab reached %1$s</string>
     <string name="zakat_hawl_change">Change</string>
     <string name="zakat_hawl_remind">Remind me</string>
+    <string name="settings_silent_mode_paused">Paused — no prayer alarm runs while alerts are set to No notification</string>
 </resources>

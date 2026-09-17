@@ -474,4 +474,5 @@
     <string name="zakat_hawl_reached">بلغ النصاب في %1$s</string>
     <string name="zakat_hawl_change">تغيير</string>
     <string name="zakat_hawl_remind">ذكّرني</string>
+    <string name="settings_silent_mode_paused">متوقف مؤقتًا — لا ينطلق أي منبّه صلاة ما دامت التنبيهات على بدون إشعارات</string>
 </resources>

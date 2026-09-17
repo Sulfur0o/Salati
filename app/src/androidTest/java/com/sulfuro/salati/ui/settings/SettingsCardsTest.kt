@@ -220,4 +220,66 @@ class SettingsCardsTest {
         composeTestRule.onNodeWithText(string(R.string.settings_theme_option_system)).performClick()
         assertEquals(null, saves.applyTo(start).appearance.isDarkMode)
     }
+
+    /**
+     * Prayer silent mode is not an alert - it is the phone quietening itself - so the
+     * alert style does not switch it off. But "No notification" means no prayer alarm is
+     * ever prepared, and this runs off the back of one, so the row must stop describing
+     * something that cannot happen. The switch itself stays: a phone left silent by an
+     * older session needs the way out that turning it off gives.
+     */
+    @Test
+    fun silentModeSaysSoWhenNoAlarmWillEverStartIt() {
+        val muted = CalculationSettings(
+            alarms = AlarmPreferences(
+                notificationsMuted = true,
+                soundEnabled = false,
+                vibrateEnabled = false,
+                silentModeAutomationEnabled = true
+            )
+        )
+
+        composeTestRule.setContent {
+            SettingsDuringPrayerCard(
+                settings = muted,
+                permissionState = allPermitted,
+                saveSettings = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_paused)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_description))
+            .assertDoesNotExist()
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_offset_title))
+            .assertDoesNotExist()
+    }
+
+    /** With alerts on it is business as usual, timings and all. */
+    @Test
+    fun silentModeKeepsItsTimingsWhileAlertsAreOn() {
+        val alerting = CalculationSettings(
+            alarms = AlarmPreferences(
+                notificationsMuted = false,
+                soundEnabled = true,
+                vibrateEnabled = true,
+                silentModeAutomationEnabled = true
+            )
+        )
+
+        composeTestRule.setContent {
+            SettingsDuringPrayerCard(
+                settings = alerting,
+                permissionState = allPermitted,
+                saveSettings = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_description))
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_offset_title))
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText(string(R.string.settings_silent_mode_paused))
+            .assertDoesNotExist()
+    }
 }

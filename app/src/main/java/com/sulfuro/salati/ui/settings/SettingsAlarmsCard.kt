@@ -2,23 +2,28 @@ package com.sulfuro.salati.ui.settings
 
 import android.content.Intent
 import android.provider.Settings
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.audio.AdhanAudioStore
-import com.sulfuro.salati.core.audio.AdhanPlaybackService
 import com.sulfuro.salati.core.alarms.PrayerSilentModeController
 import com.sulfuro.salati.core.alarms.PrayerSilentModeScheduler
+import com.sulfuro.salati.core.audio.AdhanAudioStore
+import com.sulfuro.salati.core.audio.AdhanPlaybackService
+import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.ui.components.SettingSection
 import com.sulfuro.salati.ui.components.SettingStepperRow
 import com.sulfuro.salati.ui.components.ValueSelectionRow
-import com.sulfuro.salati.core.permissions.AppPermissionState
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -260,10 +265,24 @@ internal fun SettingsDuringPrayerCard(
     val offsetIndex = offsetStops.indexOf(settings.alarms.silentModeMinutesAfterAdhan).coerceAtLeast(0)
     val durationIndex = durationStops.indexOf(settings.alarms.silentModeDurationMinutes).coerceAtLeast(0)
 
+    // Silencing the ringer is not an alert, so the alert style does not govern it - but
+    // "No notification" stops the scheduler preparing any prayer alarm at all, and this
+    // runs off the back of one. The switch can stay on and stay reachable, since a phone
+    // left silent by an old session still needs the way out that turning it off gives;
+    // what it must not do is go on describing something that cannot happen.
+    val alertsAreOff = AlertStyle.of(
+        settings.alarms.notificationsMuted,
+        settings.alarms.soundEnabled,
+        settings.alarms.vibrateEnabled
+    ) == AlertStyle.NONE
+
     SettingSection(title = stringResource(R.string.settings_card_during_prayer_title)) {
         SettingToggleRow(
             title = stringResource(R.string.settings_silent_mode_title),
-            supportingText = stringResource(R.string.settings_silent_mode_description),
+            supportingText = stringResource(
+                if (alertsAreOff) R.string.settings_silent_mode_paused
+                else R.string.settings_silent_mode_description
+            ),
             checked = settings.alarms.silentModeAutomationEnabled,
             onCheckedChange = { isChecked ->
                 PrayerSilentModeScheduler.setAutomationEnabled(appContext, isChecked)
@@ -284,7 +303,7 @@ internal fun SettingsDuringPrayerCard(
             }
         )
 
-        if (settings.alarms.silentModeAutomationEnabled) {
+        if (settings.alarms.silentModeAutomationEnabled && !alertsAreOff) {
             SettingsDivider()
             SettingStepperRow(
                 title = stringResource(R.string.settings_silent_mode_offset_title),

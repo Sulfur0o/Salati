@@ -453,4 +453,5 @@
     <string name="zakat_hawl_reached">Nisab bereikt op %1$s</string>
     <string name="zakat_hawl_change">Wijzigen</string>
     <string name="zakat_hawl_remind">Herinner mij</string>
+    <string name="settings_silent_mode_paused">Gepauzeerd — er loopt geen gebedsalarm zolang meldingen op Geen meldingen staan</string>
 </resources>
