@@ -1,8 +1,14 @@
 package com.sulfuro.salati.core.location
 
+import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -13,12 +19,26 @@ import kotlin.math.roundToInt
  * city's zone paired with the new coordinates.
  *
  * Bounding boxes overlap on purpose. The smallest box that contains the point wins, so a
- * city-sized rectangle beats the country it sits in. Points that miss every box fall back
- * to a fixed offset derived from longitude. If the device zone currently has that same
- * offset, the device zone is preferred: it is a named zone with DST rules, and the phone
- * is often already set to the place the user just stood in.
+ * city-sized rectangle beats the country it sits in. Points that miss every box take the
+ * nearest one instead, and only a point with no plausible neighbour is left with a fixed
+ * offset derived from longitude. If the device zone currently has the same offset as
+ * whatever comes out, the device zone is preferred: it is a named zone with DST rules, and
+ * the phone is often already set to the place the user just stood in.
  */
 object CoordinateTimezoneLookup {
+
+    /**
+     * How far a box may be from a point and still be taken as evidence about it. Twelve
+     * degrees is roughly 1300km at the equator: far enough to cover the gaps between these
+     * rectangles, short enough that a point in central Siberia does not borrow Almaty.
+     */
+    private const val MAX_FALLBACK_DEGREES = 12.0
+
+    /** How far a political zone may sit from solar time before it stops being credible. */
+    private const val MAX_SOLAR_DRIFT_SECONDS = 2 * 60 * 60
+
+    /** Far enough to be on the other side of the clock change, in either hemisphere. */
+    private val HALF_A_YEAR: Duration = Duration.ofDays(183)
 
     fun zoneIdFor(
         latitude: Double,
@@ -28,8 +48,61 @@ object CoordinateTimezoneLookup {
     ): ZoneId {
         val lat = latitude.coerceIn(-90.0, 90.0)
         val lng = normalizeLongitude(longitude)
-        val estimated = lookupBox(lat, lng) ?: offsetZone(lng)
+        val estimated = lookupBox(lat, lng) ?: fallbackZone(lat, lng, at)
         return if (sameOffset(estimated, deviceZoneId, at)) deviceZoneId else estimated
+    }
+
+    /**
+     * A named zone for a point that no box contains.
+     *
+     * A bare offset used to be the whole answer here, and a bare offset cannot observe
+     * daylight saving: for half of every year every prayer time it produced was an hour
+     * out. So the nearest box is taken instead - but only when it would actually help, and
+     * only when it is credible.
+     *
+     * Helping means daylight saving, because that is the only thing a named zone has that
+     * an offset does not. A neighbour that keeps one offset all year is worth nothing over
+     * the bare number and carries a border with it, so it is declined.
+     *
+     * Credible means agreeing with the sun. Compared at standard time, not at [at]: the
+     * question is where this zone's *winter* sits relative to the meridian, and a summer
+     * hour added to one side of that comparison is the very thing being measured. A
+     * political zone rarely sits more than a couple of hours off, so one that does is
+     * across a border that matters and the bare offset is the better poor answer.
+     */
+    internal fun fallbackZone(latitude: Double, longitude: Double, at: Instant): ZoneId {
+        val solar = offsetZone(longitude)
+        val nearest = nearestBoxZone(latitude, longitude) ?: return solar
+        if (!observesDaylightSaving(nearest, at)) return solar
+
+        val drift = abs(
+            nearest.rules.getStandardOffset(at).totalSeconds - solar.rules.getOffset(at).totalSeconds
+        )
+        return if (drift <= MAX_SOLAR_DRIFT_SECONDS) nearest else solar
+    }
+
+    /**
+     * Whether a zone moves its clocks, asked by looking half a year away rather than at
+     * its rule history: Shanghai had daylight saving in the eighties and does not now, and
+     * it is now that matters. Half a year also lands on the far side of the switch in
+     * either hemisphere, so southern zones answer as readily as northern ones.
+     */
+    private fun observesDaylightSaving(zone: ZoneId, at: Instant): Boolean {
+        val rules = zone.rules
+        return rules.getOffset(at) != rules.getOffset(at.plus(HALF_A_YEAR))
+    }
+
+    internal fun nearestBoxZone(latitude: Double, longitude: Double): ZoneId? {
+        var best: TzBox? = null
+        var bestDistance = MAX_FALLBACK_DEGREES
+        for (box in BOXES) {
+            val distance = box.distanceTo(latitude, longitude)
+            if (distance < bestDistance) {
+                best = box
+                bestDistance = distance
+            }
+        }
+        return best?.let { ZoneId.of(it.id) }
     }
 
     internal fun lookupBox(latitude: Double, longitude: Double): ZoneId? {
@@ -71,6 +144,21 @@ object CoordinateTimezoneLookup {
     ) {
         fun contains(lat: Double, lng: Double): Boolean {
             return lat in minLat..maxLat && lng in minLng..maxLng
+        }
+
+        /**
+         * Degrees from this rectangle to a point, and zero for a point inside it.
+         *
+         * Longitude is narrowed by the latitude it is measured at, so that comparing two
+         * candidate boxes compares ground covered rather than degrees - which are not the
+         * same thing anywhere but the equator, and this list reaches Oslo and Anchorage.
+         */
+        fun distanceTo(lat: Double, lng: Double): Double {
+            val latitudeGap = max(minLat - lat, lat - maxLat).coerceAtLeast(0.0)
+            val longitudeGap = max(minLng - lng, lng - maxLng).coerceAtLeast(0.0)
+            // The short way round: a point at 179 and a box ending at -179 are 2 apart.
+            val shortest = min(longitudeGap, 360.0 - longitudeGap)
+            return hypot(latitudeGap, shortest * cos(Math.toRadians(lat.coerceIn(-89.0, 89.0))))
         }
 
         val area: Double get() = (maxLat - minLat) * (maxLng - minLng)
