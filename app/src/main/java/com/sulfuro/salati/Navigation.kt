@@ -1,53 +1,71 @@
 package com.sulfuro.salati
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.AccountBalanceWallet
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.sulfuro.salati.core.work.AlarmWorkScheduler
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
-import kotlinx.coroutines.launch
 import com.sulfuro.salati.ui.calendar.CalendarScreen
 import com.sulfuro.salati.ui.components.AdhanPlayingBanner
 import com.sulfuro.salati.ui.dashboard.DashboardScreen
+import com.sulfuro.salati.ui.onboarding.OnboardingScreen
 import com.sulfuro.salati.ui.qibla.QiblaScreen
 import com.sulfuro.salati.ui.settings.SettingsScreen
 import com.sulfuro.salati.ui.zakat.ZakatScreen
+import com.sulfuro.salati.widget.SalatiAppWidgetProvider
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainNavigation(
     settings: CalculationSettings,
     preferences: SalatiPreferences
 ) {
-    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
-    val appContext = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val appContext = LocalContext.current.applicationContext
 
     if (!settings.hasCompletedOnboarding) {
-        com.sulfuro.salati.ui.onboarding.OnboardingScreen(
+        OnboardingScreen(
             currentSettings = settings,
             onComplete = { updated ->
                 scope.launch {
                     preferences.updateSettings { updated.copy(hasCompletedOnboarding = true) }
-                    com.sulfuro.salati.core.work.AlarmWorkScheduler.enqueueSettingsRefreshDebounced(appContext)
-                    com.sulfuro.salati.widget.SalatiAppWidgetProvider.updateAllWidgets(appContext)
+                    AlarmWorkScheduler.enqueueSettingsRefreshDebounced(appContext)
+                    SalatiAppWidgetProvider.updateAllWidgets(appContext)
                 }
             }
         )
@@ -69,22 +87,22 @@ fun MainNavigation(
         }
     }
 
-    androidx.activity.compose.BackHandler(enabled = backStack.size == 1 && currentKey != Dashboard) {
+    BackHandler(enabled = backStack.size == 1 && currentKey != Dashboard) {
         switchTab(Dashboard)
     }
 
     // Hoisted here (rather than inside ZakatScreen) because tab switches remove and
     // re-add nav entries, tearing down and recreating the screen's own remembered state.
     // Only the wizard position needs hoisting now; every answer lives in preferences.
-    val zakatStep = androidx.compose.runtime.saveable.rememberSaveable {
-        androidx.compose.runtime.mutableIntStateOf(0)
+    val zakatStep = rememberSaveable {
+        mutableIntStateOf(0)
     }
 
     // Keeps each tab's saved state - scroll offsets above all - across switches. The back
     // stack is trimmed to one entry so that tabs stay a flat, depth-1 stack, which means
     // the screen being left is discarded outright; without this, coming back from Settings
     // dropped the user at the top of a calendar they had scrolled halfway down.
-    val tabState = androidx.compose.runtime.saveable.rememberSaveableStateHolder()
+    val tabState = rememberSaveableStateHolder()
 
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -95,7 +113,7 @@ fun MainNavigation(
         bottomBar = {
             Surface(color = MaterialTheme.colorScheme.surfaceVariant) {
                 NavigationBar(
-                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    containerColor = Color.Transparent,
                     tonalElevation = 0.dp,
                     windowInsets = WindowInsets(0),
                     modifier = Modifier
@@ -133,7 +151,7 @@ fun MainNavigation(
                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
                         label = {
                             Text(
-                                text = androidx.compose.ui.res.stringResource(R.string.nav_daily),
+                                text = stringResource(R.string.nav_daily),
                                 style = navLabelStyle,
                                 maxLines = 1
                             )
@@ -147,7 +165,7 @@ fun MainNavigation(
                         icon = { Icon(Icons.Default.Event, contentDescription = null) },
                         label = {
                             Text(
-                                text = androidx.compose.ui.res.stringResource(R.string.nav_monthly),
+                                text = stringResource(R.string.nav_monthly),
                                 style = navLabelStyle,
                                 maxLines = 1
                             )
@@ -161,7 +179,7 @@ fun MainNavigation(
                         icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null) },
                         label = {
                             Text(
-                                text = androidx.compose.ui.res.stringResource(R.string.nav_zakat),
+                                text = stringResource(R.string.nav_zakat),
                                 style = navLabelStyle,
                                 maxLines = 1
                             )
@@ -175,7 +193,7 @@ fun MainNavigation(
                         icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                         label = {
                             Text(
-                                text = androidx.compose.ui.res.stringResource(R.string.nav_settings),
+                                text = stringResource(R.string.nav_settings),
                                 style = navLabelStyle,
                                 maxLines = 1
                             )

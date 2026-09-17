@@ -48,7 +48,7 @@ class ZakatUiContractTest {
 
     @Test
     fun hawlTrackerLivesOnZakatScreenNotCalendar() {
-        val zakat = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/zakat/ZakatScreen.kt")))
+        val zakat = zakatUiSource()
         val calendar = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/calendar/CalendarScreen.kt")))
         // The Hawl milestone is edited on the Zakat screen (in the summary step) and only
         // read by the calendar, which renders it as an event badge.
@@ -60,7 +60,7 @@ class ZakatUiContractTest {
 
     @Test
     fun zakatScreenOffersTheCalendarHawlHandoff() {
-        val zakat = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/zakat/ZakatScreen.kt")))
+        val zakat = zakatUiSource()
         assertTrue(zakat.contains("ZakatHawlCalendar.buildInsertIntent"))
         // The hand-off is the last step's primary action now, in the bar at the foot of
         // the screen - which is where a disabled Next used to sit with nothing to do.
@@ -80,14 +80,13 @@ class ZakatUiContractTest {
      */
     @Test
     fun aStepIsNamedOnceAndTheAmountDueRidesAlongWithIt() {
-        val zakat = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/zakat/ZakatScreen.kt")))
-        val steps = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/zakat/ZakatSteps.kt")))
+        val zakat = zakatUiSource()
 
         assertTrue("the header carries the running total", zakat.contains("zakat_due_label"))
         assertTrue("and says so when nothing is owed", zakat.contains("zakat_due_below_nisab"))
         assertFalse("the tab bar already says Zakat", zakat.contains("R.string.zakat_title"))
-        assertFalse("no per-step heading", steps.contains("zakat_cash_heading"))
-        assertFalse("no per-step explainer", steps.contains("zakat_standard_explainer"))
+        assertFalse("no per-step heading", zakat.contains("zakat_cash_heading"))
+        assertFalse("no per-step explainer", zakat.contains("zakat_standard_explainer"))
 
         // The progress segments are the way back to a step you have already passed - the
         // summary in particular, which was otherwise three taps of Next away.
@@ -115,7 +114,7 @@ class ZakatUiContractTest {
         assertEquals(400.0, withDebts.liabilities, 0.001)
         assertEquals(withDebts.grossAssets - 400.0, withDebts.netWealth, 0.001)
 
-        val zakat = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/zakat/ZakatScreen.kt")))
+        val zakat = zakatUiSource()
         assertTrue("the minus sign is conditional", zakat.contains("if (owesSomething)"))
     }
 
@@ -139,13 +138,28 @@ class ZakatUiContractTest {
         assertEquals(LocalDate.of(2026, 9, 17), zakatHawlStartDate(picked))
         assertEquals(picked, zakatHawlDueDate(zakatHawlStartDate(picked)))
 
-        val zakat = String(Files.readAllBytes(projectPath("src/main/java/com/sulfuro/salati/ui/zakat/ZakatScreen.kt")))
+        val zakat = zakatUiSource()
         assertTrue(
             "an unset Hawl opens a lunar year out",
             zakat.contains("initialDate = hawlDue ?: ZakatHawlCalendar.dueDateFrom(LocalDate.now())")
         )
         assertTrue("and what is picked is stored as its start", zakat.contains("zakatHawlStartDate"))
     }
+
+    /**
+     * Every source file behind the Zakat screen, read as one.
+     *
+     * These assertions are about where a behaviour lives in the *app*, not about which
+     * file it happens to be typed into. The screen was one 1156-line file when they were
+     * written and is nine now, and pinning a filename would mean rewriting the test every
+     * time it is divided again.
+     */
+    private fun zakatUiSource(): String =
+        projectPath("src/main/java/com/sulfuro/salati/ui/zakat").toFile()
+            .listFiles { file -> file.name.endsWith(".kt") }
+            .orEmpty()
+            .sortedBy { it.name }
+            .joinToString(separator = "\n") { it.readText() }
 
     private fun projectPath(relative: String): Path {
         val direct = Path.of(relative)

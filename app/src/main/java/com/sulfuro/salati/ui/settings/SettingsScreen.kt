@@ -1,10 +1,23 @@
 package com.sulfuro.salati.ui.settings
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -13,14 +26,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sulfuro.salati.R
-import com.sulfuro.salati.core.work.enqueueAlarmSettingsRefreshIfNeeded
+import com.sulfuro.salati.core.permissions.AppPermissionState
 import com.sulfuro.salati.core.permissions.readAppPermissionState
 import com.sulfuro.salati.core.permissions.rememberNotificationPermissionRequest
+import com.sulfuro.salati.core.work.enqueueAlarmSettingsRefreshIfNeeded
 import com.sulfuro.salati.data.settings.CalculationSettings
 import com.sulfuro.salati.data.settings.SalatiPreferences
 import com.sulfuro.salati.theme.SalatiSpacing
 import com.sulfuro.salati.widget.SalatiAppWidgetProvider
-import com.sulfuro.salati.core.permissions.AppPermissionState
 import kotlinx.coroutines.launch
 
 

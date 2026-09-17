@@ -2,11 +2,16 @@ package com.sulfuro.salati.ui.settings
 
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,10 +21,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sulfuro.salati.R
-import com.sulfuro.salati.theme.SalatiSpacing
-import com.sulfuro.salati.ui.components.SettingRow
-import com.sulfuro.salati.ui.components.PermissionStatusRow
 import com.sulfuro.salati.core.permissions.AppPermissionState
+import com.sulfuro.salati.theme.SalatiSpacing
+import com.sulfuro.salati.ui.components.PermissionStatusRow
+import com.sulfuro.salati.ui.components.SettingRow
 
 @Composable
 internal fun SettingToggleRow(
