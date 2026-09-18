@@ -216,7 +216,7 @@ fun DashboardScreen(
                 DailyScreenHeader(
                     title = stringResource(R.string.daily_today),
                     gregorianDate = dateFormat.format(today),
-                    hijriDate = hijriDate.format(),
+                    hijriDate = hijriDate.format(displayLocale),
                     locationContext = stringResource(R.string.daily_location_context, settings.location.cityName),
                     onOpenQibla = onOpenQibla
                 )

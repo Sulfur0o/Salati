@@ -16,15 +16,15 @@ class HijriCalendarHelperTest {
     @Test
     fun knownDateAndOffsetsRemainUnchanged() {
         assertEquals(
-            HijriCalendarHelper.HijriDateComponents(1, 2, "Safar", 1448),
+            HijriCalendarHelper.HijriDateComponents(1, 2, 1448),
             HijriCalendarHelper.getHijriDate(date, 0)
         )
         assertEquals(
-            HijriCalendarHelper.HijriDateComponents(2, 2, "Safar", 1448),
+            HijriCalendarHelper.HijriDateComponents(2, 2, 1448),
             HijriCalendarHelper.getHijriDate(date, 1)
         )
         assertEquals(
-            HijriCalendarHelper.HijriDateComponents(29, 1, "Muharram", 1448),
+            HijriCalendarHelper.HijriDateComponents(29, 1, 1448),
             HijriCalendarHelper.getHijriDate(date, -1)
         )
     }

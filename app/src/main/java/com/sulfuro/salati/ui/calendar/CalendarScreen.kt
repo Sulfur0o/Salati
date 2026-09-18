@@ -220,7 +220,7 @@ fun CalendarScreen(
                 selectedDayTimes?.let { times ->
                     SelectedDayPrayerDetails(
                         gregorianDate = longDateFormatter(displayLocale).format(selectedDate),
-                        hijriDate = selectedDayHijri.format(),
+                        hijriDate = selectedDayHijri.format(displayLocale),
                         events = dayEvents[selectedDayIndex] ?: emptyList(),
                         locationContext = stringResource(R.string.daily_location_context, settings.location.cityName),
                         prayerTimes = times,
@@ -389,9 +389,8 @@ internal fun CalendarDateCell(
         DateTimeFormatter.ofPattern("d MMMM yyyy", displayLocale)
     }
     val gregorianDateStr = remember(date, gregorianFormatter) { date.format(gregorianFormatter) }
-    val hijriDateStr = remember(date, hijriOffset, apiLookup) {
-        val hijri = HijriCalendarHelper.resolveHijriDate(date, hijriOffset, false, apiLookup)
-        "${hijri.day} ${hijri.monthName} ${hijri.year}"
+    val hijriDateStr = remember(date, hijriOffset, apiLookup, displayLocale) {
+        HijriCalendarHelper.resolveHijriDate(date, hijriOffset, false, apiLookup).format(displayLocale)
     }
 
     // The label is what the day *is*; "today" and "selected" are what it currently *is like*,

@@ -8,7 +8,7 @@ import org.junit.Test
 
 class IslamicCalendarEventTest {
 
-    private fun date(day: Int, month: Int) = HijriCalendarHelper.HijriDateComponents(day, month, "Month", 1445)
+    private fun date(day: Int, month: Int) = HijriCalendarHelper.HijriDateComponents(day, month, 1445)
 
     @Test
     fun testEventMapping() {
