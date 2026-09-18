@@ -50,6 +50,7 @@ import com.sulfuro.salati.core.audio.AdhanDownloadResult
 import com.sulfuro.salati.core.audio.AdhanDownloads
 import com.sulfuro.salati.core.audio.AdhanOption
 import com.sulfuro.salati.core.audio.AdhanPlaybackService
+import com.sulfuro.salati.core.audio.offeredFor
 import com.sulfuro.salati.theme.SalatiSpacing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -156,7 +157,7 @@ fun AdhanSoundSheet(
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
         val offered = (catalog as? AdhanCatalogResult.Available)
             ?.options
-            ?.filter { if (fajr) it.servesFajr else it.servesOtherPrayers }
+            ?.offeredFor(fajr)
             .orEmpty()
 
         // A recording withdrawn from the catalogue leaves a stored id that matches no row.

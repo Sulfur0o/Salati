@@ -270,6 +270,59 @@ class AdhanAudioTest {
         assertTrue(regular.servesOtherPrayers)
     }
 
+    /**
+     * The takbir is the cheapest thing in the list and the quickest to hear, and it sat two
+     * thirds of the way down thirty-odd full adhans. It leads both lists now.
+     */
+    @Test
+    fun theShortClipIsOfferedFirstInBothLists() {
+        val catalog = listOf(
+            option(id = "makkah_fajr").copy(isFajr = true),
+            option(id = "ali_mulla"),
+            option(id = "short_takbir").copy(servesAnyPrayer = true),
+            option(id = "madinah_fajr").copy(isFajr = true),
+            option(id = "mishary")
+        )
+
+        assertEquals("short_takbir", catalog.offeredFor(fajr = true).first().id)
+        assertEquals("short_takbir", catalog.offeredFor(fajr = false).first().id)
+    }
+
+    /** The manifest's order is the publisher's. Only the takbir is lifted out of it. */
+    @Test
+    fun everythingAfterTheShortClipKeepsTheOrderTheManifestGave() {
+        val catalog = listOf(
+            option(id = "ali_mulla"),
+            option(id = "short_takbir").copy(servesAnyPrayer = true),
+            option(id = "mishary"),
+            option(id = "minshawi")
+        )
+
+        assertEquals(
+            listOf("short_takbir", "ali_mulla", "mishary", "minshawi"),
+            catalog.offeredFor(fajr = false).map { it.id }
+        )
+    }
+
+    /** Reordering must not smuggle the dawn line into the four prayers it does not belong to. */
+    @Test
+    fun orderingLeavesWhatEachListContainsAlone() {
+        val catalog = listOf(
+            option(id = "makkah_fajr").copy(isFajr = true),
+            option(id = "ali_mulla"),
+            option(id = "short_takbir").copy(servesAnyPrayer = true)
+        )
+
+        assertEquals(
+            listOf("short_takbir", "makkah_fajr"),
+            catalog.offeredFor(fajr = true).map { it.id }
+        )
+        assertEquals(
+            listOf("short_takbir", "ali_mulla"),
+            catalog.offeredFor(fajr = false).map { it.id }
+        )
+    }
+
     /** Older manifests have no such field, and nothing about them may change. */
     @Test
     fun aManifestWithoutTheNewFieldBehavesExactlyAsBefore() {

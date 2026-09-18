@@ -62,6 +62,21 @@ data class AdhanOption(
         get() = !isFajr
 }
 
+/**
+ * The recordings to offer for one slot, in the order they should be read.
+ *
+ * A recording that serves any prayer is a short one - a first takbir on its own - and goes
+ * first, because it is the cheapest thing in the list to download and the quickest to hear,
+ * and it was otherwise buried two thirds of the way down a list of thirty-odd full adhans.
+ *
+ * Everything after it keeps the order the manifest gave, which is the publisher's own and
+ * carries meaning the app should not second-guess. That relies on the sort being stable,
+ * which Kotlin's is.
+ */
+fun List<AdhanOption>.offeredFor(fajr: Boolean): List<AdhanOption> =
+    filter { if (fajr) it.servesFajr else it.servesOtherPrayers }
+        .sortedBy { !it.servesAnyPrayer }
+
 @Serializable
 data class AdhanManifest(
     val version: Int = 1,
